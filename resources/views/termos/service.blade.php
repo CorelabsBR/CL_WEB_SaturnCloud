@@ -6,8 +6,6 @@
 <main class="terms-page">
     <section class="terms-hero">
         <div class="container">
-            <span class="pill pill-accent">Termos legais</span>
-
             <h1>Termos de Serviço</h1>
 
             <p>

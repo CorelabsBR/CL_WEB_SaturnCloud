@@ -6,9 +6,10 @@
     <title>GTA V - VortexHost</title>
 
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
-    <link rel="stylesheet" href="{{ asset('css/gtav.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/gtav.css') }}?v={{ filemtime(public_path('css/gtav.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
 </head>
 <body>
 
@@ -57,7 +58,12 @@
                     </ul>
 
                     <div class="gta5-card-footer">
-                        <a href="{{ route('cart.addPlan', $plan->plan) }}" class="btn btn-primary btn-md">Selecionar plano →</a>
+                        <form method="POST" action="{{ route('cart.addPlan', $plan->plan) }}">
+                            @csrf
+                            <button type="submit" class="btn btn-primary btn-md">
+                                Selecionar plano →
+                            </button>
+                        </form>
                     </div>
                 </article>
             @empty
@@ -72,5 +78,6 @@
 </section>
 
 @include('partials.footer')
+@include('partials.support-widget')
 </body>
 </html>

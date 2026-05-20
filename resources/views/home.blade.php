@@ -9,10 +9,6 @@
 <!-- HERO -->
 <section class="hero">
     <div class="container">
-        <div class="hero-eyebrow">
-            <span class="pill pill-accent">VortexHost · Infraestrutura Premium</span>
-        </div>
-
         <h1 class="hero-title">Hospedagem de<br>Outro Nível</h1>
 
         <p class="hero-subtitle">
@@ -21,8 +17,38 @@
         </p>
 
         <div class="hero-cta">
-            <a class="btn btn-primary btn-lg" href="{{ url('/host') }}">COMEÇAR AGORA</a>
-            <a class="btn btn-ghost btn-lg" href="{{ url('/vps') }}">Ver VPS →</a>
+            <a class="btn btn-primary btn-lg" href="{{ route('games.index') }}">COMEÇAR AGORA</a>
+            <a class="btn btn-ghost btn-lg" href="{{ route('vps.index') }}">Ver VPS →</a>
+        </div>
+
+        <div class="hero-badges" aria-label="Destaques da VortexHost">
+            <span class="hero-badge"><span class="dot"></span> Anti-DDoS incluso</span>
+            <span class="hero-badge"><span class="dot"></span> Suporte por ticket</span>
+            <span class="hero-badge"><span class="dot"></span> Brasil e Canadá</span>
+        </div>
+    </div>
+</section>
+
+<!-- MÉTRICAS -->
+<section class="home-stats-section" aria-label="Números da VortexHost">
+    <div class="container">
+        <div class="home-stats-grid">
+            <div class="home-stat">
+                <strong>99.9%</strong>
+                <span>Uptime monitorado</span>
+            </div>
+            <div class="home-stat">
+                <strong>NVMe</strong>
+                <span>Armazenamento rápido</span>
+            </div>
+            <div class="home-stat">
+                <strong>24/7</strong>
+                <span>Atendimento via painel</span>
+            </div>
+            <div class="home-stat">
+                <strong>DDoS</strong>
+                <span>Proteção incluída</span>
+            </div>
         </div>
     </div>
 </section>
@@ -51,7 +77,7 @@
                 <div class="svc-divider"></div>
                 <div class="svc-footer">
                     <p class="svc-price">a partir de <span>R$32</span>/mês</p>
-                    <a href="{{ url('/web') }}" class="btn btn-ghost btn-sm">Ver Planos →</a>
+                    <a href="{{ route('web') }}" class="btn btn-ghost btn-sm">Ver Planos →</a>
                 </div>
             </div>
 
@@ -68,7 +94,7 @@
                 <div class="svc-divider"></div>
                 <div class="svc-footer">
                     <p class="svc-price">a partir de <span>R$50</span>/mês</p>
-                    <a href="{{ url('/vps') }}" class="btn btn-ghost btn-sm">Ver Planos →</a>
+                    <a href="{{ route('vps.index') }}" class="btn btn-ghost btn-sm">Ver Planos →</a>
                 </div>
             </div>
 
@@ -76,19 +102,82 @@
                 <div class="svc-icon">🎮</div>
                 <p class="svc-tag">Servidores de Jogos</p>
                 <h3 class="svc-title">Jogos Online</h3>
-                <p class="svc-desc">Crie histórias incríveis em seus jogos favoritos.</p>
+                <p class="svc-desc">Servidores prontos para Minecraft, GTA, Terraria e outros jogos com instalação simples.</p>
                 <ul class="svc-feats">
-                    <li>Gerenciador de arquivos</li>
-                    <li>E-mails profissionais</li>
-                    <li>Backups automáticos</li>
+                    <li>Painel para gerenciar o servidor</li>
+                    <li>Planos para vários jogos</li>
+                    <li>Upgrade quando precisar</li>
                 </ul>
                 <div class="svc-divider"></div>
                 <div class="svc-footer">
                     <p class="svc-price">a partir de <span>R$9</span>/mês</p>
-                    <a href="{{ url('/index.php') }}" class="btn btn-ghost btn-sm">Ver Planos →</a>
+                    <a href="{{ route('games.index') }}" class="btn btn-ghost btn-sm">Ver Planos →</a>
                 </div>
             </div>
 
+        </div>
+    </div>
+</section>
+
+<!-- POR QUE ESCOLHER -->
+<section class="home-features-section">
+    <div class="container">
+        <div class="home-split">
+            <div>
+                <div class="section-head">
+                    <h2 class="section-title">Infraestrutura pensada para jogar e crescer</h2>
+                    <p class="section-sub">Do primeiro servidor até projetos maiores, a VortexHost entrega uma base estável para manter tudo online.</p>
+                </div>
+
+                <div class="home-feature-list">
+                    <article class="home-feature">
+                        <span>01</span>
+                        <div>
+                            <h3>Ativação simples</h3>
+                            <p>Escolha o plano, adicione ao carrinho e finalize o checkout pelo painel.</p>
+                        </div>
+                    </article>
+
+                    <article class="home-feature">
+                        <span>02</span>
+                        <div>
+                            <h3>Painel centralizado</h3>
+                            <p>Acompanhe serviços, faturas, carrinho e dados da conta em um só lugar.</p>
+                        </div>
+                    </article>
+
+                    <article class="home-feature">
+                        <span>03</span>
+                        <div>
+                            <h3>Suporte no canto da tela</h3>
+                            <p>Abra um ticket pelo chat flutuante sem sair da página em que você está.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="home-highlight-card">
+                <span>Pronto para começar</span>
+                <h3>Monte seu servidor em poucos cliques</h3>
+                <p>Compare planos de jogos, VPS e hospedagem web, coloque no carrinho e finalize a contratação com segurança.</p>
+                <div class="home-highlight-actions">
+                    <a class="btn btn-primary" href="{{ route('games.index') }}">Ver jogos</a>
+                    <a class="btn btn-ghost" href="{{ route('cart.index') }}">Ir ao carrinho</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="home-final-cta">
+    <div class="container">
+        <div class="home-final-box">
+            <div>
+                <h2>Hospede seu projeto com a VortexHost</h2>
+                <p>Escolha entre servidores de jogos, VPS premium ou hospedagem web e gerencie tudo no painel.</p>
+            </div>
+            <a class="btn btn-primary btn-lg" href="{{ route('games.index') }}">Conhecer planos</a>
         </div>
     </div>
 </section>

@@ -8,6 +8,9 @@
 
             @php
                 $current = request()->path();
+                $cartCount = auth()->check()
+                    ? \App\Models\CartItem::where('user_id', auth()->id())->sum('quantidade')
+                    : 0;
 
                 function navActive($paths = []) {
                     foreach ($paths as $path) {
@@ -60,14 +63,10 @@
 
             <div class="nav-actions">
                 @auth
-                    <span class="nav-area-note">Área do cliente</span>
-
-                    <a class="btn btn-primary btn-sm" href="{{ url('/dashboard') }}">
+                    <a class="btn btn-primary btn-sm" href="{{ url('/painel') }}">
                         Painel
                     </a>
                 @else
-                    <span class="nav-area-note">Cliente?</span>
-
                     <a class="btn btn-ghost btn-sm" href="{{ url('/login') }}">
                         Entrar
                     </a>
@@ -76,6 +75,25 @@
                         Criar conta
                     </a>
                 @endauth
+
+                <a
+                    class="nav-cart {{ navActive(['carrinho', 'carrinho/*']) }}"
+                    href="{{ url('/carrinho') }}"
+                    aria-label="Ir para o carrinho{{ $cartCount > 0 ? ' com ' . $cartCount . ' ' . ($cartCount === 1 ? 'item' : 'itens') : '' }}"
+                    title="Carrinho"
+                >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6.2 6h15l-1.7 8.2a2 2 0 0 1-2 1.6H9a2 2 0 0 1-2-1.6L5.2 3.8H2.8" />
+                        <circle cx="9.5" cy="20" r="1.4" />
+                        <circle cx="17.5" cy="20" r="1.4" />
+                    </svg>
+                    <span class="nav-cart-label">Carrinho</span>
+                    @if($cartCount > 0)
+                        <span class="nav-cart-count" aria-hidden="true">
+                            {{ $cartCount > 99 ? '99+' : $cartCount }}
+                        </span>
+                    @endif
+                </a>
             </div>
 
             <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -114,8 +132,11 @@
             </a>
 
             @auth
-                <a href="{{ url('/dashboard') }}">
-                    Área do Cliente
+                <a
+                    href="{{ url('/painel') }}"
+                    class="{{ navActive(['painel']) }}"
+                >
+                    Painel
                 </a>
             @else
                 <a href="{{ url('/login') }}">
@@ -126,6 +147,18 @@
                     Criar conta
                 </a>
             @endauth
+
+            <a
+                href="{{ url('/carrinho') }}"
+                class="mobile-cart {{ navActive(['carrinho', 'carrinho/*']) }}"
+            >
+                Carrinho
+                @if($cartCount > 0)
+                    <span class="mobile-cart-count">
+                        {{ $cartCount > 99 ? '99+' : $cartCount }}
+                    </span>
+                @endif
+            </a>
         </nav>
     </div>
 </header>

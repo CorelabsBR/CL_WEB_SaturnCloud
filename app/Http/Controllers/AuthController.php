@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -13,7 +14,7 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
-            return redirect()->route('cliente.dashboard');
+            return redirect()->route('dashboard.index');
         }
 
         return view('auth.login');
@@ -22,7 +23,7 @@ class AuthController extends Controller
     public function showRegister()
     {
         if (Auth::check()) {
-            return redirect()->route('cliente.dashboard');
+            return redirect()->route('dashboard.index');
         }
 
         return view('auth.register');
@@ -59,7 +60,7 @@ class AuthController extends Controller
         }
 
         if (!empty($user->profile_completed_at)) {
-            return redirect()->route('cliente.dashboard');
+            return redirect()->route('dashboard.index');
         }
 
         return view('auth.complete-profile');
@@ -73,9 +74,23 @@ class AuthController extends Controller
             return redirect()->route('login');
         }
 
+        $request->merge([
+            'cpf_cnpj' => preg_replace('/\D+/', '', (string) $request->input('cpf_cnpj')),
+        ]);
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'cpf_cnpj' => ['required', 'string', 'max:20', 'unique:user,cpf_cnpj,' . $user->id],
+            'cpf_cnpj' => [
+                'required',
+                'string',
+                'digits_between:11,14',
+                'unique:user,cpf_cnpj,' . $user->id,
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    if (!$this->isValidCpfCnpj((string) $value)) {
+                        $fail('Informe um CPF ou CNPJ válido.');
+                    }
+                },
+            ],
             'celular' => ['required', 'string', 'max:20'],
             'data_nasc' => ['required', 'date'],
 
@@ -108,8 +123,39 @@ class AuthController extends Controller
         ]);
 
         return redirect()
-            ->route('cliente.dashboard')
+            ->route('dashboard.index')
             ->with('success', 'Cadastro completo com sucesso.');
+    }
+
+    public function showEditProfile()
+    {
+        return view('auth.edit-profile', [
+            'user' => Auth::user(),
+        ]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('user', 'email')->ignore($user->id),
+            ],
+        ]);
+
+        $user->update([
+            'nome' => $data['name'],
+            'email' => $data['email'],
+        ]);
+
+        return redirect()
+            ->route('dashboard.index')
+            ->with('success', 'Perfil atualizado com sucesso.');
     }
 
     public function login(Request $request)
@@ -140,7 +186,7 @@ class AuthController extends Controller
             return redirect()->route('cadastro.completar');
         }
 
-        return redirect()->intended('/cliente');
+            return redirect()->intended('/dashboard');
     }
 
     public function logout(Request $request)
@@ -151,5 +197,72 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('home');
+    }
+
+    private function isValidCpfCnpj(string $value): bool
+    {
+        $digits = preg_replace('/\D+/', '', $value);
+
+        if (strlen($digits) === 11) {
+            return $this->isValidCpf($digits);
+        }
+
+        if (strlen($digits) === 14) {
+            return $this->isValidCnpj($digits);
+        }
+
+        return false;
+    }
+
+    private function isValidCpf(string $cpf): bool
+    {
+        if (preg_match('/^(\d)\1{10}$/', $cpf)) {
+            return false;
+        }
+
+        for ($t = 9; $t < 11; $t++) {
+            $sum = 0;
+
+            for ($i = 0; $i < $t; $i++) {
+                $sum += (int) $cpf[$i] * (($t + 1) - $i);
+            }
+
+            $digit = ((10 * $sum) % 11) % 10;
+
+            if ((int) $cpf[$t] !== $digit) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function isValidCnpj(string $cnpj): bool
+    {
+        if (preg_match('/^(\d)\1{13}$/', $cnpj)) {
+            return false;
+        }
+
+        $weights = [
+            [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2],
+            [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2],
+        ];
+
+        for ($step = 0; $step < 2; $step++) {
+            $sum = 0;
+
+            foreach ($weights[$step] as $index => $weight) {
+                $sum += (int) $cnpj[$index] * $weight;
+            }
+
+            $rest = $sum % 11;
+            $digit = $rest < 2 ? 0 : 11 - $rest;
+
+            if ((int) $cnpj[12 + $step] !== $digit) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

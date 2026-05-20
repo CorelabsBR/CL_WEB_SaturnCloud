@@ -7,7 +7,6 @@
 
     <div class="cart-header">
         <div>
-            <span class="pill pill-accent">VortexHost</span>
             <h1 class="cart-title">Carrinho</h1>
             <p class="cart-subtitle">Revise seus serviços antes de finalizar a compra.</p>
         </div>
@@ -26,7 +25,7 @@
             <h2>Seu carrinho está vazio.</h2>
             <p>Escolha um plano para continuar.</p>
 
-            <a href="{{ route('home') }}" class="btn btn-primary">
+            <a href="{{ route('games.index') }}" class="btn btn-primary">
                 Ver planos
             </a>
         </div>
@@ -90,6 +89,12 @@
                         </div>
                     </article>
                 @endforeach
+
+                <div class="cart-list-footer">
+                    <a href="{{ route('games.index') }}" class="btn btn-ghost cart-continue-btn">
+                        Voltar a comprar
+                    </a>
+                </div>
             </div>
 
             <aside class="cart-summary">

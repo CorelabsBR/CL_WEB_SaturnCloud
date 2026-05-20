@@ -8,9 +8,10 @@
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
 
     <link rel="stylesheet" href="{{ asset('css/basegame.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/game.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
 
     @stack('styles')
 </head>
@@ -28,6 +29,8 @@
 @if (!View::hasSection('hide_footer'))
     @include('partials.footer')
 @endif
+
+@include('partials.support-widget')
 
 @stack('scripts')
 

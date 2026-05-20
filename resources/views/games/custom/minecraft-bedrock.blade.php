@@ -6,9 +6,10 @@
     <title>{{ $jogo->nome }} - VortexHost</title>
 
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
-    <link rel="stylesheet" href="{{ asset('css/minecraft_bed.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/minecraft_bed.css') }}?v={{ filemtime(public_path('css/minecraft_bed.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
 </head>
 
 <body>
@@ -112,6 +113,7 @@
 </main>
 
 @include('partials.footer')
+@include('partials.support-widget')
 
 <script src="{{ asset('js/header.js') }}"></script>
 </body>

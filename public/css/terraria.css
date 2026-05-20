@@ -176,6 +176,78 @@ img {
     text-transform: uppercase;
 }
 
+.nav-cart {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+    min-height: 38px;
+    padding: .55rem .85rem;
+    border: 3px solid #111;
+    background: linear-gradient(180deg, #3f4347, #202326);
+    color: #eee;
+    font-size: .72rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    box-shadow: inset 0 3px 0 rgba(255,255,255,.12), 0 4px 0 #000;
+}
+
+.nav-cart svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.nav-cart:hover {
+    color: var(--leaf);
+}
+
+.nav-cart-count {
+    position: absolute !important;
+    top: -7px !important;
+    right: -7px !important;
+    z-index: 2 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 22px !important;
+    height: 22px !important;
+    padding: 0 .4rem !important;
+    border: 2px solid #111 !important;
+    border-radius: 999px !important;
+    background: var(--leaf) !important;
+    color: #061006 !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    text-shadow: none !important;
+}
+.mobile-cart-count {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 22px !important;
+    height: 22px !important;
+    padding: 0 .4rem !important;
+    border: 2px solid #111 !important;
+    border-radius: 999px !important;
+    background: var(--leaf) !important;
+    color: #061006 !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    text-shadow: none !important;
+}
+
 .hamburger {
     display: none;
     margin-left: auto;
@@ -217,6 +289,13 @@ img {
 .mobile-nav a:hover {
     color: white;
     border-color: var(--leaf);
+}
+
+.mobile-cart {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
 }
 
 /* BUTTONS */
@@ -607,6 +686,10 @@ img {
 .terraria-card-footer {
     margin-top: auto;
     display: flex;
+}
+
+.terraria-card-footer form {
+    width: 100%;
 }
 
 .terraria-card-footer .btn {

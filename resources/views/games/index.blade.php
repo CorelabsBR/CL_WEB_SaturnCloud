@@ -3,7 +3,7 @@
 @section('title', 'Servidores de Jogos - VortexHost')
 @section('content')
 
-<section class="services-section">
+<section class="services-section games-page">
     <div class="container">
 
         <div class="section-head center">
@@ -15,18 +15,18 @@
             <p class="section-sub">Escolha seu jogo e configure seu servidor.</p>
         </div>
 
-        <div class="services-grid">
+        <div class="services-grid games-grid">
 
             @forelse ($jogos as $jogo)
-               <a href="{{ route('games.show', ['jogo' => $jogo->slug]) }}" class="svc-card" style="text-decoration:none;">
+               <a href="{{ route('games.show', ['jogo' => $jogo->slug]) }}" class="svc-card game-list-card">
                     @if ($jogo->banner)
                         <img
+                            class="game-list-image"
                             src="{{ asset('img/games/' . $jogo->banner) }}"
                             alt="{{ $jogo->nome }}"
-                            style="width:100%;height:160px;object-fit:cover;border-radius:18px;margin-bottom:1rem;"
                         >
                     @else
-                        <div class="svc-icon">🎮</div>
+                        <div class="svc-icon game-list-fallback">🎮</div>
                     @endif
 
                     <p class="svc-tag">Game Server</p>

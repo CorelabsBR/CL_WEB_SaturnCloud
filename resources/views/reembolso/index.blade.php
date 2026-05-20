@@ -6,8 +6,6 @@
 <main class="refund-page">
     <section class="refund-hero">
         <div class="container">
-            <span class="pill pill-accent">Reembolsos</span>
-
             <h1>Política de Reembolso</h1>
 
             <p>

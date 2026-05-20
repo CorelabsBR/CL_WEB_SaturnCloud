@@ -8,11 +8,12 @@
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
 
     <link rel="stylesheet" href="{{ asset('css/base.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/serviceterms.css') }}">
     <link rel="stylesheet" href="{{ asset('css/privacidade.css') }}">
     <link rel="stylesheet" href="{{ asset('css/reembolso.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
 
 
     @stack('styles')
@@ -31,6 +32,8 @@
 @if (!View::hasSection('hide_footer'))
     @include('partials.footer')
 @endif
+
+@include('partials.support-widget')
 
 @stack('scripts')
 

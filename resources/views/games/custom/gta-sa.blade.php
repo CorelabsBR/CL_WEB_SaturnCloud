@@ -6,9 +6,16 @@
     <title>GTA San Andreas - VortexHost</title>
 
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
-    <link rel="stylesheet" href="{{ asset('css/gtasa.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/gtasa.css') }}?v={{ filemtime(public_path('css/gtasa.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
 </head>
 <body>
+@php
+    $cartCount = auth()->check()
+        ? \App\Models\CartItem::where('user_id', auth()->id())->sum('quantidade')
+        : 0;
+@endphp
+
 <header class="site-header">
     <div class="container">
         <nav class="nav-inner">
@@ -28,6 +35,17 @@
                 <span class="nav-area-note">Grove Street Ready</span>
                 <a class="btn btn-ghost btn-sm" href="{{ url('/login') }}">Entrar</a>
                 <a class="btn btn-primary btn-sm" href="{{ url('/registro') }}">Criar conta</a>
+                <a class="nav-cart" href="{{ url('/carrinho') }}" aria-label="Ir para o carrinho{{ $cartCount > 0 ? ' com ' . $cartCount . ' ' . ($cartCount === 1 ? 'item' : 'itens') : '' }}" title="Carrinho">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6.2 6h15l-1.7 8.2a2 2 0 0 1-2 1.6H9a2 2 0 0 1-2-1.6L5.2 3.8H2.8" />
+                        <circle cx="9.5" cy="20" r="1.4" />
+                        <circle cx="17.5" cy="20" r="1.4" />
+                    </svg>
+                    <span class="nav-cart-label">Carrinho</span>
+                    @if($cartCount > 0)
+                        <span class="nav-cart-count" aria-hidden="true">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
+                    @endif
+                </a>
             </div>
 
             <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -42,6 +60,12 @@
             <a href="{{ url('/web') }}">Hospedagem Web</a>
             <a href="{{ url('/login') }}">Entrar</a>
             <a href="{{ url('/registro') }}">Criar conta</a>
+            <a href="{{ url('/carrinho') }}" class="mobile-cart">
+                Carrinho
+                @if($cartCount > 0)
+                    <span class="mobile-cart-count">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
+                @endif
+            </a>
         </nav>
     </div>
 </header>
@@ -90,7 +114,12 @@
                     </ul>
 
                     <div class="sa-card-footer">
-                        <a href="{{ route('cart.addPlanPlan', $plan->plan) }}" class="btn btn-primary btn-md">Bora fechar →</a>
+                        <form method="POST" action="{{ route('cart.addPlan', $plan->plan) }}">
+                            @csrf
+                            <button type="submit" class="btn btn-primary btn-md">
+                                Bora fechar →
+                            </button>
+                        </form>
                     </div>
                 </article>
             @empty
@@ -125,5 +154,6 @@
         <div class="footer-bottom"><span>VortexHost © {{ date('Y') }}</span><span>San Andreas Hosting Department</span></div>
     </div>
 </footer>
+@include('partials.support-widget')
 </body>
 </html>

@@ -6,8 +6,6 @@
 <main class="coming-page">
     <section class="coming-hero">
         <div class="container">
-            <span class="pill pill-accent">Infraestrutura</span>
-
             <h1>em breve.</h1>
 
             <p class="coming-sub">

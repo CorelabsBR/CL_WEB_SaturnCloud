@@ -60,19 +60,19 @@
 
                     <div class="register-group">
                         <label class="register-label" for="cpf_cnpj">CPF / CNPJ</label>
-                        <input class="register-input @error('name') is-invalid @enderror" type="text" id="cpf_cnpj" name="cpf_cnpj"
+                        <input class="register-input @error('cpf_cnpj') is-invalid @enderror" type="text" id="cpf_cnpj" name="cpf_cnpj"
                                value="{{ old('cpf_cnpj', auth()->user()->cpf_cnpj) }}" required>
                     </div>
 
                     <div class="register-group">
                         <label class="register-label" for="celular">Celular</label>
-                        <input class="register-input @error('name') is-invalid @enderror" type="text" id="celular" name="celular"
+                        <input class="register-input @error('celular') is-invalid @enderror" type="text" id="celular" name="celular"
                                value="{{ old('celular', auth()->user()->celular) }}" required>
                     </div>
 
                     <div class="register-group">
                         <label class="register-label" for="data_nasc">Data de nascimento</label>
-                        <input class="register-input @error('name') is-invalid @enderror" type="date" id="data_nasc" name="data_nasc"
+                        <input class="register-input @error('data_nasc') is-invalid @enderror" type="date" id="data_nasc" name="data_nasc"
                                value="{{ old('data_nasc', optional(auth()->user()->data_nasc)->format('Y-m-d')) }}" required>
                     </div>
 

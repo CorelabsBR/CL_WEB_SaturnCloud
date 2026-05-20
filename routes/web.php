@@ -30,6 +30,12 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/completar-cadastro', [AuthController::class, 'completeProfile'])
         ->name('cadastro.completar.post');
+
+    Route::get('/perfil', [AuthController::class, 'showEditProfile'])
+        ->name('perfil.edit');
+
+    Route::patch('/perfil', [AuthController::class, 'updateProfile'])
+        ->name('perfil.update');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -55,6 +61,33 @@ Route::middleware('auth')->group(function () {
     Route::patch('/carrinho/update/{cartItem}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/carrinho/remove/{cartItem}', [CartController::class, 'remove'])->name('cart.remove');
     Route::delete('/carrinho/clear', [CartController::class, 'clear'])->name('cart.clear');
+    Route::get('/suporte', fn () => redirect('/')->with('support_widget_open', true))->name('ticket.index');
+    Route::get('/painel', fn () => view('dashboard.index'))->name('dashboard.index');
+    Route::get('/dashboard', fn () => redirect()->route('dashboard.index'));
+
+    Route::post('/suporte', function (\Illuminate\Http\Request $request) {
+        $data = $request->validate([
+            'subject' => ['required', 'string', 'min:4', 'max:120'],
+            'category' => ['required', 'string', 'max:60'],
+            'priority' => ['required', 'in:baixa,normal,alta,urgente'],
+            'message' => ['required', 'string', 'min:10', 'max:2000'],
+        ]);
+
+        $tickets = session('support_tickets', []);
+        $tickets[] = [
+            ...$data,
+            'id' => now()->format('YmdHis'),
+            'status' => 'aberto',
+            'created_at' => now()->format('d/m/Y H:i'),
+        ];
+
+        session(['support_tickets' => $tickets]);
+
+        return redirect()
+            ->back()
+            ->with('support_widget_open', true)
+            ->with('success', 'Chamado aberto com sucesso. Nossa equipe já pode acompanhar sua solicitação.');
+    })->name('ticket.store');
 
 });
 

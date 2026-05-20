@@ -297,6 +297,10 @@ body {
 }
 
 /* Botão de Compra Estilo Alerta */
+.gta5-card-footer form {
+    width: 100%;
+}
+
 .gta5-card-footer .btn-primary {
     display: block;
     width: 100%;

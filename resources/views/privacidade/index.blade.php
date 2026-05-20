@@ -6,8 +6,6 @@
 <main class="privacy-page">
     <section class="privacy-hero">
         <div class="container">
-            <span class="pill pill-accent">Privacidade</span>
-
             <h1>Política de Privacidade</h1>
 
             <p>
