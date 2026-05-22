@@ -2,13 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WebHostingController;
 use App\Http\Controllers\GameHostingController;
 use App\Http\Controllers\CartCheckoutController;
 use App\Http\Controllers\Auth\SocialAuthController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\MercadoPagoWebhookController;
+use App\Http\Controllers\SupportTicketController;
 
 Route::get('/', fn () => view('home'))->name('home');
 Route::get('/vps', fn () => view('vps.index'))->name('vps.index');
@@ -61,39 +64,30 @@ Route::middleware('auth')->group(function () {
     Route::patch('/carrinho/update/{cartItem}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/carrinho/remove/{cartItem}', [CartController::class, 'remove'])->name('cart.remove');
     Route::delete('/carrinho/clear', [CartController::class, 'clear'])->name('cart.clear');
-    Route::get('/suporte', fn () => redirect('/')->with('support_widget_open', true))->name('ticket.index');
-    Route::get('/painel', fn () => view('dashboard.index'))->name('dashboard.index');
+    Route::get('/suporte', [SupportTicketController::class, 'index'])->name('ticket.index');
+    Route::get('/suporte/mensagens', [SupportTicketController::class, 'messages'])->name('ticket.messages');
+    Route::get('/painel', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/dashboard', fn () => redirect()->route('dashboard.index'));
 
-    Route::post('/suporte', function (\Illuminate\Http\Request $request) {
-        $data = $request->validate([
-            'subject' => ['required', 'string', 'min:4', 'max:120'],
-            'category' => ['required', 'string', 'max:60'],
-            'priority' => ['required', 'in:baixa,normal,alta,urgente'],
-            'message' => ['required', 'string', 'min:10', 'max:2000'],
-        ]);
+    Route::post('/suporte', [SupportTicketController::class, 'store'])->name('ticket.store');
 
-        $tickets = session('support_tickets', []);
-        $tickets[] = [
-            ...$data,
-            'id' => now()->format('YmdHis'),
-            'status' => 'aberto',
-            'created_at' => now()->format('d/m/Y H:i'),
-        ];
+});
 
-        session(['support_tickets' => $tickets]);
-
-        return redirect()
-            ->back()
-            ->with('support_widget_open', true)
-            ->with('success', 'Chamado aberto com sucesso. Nossa equipe já pode acompanhar sua solicitação.');
-    })->name('ticket.store');
-
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('index');
+    Route::post('/produtos', [AdminController::class, 'storeProduct'])->name('products.store');
+    Route::patch('/produtos/{product}', [AdminController::class, 'updateProduct'])->name('products.update');
+    Route::delete('/produtos/{product}', [AdminController::class, 'destroyProduct'])->name('products.destroy');
+    Route::patch('/jogos/{game}', [AdminController::class, 'updateGame'])->name('games.update');
+    Route::get('/suporte/pulse', [AdminController::class, 'supportPulse'])->name('tickets.pulse');
+    Route::patch('/suporte/{ticket}', [AdminController::class, 'updateTicket'])->name('tickets.update');
+    Route::post('/suporte/{ticket}/responder', [AdminController::class, 'replyTicket'])->name('tickets.reply');
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout/pagar', [CheckoutController::class, 'pay'])->name('checkout.pay');
+    Route::post('/checkout/pedido/{order}/pagar', [CheckoutController::class, 'payOrder'])->name('checkout.order.pay');
 
     Route::get('/checkout/sucesso', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/pendente', [CheckoutController::class, 'pending'])->name('checkout.pending');

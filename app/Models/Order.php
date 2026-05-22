@@ -13,11 +13,41 @@ class Order extends Model
         'user_id',
         'total',
         'status',
+        'billing_type',
+        'service_id',
+        'due_at',
         'mp_pagamento_id',
+    ];
+
+    protected $casts = [
+        'criado_em' => 'datetime',
+        'atualizado_em' => 'datetime',
+        'due_at' => 'datetime',
+        'total' => 'decimal:2',
     ];
 
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function services()
+    {
+        return $this->hasMany(CustomerService::class);
+    }
+
+    public function renewalService()
+    {
+        return $this->belongsTo(CustomerService::class, 'service_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }   

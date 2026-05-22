@@ -157,7 +157,7 @@
             <div class="panel-title">
                 <div>
                     <h2 id="tickets-title">Meus chamados</h2>
-                    <p>Acompanhe os chamados abertos por esta sessão.</p>
+                    <p>Acompanhe seus chamados e as respostas do suporte.</p>
                 </div>
             </div>
 
@@ -177,7 +177,18 @@
                                 </span>
                             </div>
 
-                            <p>{{ data_get($ticket, 'message') }}</p>
+                            <p>{{ optional($ticket->messages->first())->body ?? 'Chamado sem mensagens.' }}</p>
+
+                            @if($ticket->messages->where('author_type', 'admin')->isNotEmpty())
+                                <div class="ticket-replies">
+                                    @foreach($ticket->messages->where('author_type', 'admin') as $reply)
+                                        <div class="ticket-reply">
+                                            <strong>{{ $reply->user?->nome ?? 'Suporte' }}</strong>
+                                            <span>{{ $reply->body }}</span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
 
                             <div class="ticket-meta">
                                 <span>#{{ data_get($ticket, 'id') }}</span>
@@ -185,7 +196,7 @@
                                 <span class="{{ $priorityClasses[$priority] ?? 'priority-normal' }}">
                                     {{ ucfirst($priority) }}
                                 </span>
-                                <span>{{ data_get($ticket, 'created_at') }}</span>
+                                <span>{{ optional($ticket->criado_em)->format('d/m/Y H:i') }}</span>
                             </div>
                         </div>
                     </article>

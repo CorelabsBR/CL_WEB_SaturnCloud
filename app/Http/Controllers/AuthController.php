@@ -32,8 +32,17 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $data = $request->validate([
-            'email' => ['required', 'email', 'max:255', 'unique:user,email'],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('user', 'email'),
+            ],
             'password' => ['required', 'confirmed', 'min:6'],
+        ], [
+            'email.unique' => 'Já existe uma conta com este e-mail. Entre na sua conta ou use outro e-mail.',
+            'password.confirmed' => 'A confirmação da senha não confere.',
+            'password.min' => 'A senha precisa ter pelo menos 6 caracteres.',
         ]);
 
         $user = User::create([
@@ -59,7 +68,11 @@ class AuthController extends Controller
             return redirect()->route('login');
         }
 
-        if (!empty($user->profile_completed_at)) {
+        if ($user->hasCompletedProfile()) {
+            if (empty($user->profile_completed_at)) {
+                $user->update(['profile_completed_at' => now()]);
+            }
+
             return redirect()->route('dashboard.index');
         }
 
@@ -182,11 +195,17 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        if (empty(Auth::user()->profile_completed_at)) {
+        $user = Auth::user();
+
+        if (! $user->hasCompletedProfile()) {
             return redirect()->route('cadastro.completar');
         }
 
-            return redirect()->intended('/dashboard');
+        if (empty($user->profile_completed_at)) {
+            $user->update(['profile_completed_at' => now()]);
+        }
+
+        return redirect()->intended('/dashboard');
     }
 
     public function logout(Request $request)

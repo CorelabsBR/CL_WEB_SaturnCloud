@@ -18,7 +18,11 @@
                 <div class="plan-card {{ $produto->featured ? 'plan-highlighted' : '' }}">
 
                     <div class="plan-card-header">
-                        <div class="plan-icon">🌐</div>
+                        @if($produto->imagem)
+                            <img class="plan-icon plan-image" src="{{ asset($produto->imagem) }}" alt="{{ $produto->nome }}">
+                        @else
+                            <div class="plan-icon">🌐</div>
+                        @endif
                         <span class="plan-label">
                             {{ $produto->featured ? 'Mais vendido' : 'Hospedagem Web' }}
                         </span>

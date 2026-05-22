@@ -116,6 +116,11 @@
     flex-shrink: 0;
 }
 
+.plan-image {
+    object-fit: cover;
+    padding: 0;
+}
+
 .plan-label {
     display: inline-flex;
     align-items: center;

@@ -54,6 +54,19 @@ public function getAuthPassword()
 }
 public function hasCompletedProfile(): bool
 {
-    return !is_null($this->profile_completed_at);
+    return !is_null($this->profile_completed_at)
+        || (
+            filled($this->nome)
+            && filled($this->cpf_cnpj)
+            && filled($this->celular)
+            && filled($this->data_nasc)
+            && filled($this->cep)
+            && filled($this->rua)
+            && filled($this->numero)
+            && filled($this->bairro)
+            && filled($this->cidade)
+            && filled($this->estado)
+            && filled($this->pais)
+        );
 }
 }

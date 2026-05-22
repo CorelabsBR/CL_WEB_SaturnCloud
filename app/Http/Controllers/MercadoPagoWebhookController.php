@@ -2,16 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
+use App\Services\MercadoPagoService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class MercadoPagoWebhookController extends Controller
 {
-    public function handle(Request $request)
+    public function handle(Request $request, MercadoPagoService $mercadoPago)
     {
-        $paymentId = $request->input('data.id')
+        if (! $mercadoPago->validateWebhookSignature($request)) {
+            Log::warning('Mercado Pago webhook com assinatura inválida', [
+                'query' => $request->query(),
+                'body' => $request->all(),
+            ]);
+
+            return response()->json(['ok' => false], 401);
+        }
+
+        $type = $request->input('type') ?? $request->query('type') ?? $request->query('topic');
+
+        if ($type && $type !== 'payment') {
+            return response()->json(['ok' => true]);
+        }
+
+        $paymentId = data_get($request->input('data'), 'id')
+            ?? $request->query('data.id')
             ?? $request->input('id')
             ?? $request->query('id');
 
@@ -19,47 +34,16 @@ class MercadoPagoWebhookController extends Controller
             return response()->json(['ok' => true]);
         }
 
-        $response = Http::withToken(env('MERCADOPAGO_ACCESS_TOKEN'))
-            ->get("https://api.mercadopago.com/v1/payments/{$paymentId}");
-
-        if (!$response->successful()) {
+        try {
+            $payment = $mercadoPago->getPayment((string) $paymentId);
+            $mercadoPago->syncPayment($payment);
+        } catch (\Throwable $e) {
             Log::warning('Mercado Pago webhook erro', [
                 'payment_id' => $paymentId,
-                'body' => $response->body(),
+                'error' => $e->getMessage(),
             ]);
 
             return response()->json(['ok' => false], 400);
-        }
-
-        $payment = $response->json();
-
-        $orderId = $payment['external_reference'] ?? null;
-        $status = $payment['status'] ?? null;
-
-        if (!$orderId) {
-            return response()->json(['ok' => true]);
-        }
-
-        $order = Order::find($orderId);
-
-        if (!$order) {
-            return response()->json(['ok' => true]);
-        }
-
-        if ($status === 'approved') {
-            $order->update([
-                'status' => 'pago',
-                'mp_pagamento_id' => $paymentId,
-            ]);
-
-            // Depois entra aqui:
-            // criar service
-            // provisionar Hestia/Pterodactyl
-        } elseif (in_array($status, ['cancelled', 'rejected'], true)) {
-            $order->update([
-                'status' => 'cancelado',
-                'mp_pagamento_id' => $paymentId,
-            ]);
         }
 
         return response()->json(['ok' => true]);

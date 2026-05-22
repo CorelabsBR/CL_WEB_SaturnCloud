@@ -162,7 +162,9 @@
                 <p>Compare planos de jogos, VPS e hospedagem web, coloque no carrinho e finalize a contratação com segurança.</p>
                 <div class="home-highlight-actions">
                     <a class="btn btn-primary" href="{{ route('games.index') }}">Ver jogos</a>
-                    <a class="btn btn-ghost" href="{{ route('cart.index') }}">Ir ao carrinho</a>
+                    @auth
+                        <a class="btn btn-ghost" href="{{ route('cart.index') }}">Ir ao carrinho</a>
+                    @endauth
                 </div>
             </div>
         </div>

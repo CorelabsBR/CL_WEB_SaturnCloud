@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthController extends Controller
@@ -24,9 +25,18 @@ class SocialAuthController extends Controller
 
         $providerIdColumn = $provider . '_id';
 
-        $user = User::where($providerIdColumn, $socialUser->getId())
-            ->orWhere('email', $socialUser->getEmail())
-            ->first();
+        $providerUser = User::where($providerIdColumn, $socialUser->getId())->first();
+        $emailUser = $socialUser->getEmail()
+            ? User::where('email', $socialUser->getEmail())->first()
+            : null;
+
+        if ($providerUser && $emailUser && $providerUser->id !== $emailUser->id) {
+            throw ValidationException::withMessages([
+                'email' => 'Este Google já está vinculado a outra conta.',
+            ]);
+        }
+
+        $user = $providerUser ?: $emailUser;
 
         if (!$user) {
             $user = User::create([
@@ -59,12 +69,16 @@ class SocialAuthController extends Controller
 
         request()->session()->regenerate();
 
-        if (empty($user->profile_completed_at)) {
+        if (! $user->hasCompletedProfile()) {
             return redirect()
                 ->route('cadastro.completar')
                 ->with('success', 'Conta conectada. Complete seu cadastro para continuar.');
         }
 
-        return redirect()->intended('/cliente');
+        if (empty($user->profile_completed_at)) {
+            $user->update(['profile_completed_at' => now()]);
+        }
+
+        return redirect()->intended('/dashboard');
     }
 }

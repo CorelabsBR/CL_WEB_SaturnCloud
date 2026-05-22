@@ -49,5 +49,43 @@ return [
     'redirect' => env('DISCORD_REDIRECT_URI'),
 ],
 
+'mercadopago' => [
+    'access_token' => env('MERCADOPAGO_ACCESS_TOKEN'),
+    'webhook_secret' => env('MERCADOPAGO_WEBHOOK_SECRET'),
+    'base_url' => env('MERCADOPAGO_BASE_URL', 'https://api.mercadopago.com'),
+    'statement_descriptor' => env('MERCADOPAGO_STATEMENT_DESCRIPTOR', 'VORTEXHOST'),
+],
+
+'hestia' => [
+    'url' => env('HESTIA_URL'),
+    'access_key' => env('HESTIA_ACCESS_KEY'),
+    'secret_key' => env('HESTIA_SECRET_KEY'),
+    'package' => env('HESTIA_PACKAGE', 'default'),
+    'package_map' => env('HESTIA_PACKAGE_MAP'),
+    'default_domain' => env('HESTIA_DEFAULT_DOMAIN'),
+    'verify_ssl' => env('HESTIA_VERIFY_SSL', true),
+],
+
+'pterodactyl' => [
+    'url' => env('PTERODACTYL_URL'),
+    'api_key' => env('PTERODACTYL_API_KEY'),
+    'node_id' => env('PTERODACTYL_NODE_ID'),
+    'location_id' => env('PTERODACTYL_LOCATION_ID', 1),
+    'allocation_id' => env('PTERODACTYL_ALLOCATION_ID'),
+    'docker_image' => env('PTERODACTYL_DOCKER_IMAGE', 'ghcr.io/pterodactyl/yolks:java_21'),
+    'startup' => env('PTERODACTYL_STARTUP', 'java -Xms128M -Xmx{{SERVER_MEMORY}}M -jar {{SERVER_JARFILE}}'),
+    'environment' => env('PTERODACTYL_ENVIRONMENT', '{"SERVER_JARFILE":"server.jar","MINECRAFT_VERSION":"latest"}'),
+    'user_language' => env('PTERODACTYL_USER_LANGUAGE', 'en'),
+    'swap' => env('PTERODACTYL_SWAP', 0),
+    'io' => env('PTERODACTYL_IO', 500),
+    'cpu' => env('PTERODACTYL_CPU', 0),
+    'oom_disabled' => env('PTERODACTYL_OOM_DISABLED', false),
+    'databases' => env('PTERODACTYL_DATABASES', 1),
+    'allocations' => env('PTERODACTYL_ALLOCATIONS', 1),
+    'backups' => env('PTERODACTYL_BACKUPS', 1),
+    'unlimited_memory' => env('PTERODACTYL_UNLIMITED_MEMORY', 0),
+    'unlimited_disk' => env('PTERODACTYL_UNLIMITED_DISK', 0),
+],
+
 ];
     

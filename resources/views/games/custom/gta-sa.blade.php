@@ -35,17 +35,19 @@
                 <span class="nav-area-note">Grove Street Ready</span>
                 <a class="btn btn-ghost btn-sm" href="{{ url('/login') }}">Entrar</a>
                 <a class="btn btn-primary btn-sm" href="{{ url('/registro') }}">Criar conta</a>
-                <a class="nav-cart" href="{{ url('/carrinho') }}" aria-label="Ir para o carrinho{{ $cartCount > 0 ? ' com ' . $cartCount . ' ' . ($cartCount === 1 ? 'item' : 'itens') : '' }}" title="Carrinho">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M6.2 6h15l-1.7 8.2a2 2 0 0 1-2 1.6H9a2 2 0 0 1-2-1.6L5.2 3.8H2.8" />
-                        <circle cx="9.5" cy="20" r="1.4" />
-                        <circle cx="17.5" cy="20" r="1.4" />
-                    </svg>
-                    <span class="nav-cart-label">Carrinho</span>
-                    @if($cartCount > 0)
-                        <span class="nav-cart-count" aria-hidden="true">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
-                    @endif
-                </a>
+                @auth
+                    <a class="nav-cart" href="{{ url('/carrinho') }}" aria-label="Ir para o carrinho{{ $cartCount > 0 ? ' com ' . $cartCount . ' ' . ($cartCount === 1 ? 'item' : 'itens') : '' }}" title="Carrinho">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M6.2 6h15l-1.7 8.2a2 2 0 0 1-2 1.6H9a2 2 0 0 1-2-1.6L5.2 3.8H2.8" />
+                            <circle cx="9.5" cy="20" r="1.4" />
+                            <circle cx="17.5" cy="20" r="1.4" />
+                        </svg>
+                        <span class="nav-cart-label">Carrinho</span>
+                        @if($cartCount > 0)
+                            <span class="nav-cart-count" aria-hidden="true">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
+                        @endif
+                    </a>
+                @endauth
             </div>
 
             <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -60,12 +62,14 @@
             <a href="{{ url('/web') }}">Hospedagem Web</a>
             <a href="{{ url('/login') }}">Entrar</a>
             <a href="{{ url('/registro') }}">Criar conta</a>
-            <a href="{{ url('/carrinho') }}" class="mobile-cart">
-                Carrinho
-                @if($cartCount > 0)
-                    <span class="mobile-cart-count">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
-                @endif
-            </a>
+            @auth
+                <a href="{{ url('/carrinho') }}" class="mobile-cart">
+                    Carrinho
+                    @if($cartCount > 0)
+                        <span class="mobile-cart-count">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
+                    @endif
+                </a>
+            @endauth
         </nav>
     </div>
 </header>

@@ -14,9 +14,16 @@
     $invoices = collect($invoices ?? []);
     $activities = collect($activities ?? []);
 
-    $activeServices = $services->filter(fn ($service) => data_get($service, 'status', 'ativo') === 'ativo')->count();
-    $pendingInvoices = $invoices->filter(fn ($invoice) => data_get($invoice, 'status') === 'pendente')->count();
-    $lastPayment = $invoices->firstWhere('status', 'pago');
+    $activeServices = data_get($stats ?? [], 'active_services', $services->where('status', 'ativo')->count());
+    $pendingInvoices = data_get($stats ?? [], 'pending_invoices', $invoices->where('status', 'pendente')->count());
+    $pendingAmount = data_get($stats ?? [], 'pending_amount', $invoices->where('status', 'pendente')->sum('amount'));
+    $paidAmount = data_get($stats ?? [], 'paid_amount', $invoices->where('status', 'pago')->sum('amount'));
+    $lastPayment = data_get($stats ?? [], 'last_payment') ?: $invoices->firstWhere('status', 'pago');
+    $nextInvoice = data_get($stats ?? [], 'next_invoice');
+    $profileCompletion = data_get($profile ?? [], 'completion', 0);
+    $missingProfile = collect(data_get($profile ?? [], 'missing', []));
+    $accountCreatedAt = data_get($stats ?? [], 'account_created_at', $user?->criado_em?->format('d/m/Y') ?? '--/--/----');
+    $accountAgeDays = (int) floor((float) data_get($stats ?? [], 'account_age_days', 0));
 @endphp
 
 <main class="client-page">
@@ -69,6 +76,10 @@
                                 <strong>99.9%</strong>
                                 <span>Uptime global</span>
                             </div>
+                            <div>
+                                <strong>{{ $accountCreatedAt }}</strong>
+                                <span>Conta criada</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -79,6 +90,18 @@
 
     <section class="client-content">
         <div class="container">
+            @if (session('success'))
+                <div class="flash flash-success" role="status">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="flash flash-error" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div class="dashboard-grid">
 
                 <aside class="dashboard-sidebar">
@@ -134,7 +157,7 @@
                                 <span class="dash-card-icon" role="img" aria-label="Ícone de cartão de crédito">💳</span>
                             </div>
                             <strong>{{ $pendingInvoices }}</strong>
-                            <small>{{ $pendingInvoices > 0 ? 'Revise os vencimentos em aberto' : 'Tudo em dia no financeiro' }}</small>
+                            <small>{{ $pendingInvoices > 0 ? 'R$ ' . number_format((float) $pendingAmount, 2, ',', '.') . ' em aberto' : 'Tudo em dia no financeiro' }}</small>
                         </div>
 
                         <div class="dash-card">
@@ -143,15 +166,14 @@
                                 <span class="dash-card-icon" role="img" aria-label="Ícone de calendário">📅</span>
                             </div>
                             <strong>
-                                {{ $user?->created_at?->format('d/m/Y') ?? '--/--/----' }}
+                                {{ $accountCreatedAt }}
                             </strong>
-                            <small>Cliente VortexHost</small>
+                            <small>{{ $accountAgeDays > 0 ? $accountAgeDays . ' dias com a VortexHost' : 'Cliente VortexHost' }}</small>
                         </div>
 
                     </div>
 
                     <div class="dashboard-panels">
-
 
                         <div class="dashboard-panel">
                             <div class="panel-head">
@@ -201,81 +223,104 @@
                                 </a>
                             </div>
 
-                            @forelse ($services as $service)
-                                @php
-                                    $status = data_get($service, 'status', 'ativo');
-                                    $statusClass = match ($status) {
-                                        'pago' => 'status-pago',
-                                        'pendente' => 'status-pendente',
-                                        'suspenso' => 'status-suspenso',
-                                        'offline' => 'status-offline',
-                                        default => 'status-ativo',
-                                    };
-
-                                    $resources = collect(data_get($service, 'resources', []));
-                                @endphp
-
-                                <article class="service-row">
-                                    <div class="service-main">
-                                        <div class="service-title">
-                                            <span>{{ data_get($service, 'name', 'Servidor Vortex') }}</span>
-                                            <span class="{{ $statusClass }}">{{ ucfirst($status) }}</span>
-                                        </div>
-                                        <div class="service-meta">
-                                            <span class="service-ip">{{ data_get($service, 'ip', 'Aguardando provisionamento') }}</span>
-                                            <span>{{ data_get($service, 'plan', 'Plano sob demanda') }}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="service-location">
-                                        <strong>Data center</strong>
-                                        {{ data_get($service, 'location', 'São Paulo, BR') }}
-                                    </div>
-
-                                    <div class="service-usage">
-                                        <strong>Consumo atual</strong>
-                                        {{ data_get($service, 'usage', 'Sem leitura recente') }}
-
-                                        @if ($resources->isNotEmpty())
-                                            <div class="resource-metrics is-compact">
-                                                @foreach ($resources as $resource)
-                                                    @php
-                                                        $value = (int) data_get($resource, 'value', 0);
-                                                    @endphp
-                                                    <div class="resource-meter {{ $value >= 90 ? 'is-danger' : ($value >= 75 ? 'is-warning' : '') }}">
-                                                        <div class="resource-meter-head">
-                                                            <span class="resource-meter-label">{{ data_get($resource, 'label', 'Recurso') }}</span>
-                                                            <span class="resource-meter-value">{{ $value }}%</span>
-                                                        </div>
-                                                        <div class="resource-meter-track" aria-hidden="true">
-                                                            <span class="resource-meter-fill" style="--value: {{ $value }}%;"></span>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @endif
-                                    </div>
-
-                                    <div class="service-actions" aria-label="Ações rápidas para {{ data_get($service, 'name', 'serviço') }}">
-                                        <button type="button">Ligar</button>
-                                        <button type="button">Desligar</button>
-                                        <button type="button">Reiniciar</button>
-                                    </div>
-                                </article>
-                            @empty
-                                <div class="empty-state">
-                                    <div class="empty-icon" role="img" aria-label="Ícone de monitor">🖥</div>
-                                    <h3>Nenhum serviço encontrado</h3>
-                                    <p>Contrate uma hospedagem de jogos, VPS ou site para começar a monitorar recursos em tempo real.</p>
+                            <div class="services-table-shell" data-service-table>
+                                <div class="services-table-toolbar">
+                                    <span data-service-summary>
+                                        Mostrando {{ $services->count() ? 1 : 0 }} para {{ $services->count() }} de {{ $services->count() }} registros
+                                    </span>
+                                    <label class="services-search">
+                                        <span>Buscar serviço</span>
+                                        <input type="search" placeholder="Buscar" data-service-search>
+                                    </label>
                                 </div>
-                            @endforelse
+
+                                <div class="services-table-wrap">
+                                    <table class="services-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Produto/Serviço</th>
+                                                <th>Preços</th>
+                                                <th>Próximo Vencimento</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse ($services as $service)
+                                                @php
+                                                    $status = data_get($service, 'status', 'ativo');
+                                                    $statusClass = match ($status) {
+                                                        'pago' => 'status-pago',
+                                                        'pendente' => 'status-pendente',
+                                                        'suspenso' => 'status-suspenso',
+                                                        'offline' => 'status-offline',
+                                                        default => 'status-ativo',
+                                                    };
+
+                                                    $panel = data_get($service, 'panel');
+                                                    $invoice = data_get($service, 'invoice', [
+                                                        'label' => 'Fatura pendente',
+                                                        'class' => 'status-pendente',
+                                                    ]);
+                                                @endphp
+
+                                                <tr data-service-row>
+                                                    <td>
+                                                        <div class="table-service-name">{{ data_get($service, 'name', 'Servidor Vortex') }}</div>
+                                                        <div class="table-service-meta">
+                                                            <span>{{ data_get($service, 'display_id', 'SRV-000000') }}</span>
+                                                            <span>{{ data_get($service, 'plan', 'Plano sob demanda') }}</span>
+                                                            <span>{{ data_get($service, 'ip', 'Aguardando provisionamento') }}</span>
+                                                        </div>
+                                                        @if ($panel)
+                                                            <a
+                                                                href="{{ data_get($panel, 'url') }}"
+                                                                class="table-panel-link"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                            >
+                                                                {{ data_get($panel, 'label', 'Abrir painel') }}
+                                                            </a>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ data_get($service, 'price', 'Sob consulta') }}</td>
+                                                    <td>{{ data_get($service, 'expires_at', 'Sem renovação definida') }}</td>
+                                                    <td>
+                                                        <div class="table-status-stack">
+                                                            <span class="{{ $statusClass }}">{{ ucfirst($status) }}</span>
+                                                            <span class="{{ data_get($invoice, 'class', 'status-pendente') }}">
+                                                                {{ data_get($invoice, 'label', 'Fatura pendente') }}
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="4" class="table-empty">Nenhum registro encontrado</td>
+                                                </tr>
+                                            @endforelse
+                                            @if ($services->isNotEmpty())
+                                                <tr data-service-empty-row hidden>
+                                                    <td colspan="4" class="table-empty">Nenhum registro encontrado</td>
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="services-table-footer">
+                                    <div class="table-pagination" aria-label="Paginação dos serviços">
+                                        <button type="button" disabled>Anterior</button>
+                                        <button type="button" disabled>Próximo</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="dashboard-panel dashboard-view" id="faturas" data-dashboard-view="faturas" hidden>
                             <div class="panel-head">
                                 <div>
                                     <h2>Faturas</h2>
-                                    <p>Status financeiro dos pedidos e renovações da sua conta.</p>
+                                    <p>Status financeiro dos pedidos e renovações de VPS.</p>
                                 </div>
                                 <a href="/checkout" class="btn btn-sm btn-primary">
                                     Ver checkout
@@ -286,6 +331,7 @@
                                 @forelse ($invoices as $invoice)
                                     @php
                                         $invoiceStatus = data_get($invoice, 'status', 'pendente');
+                                        $isRenewalInvoice = data_get($invoice, 'billing_type') === 'renewal';
                                         $invoiceStatusClass = match ($invoiceStatus) {
                                             'pago' => 'status-pago',
                                             'suspenso', 'cancelado', 'vencido' => 'status-suspenso',
@@ -296,11 +342,13 @@
                                     <article class="service-row">
                                         <div class="service-main">
                                             <div class="service-title">
-                                                <span>Fatura #{{ data_get($invoice, 'id', 'VTX') }}</span>
+                                                <span>Fatura {{ data_get($invoice, 'display_id', 'VTX-000000') }}</span>
                                                 <span class="{{ $invoiceStatusClass }}">{{ ucfirst($invoiceStatus) }}</span>
                                             </div>
                                             <div class="service-meta">
                                                 <span>{{ data_get($invoice, 'description', 'Serviços VortexHost') }}</span>
+                                                <span>{{ $isRenewalInvoice ? 'Renovação de mensalidade' : 'Compra inicial' }}</span>
+                                                <span>Emitida em {{ data_get($invoice, 'created_at', 'Sem data') }}</span>
                                             </div>
                                         </div>
 
@@ -310,20 +358,36 @@
                                         </div>
 
                                         <div class="service-usage">
-                                            <strong>Vencimento</strong>
+                                            <strong>
+                                                @if($isRenewalInvoice)
+                                                    {{ $invoiceStatus === 'pendente' ? 'Expira em' : 'Expirou em' }}
+                                                @else
+                                                    Compra em
+                                                @endif
+                                            </strong>
                                             {{ data_get($invoice, 'due_at', 'Sem vencimento') }}
+                                            @if ($isRenewalInvoice && $invoiceStatus === 'pendente' && data_get($invoice, 'due_at_iso'))
+                                                <span class="invoice-timer" data-invoice-timer="{{ data_get($invoice, 'due_at_iso') }}">
+                                                    calculando...
+                                                </span>
+                                            @endif
                                         </div>
 
                                         <div class="service-actions" aria-label="Ações da fatura">
-                                            <a href="/checkout">Pagar</a>
-                                            <a href="/carrinho">Detalhes</a>
+                                            @if ($invoiceStatus === 'pendente')
+                                                <form method="POST" action="{{ route('checkout.order.pay', data_get($invoice, 'id')) }}">
+                                                    @csrf
+                                                    <button type="submit">Pagar</button>
+                                                </form>
+                                            @endif
+                                            <a href="#faturas" data-dashboard-link>Detalhes</a>
                                         </div>
                                     </article>
                                 @empty
                                     <div class="empty-state">
                                         <div class="empty-icon" role="img" aria-label="Ícone de cartão">💳</div>
                                         <h3>Nenhuma fatura pendente</h3>
-                                        <p>Quando houver cobranças, renovações ou pedidos em aberto, eles aparecerão aqui.</p>
+                                        <p>Quando houver compra ou renovação de VPS, a fatura aparecerá aqui.</p>
                                     </div>
                                 @endforelse
                             </div>
@@ -346,22 +410,51 @@
                                         </div>
                                         <div class="service-meta">
                                             <span>{{ $user?->email ?? 'E-mail não informado' }}</span>
-                                            <span>Cliente desde {{ $user?->created_at?->format('d/m/Y') ?? '--/--/----' }}</span>
+                                            <span>Cliente desde {{ $accountCreatedAt }}</span>
                                         </div>
                                     </div>
 
                                     <div class="service-location">
-                                        <strong>Conta</strong>
-                                        VortexHost
+                                        <strong>Documento</strong>
+                                        {{ data_get($profile ?? [], 'document', 'Não informado') }}
                                     </div>
 
                                     <div class="service-usage">
                                         <strong>Cadastro</strong>
-                                        {{ $user?->created_at?->format('d/m/Y') ?? '--/--/----' }}
+                                        {{ $profileCompletion }}% completo
                                     </div>
 
                                     <div class="service-actions" aria-label="Ações de perfil">
                                         <a href="{{ route('perfil.edit') }}">Editar</a>
+                                    </div>
+                                </article>
+
+                                <article class="service-row">
+                                    <div class="service-main">
+                                        <div class="service-title">
+                                            <span>Dados de contato</span>
+                                            <span class="{{ data_get($profile ?? [], 'email_verified') ? 'status-pago' : 'status-pendente' }}">
+                                                {{ data_get($profile ?? [], 'email_verified') ? 'Verificado' : 'Pendente' }}
+                                            </span>
+                                        </div>
+                                        <div class="service-meta">
+                                            <span>{{ $user?->email ?? 'E-mail não informado' }}</span>
+                                            <span>{{ data_get($profile ?? [], 'phone', 'Não informado') }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="service-location">
+                                        <strong>Endereço</strong>
+                                        {{ data_get($profile ?? [], 'address', 'Endereço não informado') }}
+                                    </div>
+
+                                    <div class="service-usage">
+                                        <strong>Faltando</strong>
+                                        {{ $missingProfile->isEmpty() ? 'Nada pendente' : $missingProfile->take(3)->join(', ') }}
+                                    </div>
+
+                                    <div class="service-actions" aria-label="Completar perfil">
+                                        <a href="{{ route('perfil.edit') }}">Atualizar</a>
                                     </div>
                                 </article>
                             </div>
@@ -428,6 +521,63 @@
         });
 
         showView(window.location.hash.replace('#', '') || 'dashboard', false);
+
+        document.querySelectorAll('[data-service-table]').forEach((table) => {
+            const search = table.querySelector('[data-service-search]');
+            const summary = table.querySelector('[data-service-summary]');
+            const rows = Array.from(table.querySelectorAll('[data-service-row]'));
+            const emptyRow = table.querySelector('[data-service-empty-row]');
+
+            if (!search || !summary || !rows.length) {
+                return;
+            }
+
+            const updateRows = () => {
+                const query = search.value.trim().toLowerCase();
+                let visible = 0;
+
+                rows.forEach((row) => {
+                    const matches = row.textContent.toLowerCase().includes(query);
+
+                    row.hidden = !matches;
+                    visible += matches ? 1 : 0;
+                });
+
+                summary.textContent = `Mostrando ${visible ? 1 : 0} para ${visible} de ${rows.length} registros`;
+
+                if (emptyRow) {
+                    emptyRow.hidden = visible > 0;
+                }
+            };
+
+            search.addEventListener('input', updateRows);
+            updateRows();
+        });
+
+        const timers = document.querySelectorAll('[data-invoice-timer]');
+
+        const updateTimers = () => {
+            timers.forEach((timer) => {
+                const dueAt = new Date(timer.dataset.invoiceTimer);
+                const remaining = Math.max(0, dueAt.getTime() - Date.now());
+                const days = Math.floor(remaining / 86400000);
+                const hours = Math.floor((remaining % 86400000) / 3600000);
+                const minutes = Math.floor((remaining % 3600000) / 60000);
+                const seconds = Math.floor((remaining % 60000) / 1000);
+
+                if (remaining <= 0) {
+                    timer.textContent = 'expirada';
+                    return;
+                }
+
+                timer.textContent = days > 0
+                    ? `${days}d ${hours}h ${minutes}m`
+                    : `${hours}h ${minutes}m ${seconds}s`;
+            });
+        };
+
+        updateTimers();
+        setInterval(updateTimers, 1000);
     })();
 </script>
 @endpush

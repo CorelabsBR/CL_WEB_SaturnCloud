@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Services\MercadoPagoService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
@@ -26,7 +28,7 @@ class CheckoutController extends Controller
         return view('checkout.index', compact('items', 'total'));
     }
 
-    public function pay()
+    public function pay(MercadoPagoService $mercadoPago)
     {
         $cartItems = CartItem::with('product')
             ->where('user_id', Auth::id())
@@ -61,55 +63,115 @@ class CheckoutController extends Controller
 
         $order->load('items.product');
 
-        $mpItems = $order->items->map(fn ($item) => [
-            'title' => $item->product->nome,
-            'quantity' => (int) $item->quantidade,
-            'unit_price' => (float) $item->preco,
-            'currency_id' => 'BRL',
-        ])->values()->toArray();
+        return $this->redirectToPayment($order, $mercadoPago);
+    }
 
-        $payload = [
-            'items' => $mpItems,
-            'external_reference' => (string) $order->id,
-            'notification_url' => route('webhooks.mercadopago'),
-            'back_urls' => [
-                'success' => route('checkout.success'),
-                'pending' => route('checkout.pending'),
-                'failure' => route('checkout.failure'),
-            ],
-            'auto_return' => 'approved',
-        ];
+    public function payOrder(Order $order, MercadoPagoService $mercadoPago)
+    {
+        abort_if((int) $order->user_id !== (int) Auth::id(), 403);
 
-        $response = Http::withToken(env('MERCADOPAGO_ACCESS_TOKEN'))
-            ->post('https://api.mercadopago.com/checkout/preferences', $payload);
+        if ($this->isExpiredPendingOrder($order)) {
+            $order->update(['status' => 'cancelado']);
 
-        if (!$response->successful()) {
             return redirect()
-                ->route('cart.index')
+                ->route('dashboard.index')
+                ->with('error', 'Esta fatura expirou após 1 minuto e foi cancelada.');
+        }
+
+        if ($order->status === 'pago') {
+            return redirect()
+                ->route('dashboard.index')
+                ->with('success', 'Esta fatura já está paga.');
+        }
+
+        if ($order->status !== 'pendente') {
+            return redirect()
+                ->route('dashboard.index')
+                ->with('error', 'Esta fatura não pode ser paga novamente.');
+        }
+
+        $order->load('items.product');
+
+        if ($order->items->isEmpty()) {
+            return redirect()
+                ->route('dashboard.index')
+                ->with('error', 'Não encontramos itens nesta fatura.');
+        }
+
+        return $this->redirectToPayment($order, $mercadoPago);
+    }
+
+    private function isExpiredPendingOrder(Order $order): bool
+    {
+        return $order->status === 'pendente'
+            && $order->billing_type === 'renewal'
+            && $order->due_at
+            && $order->due_at->isPast();
+    }
+
+    private function redirectToPayment(Order $order, MercadoPagoService $mercadoPago)
+    {
+        try {
+            $preference = $mercadoPago->createPreference($order);
+        } catch (\Throwable $e) {
+            Log::error('Erro ao gerar preferência Mercado Pago', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return redirect()
+                ->route('dashboard.index')
                 ->with('error', 'Erro ao gerar pagamento Mercado Pago.');
         }
 
-        $data = $response->json();
+        $checkoutUrl = $preference['init_point'] ?? $preference['sandbox_init_point'] ?? null;
 
-        $order->update([
-            'mp_pagamento_id' => $data['id'] ?? null,
-        ]);
+        if (! $checkoutUrl) {
+            return redirect()
+                ->route('dashboard.index')
+                ->with('error', 'O Mercado Pago não retornou o link de pagamento.');
+        }
 
-        return redirect()->away($data['init_point']);
+        return redirect()->away($checkoutUrl);
     }
 
-    public function success()
+    public function success(Request $request, MercadoPagoService $mercadoPago)
     {
-        return redirect()->route('cliente.dashboard')->with('success', 'Pagamento aprovado ou em processamento.');
+        $this->syncReturnedPayment($request, $mercadoPago);
+
+        return redirect()->route('dashboard.index')->with('success', 'Pagamento aprovado ou em processamento.');
     }
 
-    public function pending()
+    public function pending(Request $request, MercadoPagoService $mercadoPago)
     {
-        return redirect()->route('cliente.dashboard')->with('success', 'Pagamento pendente.');
+        $this->syncReturnedPayment($request, $mercadoPago);
+
+        return redirect()->route('dashboard.index')->with('success', 'Pagamento pendente.');
     }
 
-    public function failure()
+    public function failure(Request $request, MercadoPagoService $mercadoPago)
     {
-        return redirect()->route('checkout.index')->with('error', 'Pagamento não aprovado.');
+        $this->syncReturnedPayment($request, $mercadoPago);
+
+        return redirect()->route('dashboard.index')->with('error', 'Pagamento não aprovado.');
+    }
+
+    private function syncReturnedPayment(Request $request, MercadoPagoService $mercadoPago): void
+    {
+        $paymentId = $request->query('payment_id') ?: $request->query('collection_id');
+
+        if (! $paymentId) {
+            return;
+        }
+
+        try {
+            $payment = $mercadoPago->getPayment((string) $paymentId);
+            $mercadoPago->syncPayment($payment);
+        } catch (\Throwable $e) {
+            Log::warning('Não foi possível sincronizar retorno Mercado Pago', [
+                'payment_id' => $paymentId,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }
