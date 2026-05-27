@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\CartItem;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Services\MercadoPagoService;
+use App\Services\ProvisioningService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Throwable;
 
 class CheckoutController extends Controller
 {
@@ -23,12 +28,49 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Carrinho vazio.');
         }
 
-        $total = $items->sum(fn ($item) => $item->product->preco * $item->quantidade);
+        $totals = $this->cartTotals($items);
 
-        return view('checkout.index', compact('items', 'total'));
+        return view('checkout.index', [
+            'items' => $items,
+            'total' => $totals['subtotal'],
+            'subtotal' => $totals['subtotal'],
+            'discount' => $totals['discount'],
+            'finalTotal' => $totals['final_total'],
+            'coupon' => $totals['coupon'],
+        ]);
     }
 
-    public function pay(MercadoPagoService $mercadoPago)
+    public function applyCoupon(Request $request)
+    {
+        $data = $request->validate([
+            'coupon_code' => ['required', 'string', 'max:60'],
+        ]);
+
+        $coupon = $this->findCoupon($data['coupon_code']);
+
+        if (! $coupon) {
+            return redirect()
+                ->route('checkout.index')
+                ->with('error', 'Cupom inválido ou inativo.');
+        }
+
+        session(['checkout_coupon_code' => $coupon->code]);
+
+        return redirect()
+            ->route('checkout.index')
+            ->with('success', 'Cupom aplicado com sucesso.');
+    }
+
+    public function removeCoupon()
+    {
+        session()->forget('checkout_coupon_code');
+
+        return redirect()
+            ->route('checkout.index')
+            ->with('success', 'Cupom removido.');
+    }
+
+    public function pay(MercadoPagoService $mercadoPago, ProvisioningService $provisioning)
     {
         $cartItems = CartItem::with('product')
             ->where('user_id', Auth::id())
@@ -39,12 +81,14 @@ class CheckoutController extends Controller
         }
 
         $order = DB::transaction(function () use ($cartItems) {
-            $total = $cartItems->sum(fn ($item) => $item->product->preco * $item->quantidade);
+            $totals = $this->cartTotals($cartItems);
 
             $order = Order::create([
                 'user_id' => Auth::id(),
-                'total' => $total,
-                'status' => 'pendente',
+                'total' => $totals['final_total'],
+                'coupon_code' => $totals['coupon']?->code,
+                'discount_amount' => $totals['discount'],
+                'status' => $totals['final_total'] <= 0 ? 'pago' : 'pendente',
             ]);
 
             foreach ($cartItems as $item) {
@@ -57,11 +101,31 @@ class CheckoutController extends Controller
             }
 
             CartItem::where('user_id', Auth::id())->delete();
+            session()->forget('checkout_coupon_code');
 
             return $order;
         });
 
         $order->load('items.product');
+
+        if ((float) $order->total <= 0) {
+            $order->payments()->create([
+                'provider' => 'coupon',
+                'amount' => 0,
+                'status' => 'approved',
+                'raw_payload' => [
+                    'coupon_code' => $order->coupon_code,
+                    'discount_amount' => $order->discount_amount,
+                ],
+            ]);
+
+            $provisioning->provisionOrder($order);
+            $this->processHestiaQueue($order);
+
+            return redirect()
+                ->route('dashboard.index')
+                ->with('success', 'Cupom aplicado. Pedido aprovado sem pagamento.');
+        }
 
         return $this->redirectToPayment($order, $mercadoPago);
     }
@@ -126,6 +190,9 @@ class CheckoutController extends Controller
 
         $checkoutUrl = $preference['init_point'] ?? $preference['sandbox_init_point'] ?? null;
 
+        // Persist order id in session so we can redirect user to configuration after payment return
+        session(['checkout_order_id' => $order->id]);
+
         if (! $checkoutUrl) {
             return redirect()
                 ->route('dashboard.index')
@@ -135,9 +202,65 @@ class CheckoutController extends Controller
         return redirect()->away($checkoutUrl);
     }
 
+    private function processHestiaQueue(Order $order): void
+    {
+        try {
+            $exitCode = Artisan::call('hestia:process-queue', [
+                'order_id' => (string) $order->id,
+            ]);
+            $output = trim(Artisan::output());
+
+            if ($exitCode !== 0) {
+                Log::warning('Fila Hestia retornou erro apos pedido aprovado por cupom', [
+                    'order_id' => $order->id,
+                    'exit_code' => $exitCode,
+                    'output' => $output,
+                ]);
+            }
+        } catch (Throwable $e) {
+            Log::error('Falha ao processar fila Hestia apos pedido aprovado por cupom', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    private function cartTotals($items): array
+    {
+        $subtotal = round((float) $items->sum(fn ($item) => $item->product->preco * $item->quantidade), 2);
+        $coupon = $this->activeSessionCoupon();
+        $discount = $coupon?->discountFor($subtotal) ?? 0;
+
+        return [
+            'subtotal' => $subtotal,
+            'coupon' => $coupon,
+            'discount' => $discount,
+            'final_total' => round(max(0, $subtotal - $discount), 2),
+        ];
+    }
+
+    private function activeSessionCoupon(): ?Coupon
+    {
+        $code = session('checkout_coupon_code');
+
+        return $code ? $this->findCoupon($code) : null;
+    }
+
+    private function findCoupon(string $code): ?Coupon
+    {
+        $code = trim($code);
+
+        return Coupon::query()
+            ->where('active', true)
+            ->get()
+            ->first(fn (Coupon $coupon) => trim($coupon->code) === $code);
+    }
+
     public function success(Request $request, MercadoPagoService $mercadoPago)
     {
         $this->syncReturnedPayment($request, $mercadoPago);
+
+        session()->forget('checkout_order_id');
 
         return redirect()->route('dashboard.index')->with('success', 'Pagamento aprovado ou em processamento.');
     }

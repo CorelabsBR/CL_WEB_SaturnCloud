@@ -9,6 +9,7 @@ class HestiaAccount extends Model
     protected $fillable = [
         'service_id',
         'hestia_user',
+        'password',
         'domain',
         'ftp_user',
         'database_name',
@@ -17,7 +18,12 @@ class HestiaAccount extends Model
     ];
 
     protected $casts = [
+        'password' => 'encrypted',
         'raw_response' => 'array',
+    ];
+
+    protected $hidden = [
+        'password',
     ];
 
     public function service()

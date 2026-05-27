@@ -10,7 +10,9 @@ use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\HestiaPanelController;
 use App\Http\Controllers\MercadoPagoWebhookController;
+use App\Http\Controllers\PterodactylServerConfigurationController;
 use App\Http\Controllers\SupportTicketController;
 
 Route::get('/', fn () => view('home'))->name('home');
@@ -78,20 +80,32 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::post('/produtos', [AdminController::class, 'storeProduct'])->name('products.store');
     Route::patch('/produtos/{product}', [AdminController::class, 'updateProduct'])->name('products.update');
     Route::delete('/produtos/{product}', [AdminController::class, 'destroyProduct'])->name('products.destroy');
+    Route::post('/cupons', [AdminController::class, 'storeCoupon'])->name('coupons.store');
+    Route::delete('/cupons/{coupon}', [AdminController::class, 'destroyCoupon'])->name('coupons.destroy');
     Route::patch('/jogos/{game}', [AdminController::class, 'updateGame'])->name('games.update');
     Route::get('/suporte/pulse', [AdminController::class, 'supportPulse'])->name('tickets.pulse');
     Route::patch('/suporte/{ticket}', [AdminController::class, 'updateTicket'])->name('tickets.update');
     Route::post('/suporte/{ticket}/responder', [AdminController::class, 'replyTicket'])->name('tickets.reply');
+    Route::delete('/suporte/{ticket}', [AdminController::class, 'destroyTicket'])->name('tickets.destroy');
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/cupom', [CheckoutController::class, 'applyCoupon'])->name('checkout.coupon.apply');
+    Route::delete('/checkout/cupom', [CheckoutController::class, 'removeCoupon'])->name('checkout.coupon.remove');
     Route::post('/checkout/pagar', [CheckoutController::class, 'pay'])->name('checkout.pay');
     Route::post('/checkout/pedido/{order}/pagar', [CheckoutController::class, 'payOrder'])->name('checkout.order.pay');
+    Route::get('/servicos/{service}/configurar-pterodactyl', [PterodactylServerConfigurationController::class, 'edit'])
+        ->name('pterodactyl.configure.edit');
+    Route::patch('/servicos/{service}/configurar-pterodactyl', [PterodactylServerConfigurationController::class, 'update'])
+        ->name('pterodactyl.configure.update');
+    Route::get('/servicos/{service}/painel-hestia', HestiaPanelController::class)
+        ->name('hestia.panel');
 
     Route::get('/checkout/sucesso', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/pendente', [CheckoutController::class, 'pending'])->name('checkout.pending');
     Route::get('/checkout/falhou', [CheckoutController::class, 'failure'])->name('checkout.failure');
+
 });
 
 Route::post('/webhooks/mercadopago', [MercadoPagoWebhookController::class, 'handle'])

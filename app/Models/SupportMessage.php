@@ -16,6 +16,7 @@ class SupportMessage extends Model
         'user_id',
         'author_type',
         'body',
+        'image_path',
     ];
 
     public function ticket()

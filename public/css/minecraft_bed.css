@@ -208,26 +208,62 @@ header *, .site-header *, nav * {
 /* =========================================
    ESTRUTURA DO CARD
    ========================================= */
+/* =========================================
+   GRID DE PLANOS (Espelhado do GTA V)
+   ========================================= */
+.minecraftjava-plans-grid {
+    display: flex; /* Mudamos de grid para flex */
+    flex-wrap: wrap; /* Permite quebrar para a linha de baixo */
+    justify-content: center; /* Centraliza a segunda linha */
+    gap: 30px; /* Mesmo gap do GTA V */
+    width: 100%;
+    max-width: 1200px; /* Mesmo limite de largura do GTA V */
+    margin: 0 auto;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* =========================================
+   ESTRUTURA DO CARD
+   ========================================= */
 .minecraftjava-card {
+    /* O cálculo mágico do GTA V para 3 por linha */
+    flex: 0 1 calc(33.333% - 20px); 
+    min-width: 300px; /* Impede de ficarem finos demais */
+    padding: 40px 30px; /* Mesmo preenchimento interno enorme do GTA V */
+    
+    /* Mantendo o visual característico do Minecraft: */
+    --theme-color: var(--mc-dark-gray); 
+    background-color: #0a0a0a; 
     font-family: 'Minecraft', sans-serif;
-    -webkit-font-smoothing: none; /* Deixa a fonte pixelada super nítida */
+    -webkit-font-smoothing: none; 
     font-smooth: never;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1.5rem 1rem; 
     border: 1px solid var(--mc-dark-gray); 
-    border-top: 3px solid var(--theme-color); /* Linha sutil no topo com a cor do tema */
+    border-top: 3px solid var(--theme-color); 
     border-radius: 12px; 
-    width: 100%;
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-/* Hover: A borda inteira assume a cor do tema */
-.minecraftjava-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--theme-color); 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+/* ... mantenha os hover e outras propriedades do card logo abaixo ... */
+
+/* =========================================
+   RESPONSIVIDADE (Copiada do GTA V)
+   ========================================= */
+/* Ajuste para telas menores (Tablets) - 2 por linha */
+@media (max-width: 1024px) {
+    .minecraftjava-card {
+        flex: 0 1 calc(50% - 20px);
+    }
+}
+
+/* Ajuste para Celulares - 1 por linha */
+@media (max-width: 650px) {
+    .minecraftjava-card {
+        flex: 0 1 100%;
+    }
 }
 
 /* Ícone: Tamanho intermediário (48px) com borda temática */
@@ -333,6 +369,10 @@ header *, .site-header *, nav * {
     padding: 0.5rem 2rem; /* Adiciona um espaço interno para o botão não ficar "esmagado" */
     /* ou use width: 80%; se quiser que ele ainda seja largo, mas com margens */
 }
+
+
+
+
 /* RESPONSIVO */
 @media (max-width: 768px) {
     .minecraftjava-header { padding: 6rem 1rem 3rem 1rem; }

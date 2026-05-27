@@ -6,8 +6,11 @@ use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class MercadoPagoService
 {
@@ -135,11 +138,35 @@ class MercadoPagoService
             $this->renewService($order);
         }
 
-        if ($orderStatus === 'pago' && $order->billing_type !== 'renewal') {
+        if ($orderStatus === 'pago' && $previousStatus !== 'pago' && $order->billing_type !== 'renewal') {
             $this->provisioning->provisionOrder($order);
+            $this->processHestiaQueue($order);
         }
 
         return $order;
+    }
+
+    private function processHestiaQueue(Order $order): void
+    {
+        try {
+            $exitCode = Artisan::call('hestia:process-queue', [
+                'order_id' => (string) $order->id,
+            ]);
+            $output = trim(Artisan::output());
+
+            if ($exitCode !== 0) {
+                Log::warning('Fila Hestia retornou erro apos pagamento aprovado', [
+                    'order_id' => $order->id,
+                    'exit_code' => $exitCode,
+                    'output' => $output,
+                ]);
+            }
+        } catch (Throwable $e) {
+            Log::error('Falha ao processar fila Hestia apos pagamento aprovado', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     private function renewService(Order $order): void
@@ -214,6 +241,21 @@ class MercadoPagoService
 
     private function itemsPayload(Order $order): array
     {
+        $itemsTotal = round((float) $order->items->sum(fn ($item) => $item->preco * $item->quantidade), 2);
+
+        if (round((float) $order->total, 2) !== $itemsTotal) {
+            return [[
+                'id' => (string) $order->id,
+                'title' => 'Pedido VortexHost',
+                'description' => $order->coupon_code
+                    ? "Pedido com cupom {$order->coupon_code}"
+                    : 'Pedido VortexHost',
+                'quantity' => 1,
+                'currency_id' => 'BRL',
+                'unit_price' => (float) $order->total,
+            ]];
+        }
+
         return $order->items->map(fn ($item) => [
             'id' => (string) $item->product_id,
             'title' => $item->product->nome,

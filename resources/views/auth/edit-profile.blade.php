@@ -86,8 +86,38 @@
                             @enderror
                         </label>
 
+                        <label class="profile-field" for="pterodactyl_fivem_license">
+                            <span>Licença FiveM (opcional)</span>
+                            <input
+                                id="pterodactyl_fivem_license"
+                                name="pterodactyl_fivem_license"
+                                type="text"
+                                value="{{ old('pterodactyl_fivem_license', $user?->pterodactyl_fivem_license) }}"
+                                maxlength="255"
+                            >
+                            <small>Somente preencha se for usar servers FiveM.</small>
+                            @error('pterodactyl_fivem_license')
+                                <small>{{ $message }}</small>
+                            @enderror
+                        </label>
+
+                        <label class="profile-field" for="pterodactyl_cfx_license">
+                            <span>Licença CFX (opcional)</span>
+                            <input
+                                id="pterodactyl_cfx_license"
+                                name="pterodactyl_cfx_license"
+                                type="text"
+                                value="{{ old('pterodactyl_cfx_license', $user?->pterodactyl_cfx_license) }}"
+                                maxlength="255"
+                            >
+                            <small>Somente preencha se for usar servers FiveM/RedM.</small>
+                            @error('pterodactyl_cfx_license')
+                                <small>{{ $message }}</small>
+                            @enderror
+                        </label>
+
                         <div class="profile-edit-actions">
-                            <a href="{{ route('dashboard.index') }}#perfil" class="btn btn-ghost">
+                            <a href="{{ route('dashboard.index') }}" class="btn btn-ghost">
                                 Voltar
                             </a>
                             <button type="submit" class="btn btn-primary">

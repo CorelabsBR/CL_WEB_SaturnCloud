@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\SupportTicket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class SupportTicketController extends Controller
 {
@@ -24,7 +25,8 @@ class SupportTicketController extends Controller
             'subject' => ['required', 'string', 'min:4', 'max:120'],
             'category' => ['required', 'string', 'max:60'],
             'priority' => ['required', 'in:baixa,normal,alta,urgente'],
-            'message' => ['required', 'string', 'min:10', 'max:2000'],
+            'message' => ['nullable', 'required_without:image', 'string', 'max:2000'],
+            'image' => ['nullable', 'image', 'max:4096'],
         ]);
 
         $ticket = null;
@@ -37,6 +39,8 @@ class SupportTicketController extends Controller
                 ->first();
         }
 
+        $isNewTicket = false;
+
         if (! $ticket) {
             $ticket = SupportTicket::create([
                 'user_id' => Auth::id(),
@@ -45,13 +49,23 @@ class SupportTicketController extends Controller
                 'priority' => $data['priority'],
                 'status' => 'aberto',
             ]);
+            $isNewTicket = true;
         }
 
         $ticket->messages()->create([
             'user_id' => Auth::id(),
             'author_type' => 'cliente',
-            'body' => $data['message'],
+            'body' => $data['message'] ?? '',
+            'image_path' => $this->uploadSupportImage($request),
         ]);
+
+        if ($isNewTicket && $data['subject'] === 'Atendimento pelo chat') {
+            $ticket->messages()->create([
+                'user_id' => null,
+                'author_type' => 'admin',
+                'body' => 'Esperando o responsável.',
+            ]);
+        }
 
         $ticket->update([
             'status' => 'aberto',
@@ -65,7 +79,7 @@ class SupportTicketController extends Controller
         return redirect()
             ->back()
             ->with('support_widget_open', true)
-            ->with('success', 'Mensagem enviada com sucesso. Nossa equipe já pode acompanhar sua solicitação.');
+            ->with('success', 'Esperando o responsável.');
     }
 
     public function messages()
@@ -93,11 +107,32 @@ class SupportTicketController extends Controller
                                 ? ($message->user?->nome ?? 'Suporte')
                                 : 'Você',
                             'body' => $message->body,
+                            'image_url' => $message->image_path ? asset($message->image_path) : null,
                             'time' => optional($message->criado_em)->format('d/m/Y H:i'),
                         ];
                     });
                 })
                 ->values(),
         ];
+    }
+
+    private function uploadSupportImage(Request $request): ?string
+    {
+        if (! $request->hasFile('image')) {
+            return null;
+        }
+
+        $directory = public_path('uploads/support');
+
+        if (! is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        $file = $request->file('image');
+        $name = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) ?: 'imagem';
+        $filename = $name . '-' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $file->move($directory, $filename);
+
+        return 'uploads/support/' . $filename;
     }
 }

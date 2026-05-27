@@ -197,6 +197,7 @@ body {
     padding: 40px 30px;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 /* Ajuste para telas menores (Tablets) - 2 por linha */
@@ -219,54 +220,8 @@ body {
     transform: translateY(-5px);
 }
 
-.gta5-card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
 
-.gta5-icon-box span {
-    font-size: 3.5rem;
-    color: var(--gta-alert-yellow);
-    line-height: 1;
-    text-transform: uppercase;
-}
 
-.gta5-icon-img {
-    width: 45px;
-    height: auto;
-    filter: brightness(0) invert(85%) sepia(21%) saturate(1478%) hue-rotate(352deg) brightness(101%) contrast(92%); /* Transforma o ícone na cor amarela via CSS */
-}
-
-.gta5-wanted {
-    color: var(--gta-white);
-    font-size: 1.2rem;
-    letter-spacing: 3px;
-    opacity: 0.3;
-    text-transform: uppercase;
-}
-
-.gta5-card:hover .gta5-wanted {
-    color: var(--gta-alert-yellow);
-    opacity: 1;
-}
-
-.gta5-plan-tag {
-    color: #666;
-    margin: 0;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.gta5-plan-name {
-    font-size: 2.8rem;
-    color: var(--gta-white);
-    margin: 5px 0 25px 0;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
 
 /* Especificações separadas por linhas finas */
 .gta5-plan-specs {

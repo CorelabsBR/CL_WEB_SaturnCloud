@@ -159,11 +159,15 @@ class AuthController extends Controller
                 'max:255',
                 Rule::unique('user', 'email')->ignore($user->id),
             ],
+            'pterodactyl_fivem_license' => ['nullable', 'string', 'max:255'],
+            'pterodactyl_cfx_license' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user->update([
             'nome' => $data['name'],
             'email' => $data['email'],
+            'pterodactyl_fivem_license' => $data['pterodactyl_fivem_license'] ?? null,
+            'pterodactyl_cfx_license' => $data['pterodactyl_cfx_license'] ?? null,
         ]);
 
         return redirect()

@@ -369,6 +369,10 @@ header *, .site-header *, nav * {
     padding: 0.5rem 2rem; /* Adiciona um espaço interno para o botão não ficar "esmagado" */
     /* ou use width: 80%; se quiser que ele ainda seja largo, mas com margens */
 }
+
+
+
+
 /* RESPONSIVO */
 @media (max-width: 768px) {
     .minecraftjava-header { padding: 6rem 1rem 3rem 1rem; }

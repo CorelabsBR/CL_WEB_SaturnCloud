@@ -12,6 +12,8 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'total',
+        'coupon_code',
+        'discount_amount',
         'status',
         'billing_type',
         'service_id',
@@ -24,6 +26,7 @@ class Order extends Model
         'atualizado_em' => 'datetime',
         'due_at' => 'datetime',
         'total' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
     ];
 
     public function items()

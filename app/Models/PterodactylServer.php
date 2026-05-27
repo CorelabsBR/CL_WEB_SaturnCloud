@@ -11,6 +11,8 @@ class PterodactylServer extends Model
         'plan_id',
         'pterodactyl_user_id',
         'pterodactyl_server_id',
+        'external_id',
+        'provision_identifier',
         'uuid',
         'identifier',
         'allocation_id',
@@ -26,5 +28,10 @@ class PterodactylServer extends Model
     public function service()
     {
         return $this->belongsTo(CustomerService::class, 'service_id');
+    }
+
+    public function egg()
+    {
+        return $this->belongsTo(PterodactylEgg::class, 'egg_id', 'egg_id');
     }
 }

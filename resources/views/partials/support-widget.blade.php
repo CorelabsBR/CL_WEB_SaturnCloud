@@ -52,7 +52,14 @@
                     @foreach($ticket->messages as $message)
                         <div class="support-message {{ $message->author_type === 'admin' ? 'support-message-team' : 'support-message-user' }}">
                             <strong>{{ $message->author_type === 'admin' ? ($message->user?->nome ?? 'Suporte') : 'Você' }}</strong>
-                            <p>{{ $message->body }}</p>
+                            @if($message->body)
+                                <p>{{ $message->body }}</p>
+                            @endif
+                            @if($message->image_path)
+                                <a href="{{ asset($message->image_path) }}" target="_blank" rel="noopener">
+                                    <img src="{{ asset($message->image_path) }}" alt="Imagem enviada" class="support-message-image">
+                                </a>
+                            @endif
                             <small>#{{ $ticket->id }} · {{ optional($message->criado_em)->format('d/m/Y H:i') }}</small>
                         </div>
                     @endforeach
@@ -68,13 +75,20 @@
         </div>
 
         @auth
-            <form class="support-chat-form" method="POST" action="{{ route('ticket.store') }}" data-support-form>
+            <form class="support-chat-form" method="POST" action="{{ route('ticket.store') }}" enctype="multipart/form-data" data-support-form>
                 @csrf
                 <input type="hidden" name="subject" value="Atendimento pelo chat">
                 <input type="hidden" name="category" value="Suporte geral">
                 <input type="hidden" name="priority" value="normal">
 
-                <textarea name="message" rows="3" placeholder="Digite sua mensagem..." required>{{ old('message') }}</textarea>
+                <textarea name="message" rows="3" placeholder="Digite sua mensagem...">{{ old('message') }}</textarea>
+                <div class="support-chat-tools">
+                    <label class="support-image-button" title="Adicionar imagem">
+                        <input type="file" name="image" accept="image/*" data-support-image>
+                        <span>Imagem</span>
+                    </label>
+                    <small data-support-image-name hidden></small>
+                </div>
                 @error('message')
                     <small>{{ $message }}</small>
                 @enderror
@@ -105,6 +119,39 @@
         const form = widget.querySelector('[data-support-form]');
         const badge = widget.querySelector('[data-support-count]');
         let lastSignature = '';
+        let formError = form?.querySelector('[data-support-form-error]');
+
+        const textarea = form?.querySelector('textarea[name="message"]');
+        const submitButton = form?.querySelector('button[type="submit"]');
+        const imageInput = form?.querySelector('[data-support-image]');
+        const imageName = form?.querySelector('[data-support-image-name]');
+
+        if (form && !formError) {
+            formError = document.createElement('small');
+            formError.setAttribute('data-support-form-error', '');
+            formError.hidden = true;
+            form.insertBefore(formError, submitButton);
+        }
+
+        if (textarea) {
+            textarea.addEventListener('keydown', (event) => {
+                if (event.key !== 'Enter' || event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) {
+                    return;
+                }
+
+                event.preventDefault();
+                form.requestSubmit();
+            });
+        }
+
+        imageInput?.addEventListener('change', () => {
+            if (!imageName) {
+                return;
+            }
+
+            imageName.textContent = imageInput.files?.[0]?.name || '';
+            imageName.hidden = !imageName.textContent;
+        });
 
         toggles.forEach((toggle) => {
             toggle.addEventListener('click', (event) => {
@@ -140,7 +187,8 @@
                 return `
                     <div class="support-message ${isAdmin ? 'support-message-team' : 'support-message-user'}">
                         <strong>${escapeHtml(message.author_name || (isAdmin ? 'Suporte' : 'Você'))}</strong>
-                        <p>${escapeHtml(message.body)}</p>
+                        ${message.body ? `<p>${escapeHtml(message.body)}</p>` : ''}
+                        ${message.image_url ? `<a href="${escapeHtml(message.image_url)}" target="_blank" rel="noopener"><img src="${escapeHtml(message.image_url)}" alt="Imagem enviada" class="support-message-image"></a>` : ''}
                         <small>#${escapeHtml(message.ticket_id)} · ${escapeHtml(message.time)}</small>
                     </div>
                 `;
@@ -152,7 +200,7 @@
                 badge.hidden = count <= 0;
             }
 
-            if (body && (shouldStickToBottom || widget.classList.contains('is-open'))) {
+            if (body && shouldStickToBottom) {
                 requestAnimationFrame(() => {
                     body.scrollTo({
                         top: body.scrollHeight,
@@ -160,6 +208,15 @@
                     });
                 });
             }
+        };
+
+        const setFormError = (message = '') => {
+            if (!formError) {
+                return;
+            }
+
+            formError.textContent = message;
+            formError.hidden = !message;
         };
 
         const fetchMessages = async () => {
@@ -184,11 +241,17 @@
             event.preventDefault();
 
             const textarea = form.querySelector('textarea[name="message"]');
+            const imageInput = form.querySelector('[data-support-image]');
+            const message = textarea.value.trim();
 
-            if (!textarea || textarea.value.trim().length < 10) {
-                form.submit();
+            if (!message && !imageInput?.files?.length) {
+                setFormError('Digite uma mensagem ou adicione uma imagem.');
+                textarea.focus();
                 return;
             }
+
+            setFormError();
+            submitButton?.setAttribute('disabled', 'disabled');
 
             try {
                 const response = await fetch(form.action, {
@@ -201,15 +264,35 @@
                 });
 
                 if (!response.ok) {
-                    form.submit();
+                    let errorMessage = 'Não foi possível enviar agora. Tente novamente em instantes.';
+
+                    if (response.status === 419) {
+                        errorMessage = 'Sua sessão expirou. Atualize a página quando puder e tente novamente.';
+                    } else if (response.status === 422) {
+                        const payload = await response.json().catch(() => null);
+                        errorMessage = payload?.message
+                            || Object.values(payload?.errors ?? {})?.flat()?.[0]
+                            || 'Confira a mensagem e tente novamente.';
+                    }
+
+                    setFormError(errorMessage);
                     return;
                 }
 
                 textarea.value = '';
+                if (imageInput) {
+                    imageInput.value = '';
+                }
+                if (imageName) {
+                    imageName.textContent = '';
+                    imageName.hidden = true;
+                }
                 renderMessages(await response.json());
                 widget.classList.add('is-open');
             } catch (error) {
-                form.submit();
+                setFormError('Falha de conexão. Sua mensagem não foi enviada ainda.');
+            } finally {
+                submitButton?.removeAttribute('disabled');
             }
         });
 

@@ -30,7 +30,7 @@ class GameHostingController extends Controller
         abort_if(! $jogo->ativo, 404);
 
         $plans = $jogo->plans()
-        ->orderBy('plan', 'asc')
+            ->orderBy('plan', 'asc')
             ->get();
 
         $customView = 'games.custom.' . $jogo->slug;

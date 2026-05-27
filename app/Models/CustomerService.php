@@ -17,6 +17,7 @@ class CustomerService extends Model
         'status',
         'name',
         'domain',
+        'provision_identifier',
         'expires_at',
     ];
 
@@ -42,6 +43,11 @@ class CustomerService extends Model
     public function pterodactylServer()
     {
         return $this->hasOne(PterodactylServer::class, 'service_id');
+    }
+
+    public function provisioningConfiguration()
+    {
+        return $this->hasOne(ServiceProvisioningConfiguration::class, 'service_id');
     }
 
     public function hestiaAccount()

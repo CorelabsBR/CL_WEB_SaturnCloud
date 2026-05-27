@@ -142,6 +142,9 @@
 
 .game-card:hover::before { opacity: 1; }
 
+
+
+
 /* ── Icon ───────────────────────────────────────────── */
 .game-card-icon {
     width: 48px;

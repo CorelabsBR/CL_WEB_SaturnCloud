@@ -27,6 +27,11 @@ class Plan extends Model
         'cpu' => 'integer',
     ];
 
+    public function pterodactylEgg()
+    {
+        return $this->belongsTo(PterodactylEgg::class, 'egg');
+    }
+
     public function jogo()
     {
         return $this->belongsTo(JogoProd::class, 'jogo_id');

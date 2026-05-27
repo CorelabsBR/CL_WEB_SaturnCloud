@@ -95,6 +95,12 @@
                                 </svg>
                                 Painel
                             </a>
+                            <a href="{{ route('perfil.edit') }}" class="profile-menu-item">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 12c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4zm0 2c-2.7 0-8 1.4-8 4v2h16v-2c0-2.6-5.3-4-8-4z" />
+                                </svg>
+                                Editar perfil
+                            </a>
                             @if(auth()->user()?->tipo_usuario === 'root')
                                 <a href="{{ route('admin.index') }}" class="profile-menu-item">
                                     <svg viewBox="0 0 24 24" aria-hidden="true">

@@ -45,7 +45,7 @@
                                 <span>V</span>
                             @endif
                         </div>
-                        <span class="gta5-wanted">★ ★ ★ ★ ★</span>
+                        <span class="gta5-wanted">{{ trim(str_repeat('★ ', $loop->iteration)) }}</span>
                     </div>
 
                     <p class="gta5-plan-tag">Plano</p>
@@ -55,6 +55,7 @@
                         <li><span>RAM</span><strong>{{ $plan->ramFormatada() }}</strong></li>
                         <li><span>Disco</span><strong>{{ $plan->discoFormatado() }}</strong></li>
                         <li><span>CPU</span><strong>{{ $plan->cpuFormatada() }}</strong></li>
+                        <li><span>Preço</span><strong>{{ $plan->precoFormatada() }} /mês</strong></li>
                     </ul>
 
                     <div class="gta5-card-footer">
@@ -79,5 +80,6 @@
 
 @include('partials.footer')
 @include('partials.support-widget')
+<script src="{{ asset('js/header.js') }}"></script>
 </body>
 </html>

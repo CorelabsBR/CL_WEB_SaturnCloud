@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CategoriaProd;
+use App\Models\Coupon;
 use App\Models\JogoProd;
 use App\Models\Order;
 use App\Models\Product;
@@ -25,6 +26,7 @@ class AdminController extends Controller
                 'products' => Product::count(),
                 'openTickets' => SupportTicket::whereIn('status', ['aberto', 'respondido'])->count(),
                 'orders' => $this->vpsOrdersQuery()->count(),
+                'coupons' => Coupon::count(),
             ],
             'products' => Product::with(['categoria', 'jogo'])
                 ->orderByRaw('jogo_id is null')
@@ -42,7 +44,26 @@ class AdminController extends Controller
                 ->latest('criado_em')
                 ->limit(24)
                 ->get(),
+            'coupons' => Coupon::latest('created_at')->get(),
         ]);
+    }
+
+    public function storeCoupon(Request $request)
+    {
+        $this->ensureAdmin();
+
+        Coupon::create($this->validateCoupon($request));
+
+        return back()->with('admin_success', 'Cupom criado com sucesso.');
+    }
+
+    public function destroyCoupon(Coupon $coupon)
+    {
+        $this->ensureAdmin();
+
+        $coupon->delete();
+
+        return back()->with('admin_success', 'Cupom removido com sucesso.');
     }
 
     public function storeProduct(Request $request)
@@ -117,19 +138,37 @@ class AdminController extends Controller
         $this->ensureAdmin();
 
         $data = $request->validate([
-            'message' => ['required', 'string', 'min:2', 'max:2000'],
-            'status' => ['required', 'in:aberto,respondido,fechado'],
+            'message' => ['nullable', 'required_without:image', 'string', 'max:2000'],
+            'image' => ['nullable', 'image', 'max:4096'],
         ]);
 
         $ticket->messages()->create([
             'user_id' => Auth::id(),
             'author_type' => 'admin',
-            'body' => $data['message'],
+            'body' => $data['message'] ?? '',
+            'image_path' => $this->uploadSupportImage($request),
         ]);
 
-        $ticket->update(['status' => $data['status']]);
+        $ticket->update(['status' => 'respondido']);
+
+        if ($request->expectsJson()) {
+            return response()->json($this->supportPayload());
+        }
 
         return back()->with('admin_success', 'Resposta enviada ao cliente.');
+    }
+
+    public function destroyTicket(SupportTicket $ticket)
+    {
+        $this->ensureAdmin();
+
+        $ticket->delete();
+
+        if (request()->expectsJson()) {
+            return response()->json($this->supportPayload());
+        }
+
+        return back()->with('admin_success', 'Chat fechado.');
     }
 
     public function updateTicket(Request $request, SupportTicket $ticket)
@@ -150,9 +189,48 @@ class AdminController extends Controller
     {
         $this->ensureAdmin();
 
-        return response()->json([
+        return response()->json($this->supportPayload());
+    }
+
+    private function supportPayload(): array
+    {
+        $tickets = SupportTicket::with('messages.user', 'user')
+            ->latest('atualizado_em')
+            ->get();
+
+        return [
             'signature' => $this->supportSignature(),
-        ]);
+            'tickets' => $tickets->map(function ($ticket) {
+                $lastMessage = $ticket->messages->last();
+                $clientName = $ticket->user?->nome ?? 'Cliente';
+
+                return [
+                    'id' => $ticket->id,
+                    'client_name' => $clientName,
+                    'initial' => Str::upper(Str::substr($clientName, 0, 1)),
+                    'subject' => $ticket->subject,
+                    'category' => $ticket->category,
+                    'preview' => $lastMessage?->body
+                        ? Str::limit($lastMessage->body, 44)
+                        : ($lastMessage?->image_path ? 'Imagem enviada' : $ticket->subject),
+                    'last_time' => optional($lastMessage?->criado_em)->format('H:i'),
+                    'reply_url' => route('admin.tickets.reply', $ticket),
+                    'destroy_url' => route('admin.tickets.destroy', $ticket),
+                    'messages' => $ticket->messages->map(function ($message) use ($ticket) {
+                        return [
+                            'id' => $message->id,
+                            'author_type' => $message->author_type,
+                            'author_name' => $message->author_type === 'admin'
+                                ? ($message->user?->nome ?? 'Admin')
+                                : ($ticket->user?->nome ?? 'Cliente'),
+                            'body' => $message->body,
+                            'image_url' => $message->image_path ? asset($message->image_path) : null,
+                            'time' => optional($message->criado_em)->format('d/m/Y H:i'),
+                        ];
+                    })->toArray(),
+                ];
+            })->toArray(),
+        ];
     }
 
     private function validateProduct(Request $request): array
@@ -173,6 +251,27 @@ class AdminController extends Controller
             'dominios' => ['nullable', 'string', 'max:80'],
             'imagem' => ['nullable', 'image', 'max:4096'],
         ]);
+    }
+
+    private function validateCoupon(Request $request, ?Coupon $coupon = null): array
+    {
+        $couponId = $coupon?->id ?? 'NULL';
+
+        $data = $request->validate([
+            'code' => ['required', 'string', 'max:60', 'unique:coupons,code,' . $couponId],
+            'type' => ['required', 'in:percent,fixed'],
+            'value' => ['required', 'numeric', 'min:0.01', 'max:999999.99'],
+            'active' => ['nullable', 'boolean'],
+        ]);
+
+        $data['code'] = trim($data['code']);
+        $data['active'] = $request->boolean('active');
+
+        if ($data['type'] === 'percent') {
+            $data['value'] = min(100, (float) $data['value']);
+        }
+
+        return $data;
     }
 
     private function vpsOrdersQuery()
@@ -197,6 +296,26 @@ class AdminController extends Controller
         $file->move(public_path($directory), $filename);
 
         return $basenameOnly ? $filename : $directory . '/' . $filename;
+    }
+
+    private function uploadSupportImage(Request $request): ?string
+    {
+        if (! $request->hasFile('image')) {
+            return null;
+        }
+
+        $directory = public_path('uploads/support');
+
+        if (! is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        $file = $request->file('image');
+        $name = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) ?: 'imagem';
+        $filename = $name . '-' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $file->move($directory, $filename);
+
+        return 'uploads/support/' . $filename;
     }
 
     private function ensureAdmin(): void

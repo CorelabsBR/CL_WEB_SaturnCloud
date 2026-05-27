@@ -17,11 +17,8 @@
     $activeServices = data_get($stats ?? [], 'active_services', $services->where('status', 'ativo')->count());
     $pendingInvoices = data_get($stats ?? [], 'pending_invoices', $invoices->where('status', 'pendente')->count());
     $pendingAmount = data_get($stats ?? [], 'pending_amount', $invoices->where('status', 'pendente')->sum('amount'));
-    $paidAmount = data_get($stats ?? [], 'paid_amount', $invoices->where('status', 'pago')->sum('amount'));
-    $lastPayment = data_get($stats ?? [], 'last_payment') ?: $invoices->firstWhere('status', 'pago');
+    $lastPayment = data_get($stats ?? [], 'last_payment');
     $nextInvoice = data_get($stats ?? [], 'next_invoice');
-    $profileCompletion = data_get($profile ?? [], 'completion', 0);
-    $missingProfile = collect(data_get($profile ?? [], 'missing', []));
     $accountCreatedAt = data_get($stats ?? [], 'account_created_at', $user?->criado_em?->format('d/m/Y') ?? '--/--/----');
     $accountAgeDays = (int) floor((float) data_get($stats ?? [], 'account_age_days', 0));
 @endphp
@@ -68,17 +65,13 @@
                             </div>
                             <div>
                                 <strong>
-                                    {{ $lastPayment ? 'R$ ' . number_format((float) data_get($lastPayment, 'amount', 0), 2, ',', '.') : 'R$ 0,00' }}
+                                    {{ $lastPayment ? 'R$ ' . number_format((float) data_get($lastPayment, 'amount', 0), 2, ',', '.') : 'Sem pagamento' }}
                                 </strong>
-                                <span>Último pagamento</span>
+                                <span>{{ $lastPayment ? 'Último gasto' : 'Último pagamento' }}</span>
                             </div>
                             <div>
                                 <strong>99.9%</strong>
                                 <span>Uptime global</span>
-                            </div>
-                            <div>
-                                <strong>{{ $accountCreatedAt }}</strong>
-                                <span>Conta criada</span>
                             </div>
                         </div>
                     </div>
@@ -102,39 +95,47 @@
                 </div>
             @endif
 
-            <div class="dashboard-grid">
+            <div class="dashboard-shell">
 
-                <aside class="dashboard-sidebar">
-                    <div class="sidebar-card">
-                        <div class="sidebar-user">
-                            <div class="sidebar-avatar" aria-hidden="true">
-                                {{ $userInitial }}
-                            </div>
-                            <div>
-                                <strong>{{ $userName }}</strong>
-                                <span>{{ $user?->email ?? 'cliente@vortexhost.com.br' }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="sidebar-card">
-                        <span class="sidebar-title">Navegação</span>
-                        <nav class="sidebar-nav" aria-label="Menu do Painel">
+                <div class="dashboard-topbar">
+                    <div class="dashboard-tabs-card">
+                        <nav class="dashboard-tab-nav" aria-label="Menu do Painel">
                             <a href="#dashboard" class="active" aria-current="page" data-dashboard-link>
-                                Dashboard
+                                <span class="dashboard-tab-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M4 13h6v7H4zm10-9h6v16h-6zM4 4h6v6H4z" />
+                                    </svg>
+                                </span>
+                                <span>
+                                    <strong>Dashboard</strong>
+                                    <small>Resumo da conta</small>
+                                </span>
                             </a>
                             <a href="#servicos" data-dashboard-link>
-                                Meus Serviços
+                                <span class="dashboard-tab-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M4 4h16v5H4zm0 7h16v9H4zm3 3v3h3v-3z" />
+                                    </svg>
+                                </span>
+                                <span>
+                                    <strong>Serviços</strong>
+                                    <small>Servidores e planos</small>
+                                </span>
                             </a>
                             <a href="#faturas" data-dashboard-link>
-                                Faturas
-                            </a>
-                            <a href="#perfil" data-dashboard-link>
-                                Perfil
+                                <span class="dashboard-tab-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M6 2h12v20l-3-2-3 2-3-2-3 2zm3 6h6V6H9zm0 4h6v-2H9zm0 4h4v-2H9z" />
+                                    </svg>
+                                </span>
+                                <span>
+                                    <strong>Faturas</strong>
+                                    <small>Pagamentos</small>
+                                </span>
                             </a>
                         </nav>
                     </div>
-                </aside>
+                </div>
 
                 <div class="dashboard-main" data-dashboard-tabs>
 
@@ -145,7 +146,11 @@
                         <div class="dash-card">
                             <div class="dash-card-top">
                                 <span class="dash-card-title">Serviços ativos</span>
-                                <span class="dash-card-icon" role="img" aria-label="Ícone de raio">⚡</span>
+                                <span class="dash-card-icon dash-card-service-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M4 4h16v5H4zm0 7h16v9H4zm3 3v3h3v-3z" />
+                                    </svg>
+                                </span>
                             </div>
                             <strong>{{ $activeServices }}</strong>
                             <small>{{ $activeServices === 1 ? '1 ambiente online agora' : $activeServices . ' ambientes online agora' }}</small>
@@ -154,21 +159,29 @@
                         <div class="dash-card">
                             <div class="dash-card-top">
                                 <span class="dash-card-title">Faturas pendentes</span>
-                                <span class="dash-card-icon" role="img" aria-label="Ícone de cartão de crédito">💳</span>
+                                <span class="dash-card-icon dash-card-invoice-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M3 5h18v14H3zm2 3v2h14V8zm0 5v3h5v-3z" />
+                                    </svg>
+                                </span>
                             </div>
                             <strong>{{ $pendingInvoices }}</strong>
                             <small>{{ $pendingInvoices > 0 ? 'R$ ' . number_format((float) $pendingAmount, 2, ',', '.') . ' em aberto' : 'Tudo em dia no financeiro' }}</small>
                         </div>
 
-                        <div class="dash-card">
+                        <div class="dash-card dash-card-account">
                             <div class="dash-card-top">
-                                <span class="dash-card-title">Conta criada</span>
-                                <span class="dash-card-icon" role="img" aria-label="Ícone de calendário">📅</span>
+                                <span class="dash-card-title">Membro desde</span>
+                                <span class="dash-card-icon dash-card-date-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M7 2h2v3h6V2h2v3h3v17H4V5h3zm11 8H6v10h12zM6 7v1h12V7z" />
+                                    </svg>
+                                </span>
                             </div>
                             <strong>
                                 {{ $accountCreatedAt }}
                             </strong>
-                            <small>{{ $accountAgeDays > 0 ? $accountAgeDays . ' dias com a VortexHost' : 'Cliente VortexHost' }}</small>
+                            <small>{{ $accountAgeDays > 0 ? $accountAgeDays . ' dias de conta ativa' : 'Conta ativada recentemente' }}</small>
                         </div>
 
                     </div>
@@ -225,9 +238,7 @@
 
                             <div class="services-table-shell" data-service-table>
                                 <div class="services-table-toolbar">
-                                    <span data-service-summary>
-                                        Mostrando {{ $services->count() ? 1 : 0 }} para {{ $services->count() }} de {{ $services->count() }} registros
-                                    </span>
+                                    <span data-service-summary class="services-summary" hidden></span>
                                     <label class="services-search">
                                         <span>Buscar serviço</span>
                                         <input type="search" placeholder="Buscar" data-service-search>
@@ -238,9 +249,9 @@
                                     <table class="services-table">
                                         <thead>
                                             <tr>
-                                                <th>Produto/Serviço</th>
-                                                <th>Preços</th>
-                                                <th>Próximo Vencimento</th>
+                                                <th>Serviço</th>
+                                                <th>Preço</th>
+                                                <th>Vencimento</th>
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
@@ -252,6 +263,7 @@
                                                         'pago' => 'status-pago',
                                                         'pendente' => 'status-pendente',
                                                         'suspenso' => 'status-suspenso',
+                                                        'cancelado' => 'status-suspenso',
                                                         'offline' => 'status-offline',
                                                         default => 'status-ativo',
                                                     };
@@ -267,29 +279,38 @@
                                                     <td>
                                                         <div class="table-service-name">{{ data_get($service, 'name', 'Servidor Vortex') }}</div>
                                                         <div class="table-service-meta">
-                                                            <span>{{ data_get($service, 'display_id', 'SRV-000000') }}</span>
                                                             <span>{{ data_get($service, 'plan', 'Plano sob demanda') }}</span>
-                                                            <span>{{ data_get($service, 'ip', 'Aguardando provisionamento') }}</span>
+                                                            @if (data_get($service, 'ip') && data_get($service, 'ip') !== 'Aguardando provisionamento')
+                                                                <span>{{ data_get($service, 'ip') }}</span>
+                                                            @endif
                                                         </div>
-                                                        @if ($panel)
-                                                            <a
-                                                                href="{{ data_get($panel, 'url') }}"
-                                                                class="table-panel-link"
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                            >
-                                                                {{ data_get($panel, 'label', 'Abrir painel') }}
-                                                            </a>
-                                                        @endif
+
+                                                        <div class="table-service-actions">
+                                                            @if ($panel)
+                                                                <a
+                                                                    href="{{ data_get($panel, 'url') }}"
+                                                                    class="table-panel-link"
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                >
+                                                                    Painel
+                                                                </a>
+                                                            @endif
+                                                            @if (data_get($service, 'configuration_url'))
+                                                                <a
+                                                                    href="{{ data_get($service, 'configuration_url') }}"
+                                                                    class="table-panel-link"
+                                                                >
+                                                                    Configurar
+                                                                </a>
+                                                            @endif
+                                                        </div>
                                                     </td>
                                                     <td>{{ data_get($service, 'price', 'Sob consulta') }}</td>
                                                     <td>{{ data_get($service, 'expires_at', 'Sem renovação definida') }}</td>
                                                     <td>
                                                         <div class="table-status-stack">
                                                             <span class="{{ $statusClass }}">{{ ucfirst($status) }}</span>
-                                                            <span class="{{ data_get($invoice, 'class', 'status-pendente') }}">
-                                                                {{ data_get($invoice, 'label', 'Fatura pendente') }}
-                                                            </span>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -309,8 +330,8 @@
 
                                 <div class="services-table-footer">
                                     <div class="table-pagination" aria-label="Paginação dos serviços">
-                                        <button type="button" disabled>Anterior</button>
-                                        <button type="button" disabled>Próximo</button>
+                                        <button type="button" data-service-prev>Anterior</button>
+                                        <button type="button" data-service-next>Próximo</button>
                                     </div>
                                 </div>
                             </div>
@@ -393,73 +414,6 @@
                             </div>
                         </div>
 
-                        <div class="dashboard-panel dashboard-view" id="perfil" data-dashboard-view="perfil" hidden>
-                            <div class="panel-head">
-                                <div>
-                                    <h2>Perfil</h2>
-                                    <p>Dados principais da conta do cliente.</p>
-                                </div>
-                            </div>
-
-                            <div class="service-list">
-                                <article class="service-row">
-                                    <div class="service-main">
-                                        <div class="service-title">
-                                            <span>{{ $userName }}</span>
-                                            <span class="status-ativo">Ativo</span>
-                                        </div>
-                                        <div class="service-meta">
-                                            <span>{{ $user?->email ?? 'E-mail não informado' }}</span>
-                                            <span>Cliente desde {{ $accountCreatedAt }}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="service-location">
-                                        <strong>Documento</strong>
-                                        {{ data_get($profile ?? [], 'document', 'Não informado') }}
-                                    </div>
-
-                                    <div class="service-usage">
-                                        <strong>Cadastro</strong>
-                                        {{ $profileCompletion }}% completo
-                                    </div>
-
-                                    <div class="service-actions" aria-label="Ações de perfil">
-                                        <a href="{{ route('perfil.edit') }}">Editar</a>
-                                    </div>
-                                </article>
-
-                                <article class="service-row">
-                                    <div class="service-main">
-                                        <div class="service-title">
-                                            <span>Dados de contato</span>
-                                            <span class="{{ data_get($profile ?? [], 'email_verified') ? 'status-pago' : 'status-pendente' }}">
-                                                {{ data_get($profile ?? [], 'email_verified') ? 'Verificado' : 'Pendente' }}
-                                            </span>
-                                        </div>
-                                        <div class="service-meta">
-                                            <span>{{ $user?->email ?? 'E-mail não informado' }}</span>
-                                            <span>{{ data_get($profile ?? [], 'phone', 'Não informado') }}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="service-location">
-                                        <strong>Endereço</strong>
-                                        {{ data_get($profile ?? [], 'address', 'Endereço não informado') }}
-                                    </div>
-
-                                    <div class="service-usage">
-                                        <strong>Faltando</strong>
-                                        {{ $missingProfile->isEmpty() ? 'Nada pendente' : $missingProfile->take(3)->join(', ') }}
-                                    </div>
-
-                                    <div class="service-actions" aria-label="Completar perfil">
-                                        <a href="{{ route('perfil.edit') }}">Atualizar</a>
-                                    </div>
-                                </article>
-                            </div>
-                        </div>
-
                     </div>
 
                 </div>
@@ -527,30 +481,60 @@
             const summary = table.querySelector('[data-service-summary]');
             const rows = Array.from(table.querySelectorAll('[data-service-row]'));
             const emptyRow = table.querySelector('[data-service-empty-row]');
+            const previous = table.querySelector('[data-service-prev]');
+            const next = table.querySelector('[data-service-next]');
+            const perPage = 3;
+            let currentPage = 1;
 
-            if (!search || !summary || !rows.length) {
+            if (!search || !previous || !next || !rows.length) {
                 return;
             }
 
             const updateRows = () => {
                 const query = search.value.trim().toLowerCase();
-                let visible = 0;
+                const matchingRows = rows.filter((row) => row.textContent.toLowerCase().includes(query));
+                const total = matchingRows.length;
+                const totalPages = Math.max(1, Math.ceil(total / perPage));
+
+                currentPage = Math.min(currentPage, totalPages);
+
+                const start = total ? (currentPage - 1) * perPage : 0;
+                const end = Math.min(start + perPage, total);
+                const visibleRows = new Set(matchingRows.slice(start, end));
 
                 rows.forEach((row) => {
-                    const matches = row.textContent.toLowerCase().includes(query);
-
-                    row.hidden = !matches;
-                    visible += matches ? 1 : 0;
+                    row.hidden = !visibleRows.has(row);
                 });
 
-                summary.textContent = `Mostrando ${visible ? 1 : 0} para ${visible} de ${rows.length} registros`;
+                if (summary) {
+                    summary.textContent = total
+                        ? `Mostrando ${start + 1} a ${end} de ${total} registros`
+                        : `Mostrando 0 a 0 de ${rows.length} registros`;
+                }
+
+                previous.disabled = currentPage <= 1 || total === 0;
+                next.disabled = currentPage >= totalPages || total === 0;
 
                 if (emptyRow) {
-                    emptyRow.hidden = visible > 0;
+                    emptyRow.hidden = total > 0;
                 }
             };
 
-            search.addEventListener('input', updateRows);
+            search.addEventListener('input', () => {
+                currentPage = 1;
+                updateRows();
+            });
+
+            previous.addEventListener('click', () => {
+                currentPage = Math.max(1, currentPage - 1);
+                updateRows();
+            });
+
+            next.addEventListener('click', () => {
+                currentPage += 1;
+                updateRows();
+            });
+
             updateRows();
         });
 

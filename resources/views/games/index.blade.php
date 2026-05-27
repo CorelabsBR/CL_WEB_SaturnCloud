@@ -3,44 +3,69 @@
 @section('title', 'Servidores de Jogos - VortexHost')
 @section('content')
 
-<section class="services-section games-page">
+<section class="games-page">
     <div class="container">
 
-        <div class="section-head center">
-            <h1 class="section-title">
-                
-                Servidores de Jogos
+        <div class="games-picker-head">
+            <div>
+                <span class="games-eyebrow">Game hosting</span>
+                <h1 class="section-title">Escolha o jogo do seu servidor</h1>
+                <p class="section-sub">
+                    Selecione uma base pronta, veja os planos disponíveis e coloque o servidor no ar com a configuração certa para cada jogo.
+                </p>
+            </div>
 
-            </h1>
-            <p class="section-sub">Escolha seu jogo e configure seu servidor.</p>
+            <div class="games-head-panel">
+                <span>{{ $jogos->count() }}</span>
+                <p>{{ $jogos->count() === 1 ? 'jogo disponível' : 'jogos disponíveis' }}</p>
+            </div>
         </div>
 
-        <div class="services-grid games-grid">
+        <div class="games-picker-grid">
 
             @forelse ($jogos as $jogo)
-               <a href="{{ route('games.show', ['jogo' => $jogo->slug]) }}" class="svc-card game-list-card">
-                    @if ($jogo->banner)
-                        <img
-                            class="game-list-image"
-                            src="{{ asset('img/games/' . $jogo->banner) }}"
-                            alt="{{ $jogo->nome }}"
-                        >
-                    @else
-                        <div class="svc-icon game-list-fallback">🎮</div>
-                    @endif
+                <a
+                    href="{{ route('games.show', ['jogo' => $jogo->slug]) }}"
+                    class="game-choice-card {{ $loop->first ? 'is-featured' : '' }}"
+                    aria-label="Ver planos para {{ $jogo->nome }}"
+                >
+                    <div class="game-choice-media">
+                        @if ($jogo->banner)
+                            <img
+                                class="game-choice-image"
+                                src="{{ asset('img/games/' . $jogo->banner) }}"
+                                alt="{{ $jogo->nome }}"
+                            >
+                        @else
+                            <div class="game-choice-fallback">
+                                <span>{{ mb_substr($jogo->nome, 0, 1) }}</span>
+                            </div>
+                        @endif
+                    </div>
 
-                    <p class="svc-tag">Game Server</p>
+                    <div class="game-choice-content">
+                        <div class="game-choice-topline">
+                            <span class="game-choice-status">Pronto para ativar</span>
+                            @if ($loop->first)
+                                <span class="game-choice-featured">Destaque</span>
+                            @endif
+                        </div>
 
-                    <h3 class="svc-title">{{ $jogo->nome }}</h3>
+                        <h2>{{ $jogo->nome }}</h2>
 
-                    <p class="svc-desc">
-                        Ver planos disponíveis
-                    </p>
+                        <p>
+                            Planos otimizados com painel, proteção e recursos ajustados para partidas estáveis.
+                        </p>
 
+                        <div class="game-choice-footer">
+                            <span>Ver planos</span>
+                            <span class="game-choice-arrow" aria-hidden="true">→</span>
+                        </div>
+                    </div>
                 </a>
             @empty
 
-                <div style="text-align:center; padding:60px;">
+                <div class="games-empty-state">
                     <h3>Nenhum jogo encontrado</h3>
                     <p>Popula a tabela jogos_prod.</p>
                 </div>

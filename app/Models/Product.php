@@ -45,4 +45,9 @@ class Product extends Model
     {
         return $this->belongsTo(JogoProd::class, 'jogo_id');
     }
+
+    public function planModel()
+    {
+        return $this->belongsTo(Plan::class, 'plan', 'plan');
+    }
 }

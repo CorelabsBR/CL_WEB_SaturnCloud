@@ -4,23 +4,36 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Payment;
+use App\Services\PterodactylService;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(PterodactylService $pterodactyl)
     {
         $userId = Auth::id();
         $user = Auth::user();
+
+        try {
+            $pterodactyl->pruneDeletedServersForUser($userId);
+        } catch (\Throwable $e) {
+            Log::warning('Falha ao sincronizar servidores removidos do Pterodactyl no dashboard', [
+                'user_id' => $userId,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         $services = DB::table('services as s')
             ->leftJoin('products as p', 's.product_id', '=', 'p.id')
             ->leftJoin('orders as o', 's.order_id', '=', 'o.id')
             ->leftJoin('pterodactyl_servers as ps', 's.id', '=', 'ps.service_id')
             ->leftJoin('hestia_accounts as ha', 's.id', '=', 'ha.service_id')
+            ->leftJoin('service_provisioning_configurations as spc', 's.id', '=', 'spc.service_id')
             ->select(
                 's.id',
                 's.user_id',
@@ -31,8 +44,10 @@ class DashboardController extends Controller
                 's.status',
                 's.type',
                 's.domain',
+                's.provision_identifier',
                 's.expires_at',
                 's.created_at',
+                's.updated_at',
                 'p.nome as product_name',
                 'p.plan as product_plan',
                 'p.preco as product_price',
@@ -40,9 +55,14 @@ class DashboardController extends Controller
                 'p.armazenamento',
                 'p.processamento',
                 'o.status as original_order_status',
+                'spc.last_error as provisioning_last_error',
                 'ps.identifier as pterodactyl_identifier',
                 'ha.hestia_user',
                 'ha.domain as hestia_domain'
+            )
+            ->selectRaw(
+                'exists(select 1 from payments pay where pay.order_id = s.order_id and pay.status = ?) as has_approved_payment',
+                ['approved']
             )
             ->where('s.user_id', $userId)
             ->orderByDesc('s.created_at')
@@ -68,10 +88,14 @@ class DashboardController extends Controller
                 $plan = $service->product_name
                     ? $service->product_name
                     : ($service->product_plan ? ucfirst($service->product_plan) : ucfirst($service->type ?: 'Plano'));
+                $lastError = $service->provisioning_last_error
+                    ? json_decode($service->provisioning_last_error, true)
+                    : null;
 
                 return [
                     'id' => $service->id,
                     'display_id' => $this->displayId('SRV', $service->id),
+                    'provision_identifier' => $service->provision_identifier,
                     'name' => $name,
                     'status' => $status,
                     'type' => $service->type,
@@ -85,18 +109,26 @@ class DashboardController extends Controller
                     'created_at' => $service->created_at
                         ? date('d/m/Y', strtotime($service->created_at))
                         : '--/--/----',
+                    'activity_at' => $service->updated_at ?: $service->created_at,
                     'expires_at' => $service->expires_at
                         ? date('d/m/Y', strtotime($service->expires_at))
                         : 'Sem renovação definida',
                     'resources' => $this->buildServiceResources($service->ram, $service->armazenamento, $service->processamento),
                     'panel' => $this->servicePanelLink($service),
-                    'invoice' => $this->serviceInvoiceStatus($service->original_order_status),
+                    'configuration_url' => $service->type === 'game' && data_get($lastError, 'type') === 'missing_required_egg_variables'
+                        ? route('pterodactyl.configure.edit', $service->id)
+                        : null,
+                    'invoice' => $this->serviceInvoiceStatus(
+                        $service->original_order_status,
+                        (bool) $service->has_approved_payment,
+                        $service->status
+                    ),
                 ];
             });
 
         $stats = $this->buildStats($user, $services, $invoices);
         $profile = $this->buildProfileSummary($user);
-        $activities = $this->buildActivities($services, $invoices);
+        $activities = $this->buildActivities($services, $invoices, $user);
 
         return view('dashboard.index', compact(
             'services',
@@ -111,6 +143,7 @@ class DashboardController extends Controller
     {
         $pendingInvoices = $invoices->where('status', 'pendente');
         $paidInvoices = $invoices->where('status', 'pago');
+        $lastPayment = $this->lastPaymentSummary($user?->id);
         $nextInvoice = $pendingInvoices
             ->sortBy(fn ($invoice) => data_get($invoice, 'due_at_raw')?->timestamp ?? PHP_INT_MAX)
             ->first();
@@ -124,7 +157,7 @@ class DashboardController extends Controller
             'paid_invoices' => $paidInvoices->count(),
             'pending_amount' => $pendingInvoices->sum('amount'),
             'paid_amount' => $paidInvoices->sum('amount'),
-            'last_payment' => $paidInvoices->first(),
+            'last_payment' => $lastPayment,
             'next_invoice' => $nextInvoice,
             'account_created_at' => $this->modelTimestamp($user, 'created')?->format('d/m/Y') ?? '--/--/----',
             'account_age_days' => $this->modelTimestamp($user, 'created')
@@ -213,6 +246,7 @@ class DashboardController extends Controller
                     'description' => $description ?: ($order->billing_type === 'renewal' ? 'Renovação de mensalidade' : 'Compra inicial'),
                     'amount' => $order->total,
                     'created_at' => $createdAt?->format('d/m/Y H:i') ?? 'Sem data',
+                    'created_at_raw' => $createdAt,
                     'due_at' => $order->billing_type === 'renewal'
                         ? ($order->due_at?->format('d/m/Y H:i') ?? 'Sem vencimento')
                         : ($createdAt?->format('d/m/Y H:i') ?? 'Sem data'),
@@ -259,23 +293,66 @@ class DashboardController extends Controller
         }
 
         if ($service->type === 'web') {
-            $baseUrl = rtrim((string) config('services.hestia.url'), '/');
-
-            if (! $baseUrl) {
+            if (! config('services.hestia.url')) {
                 return null;
             }
 
             return [
                 'label' => 'Painel do site',
-                'url' => $baseUrl,
+                'url' => route('hestia.panel', $service->id),
             ];
         }
 
         return null;
     }
 
-    private function serviceInvoiceStatus(?string $status): array
+    private function lastPaymentSummary(?int $userId): ?array
     {
+        if (! $userId) {
+            return null;
+        }
+
+        $lastPaidOrder = Order::query()
+            ->where('user_id', $userId)
+            ->where('status', 'pago')
+            ->latest('atualizado_em')
+            ->first();
+
+        if ($lastPaidOrder) {
+            return [
+                'amount' => $lastPaidOrder->total,
+                'paid_at' => $this->modelTimestamp($lastPaidOrder, 'updated')?->format('d/m/Y H:i'),
+                'display_id' => $this->displayId('VTX', $lastPaidOrder->id),
+            ];
+        }
+
+        $lastApprovedPayment = Payment::query()
+            ->where('status', 'approved')
+            ->whereHas('order', fn ($query) => $query->where('user_id', $userId))
+            ->with('order')
+            ->latest('updated_at')
+            ->first();
+
+        if (! $lastApprovedPayment) {
+            return null;
+        }
+
+        return [
+            'amount' => $lastApprovedPayment->amount ?: $lastApprovedPayment->order?->total,
+            'paid_at' => $this->modelTimestamp($lastApprovedPayment, 'updated')?->format('d/m/Y H:i'),
+            'display_id' => $this->displayId('VTX', $lastApprovedPayment->order_id),
+        ];
+    }
+
+    private function serviceInvoiceStatus(?string $status, bool $hasApprovedPayment = false, ?string $serviceStatus = null): array
+    {
+        if ($hasApprovedPayment || $serviceStatus === 'active') {
+            return [
+                'label' => 'Fatura paga',
+                'class' => 'status-pago',
+            ];
+        }
+
         return match ($status) {
             'pago' => [
                 'label' => 'Fatura paga',
@@ -393,34 +470,92 @@ class DashboardController extends Controller
         return 0;
     }
 
-    private function buildActivities($services, $invoices)
+    private function buildActivities($services, $invoices, $user)
     {
         $activities = collect();
 
         foreach ($services as $service) {
+            $activityAt = $this->activityTimestamp(data_get($service, 'activity_at'));
+
             $activities->push([
-                'title' => "{$service['name']} " . ucfirst($service['status']),
-                'description' => "Serviço em {$service['location']}.",
-                'time' => 'Agora',
+                'title' => data_get($service, 'status') === 'ativo'
+                    ? "Serviço ativo: {$service['name']}"
+                    : "{$service['name']} " . ucfirst((string) data_get($service, 'status', 'pendente')),
+                'description' => "Serviço em " . data_get($service, 'location', 'local não informado') . ".",
+                'time' => $this->activityTimeLabel($activityAt),
+                'sort_at' => $activityAt,
             ]);
         }
 
         foreach ($invoices as $invoice) {
+            $activityAt = $this->activityTimestamp(data_get($invoice, 'created_at_raw'));
+
             $activities->push([
                 'title' => 'Fatura ' . data_get($invoice, 'display_id', $this->displayId('VTX', data_get($invoice, 'id'))) . ' ' . ucfirst($invoice['status']),
                 'description' => 'Valor R$ ' . number_format((float) $invoice['amount'], 2, ',', '.'),
-                'time' => 'Recentemente',
+                'time' => $this->activityTimeLabel($activityAt),
+                'sort_at' => $activityAt,
             ]);
         }
 
         if ($activities->isEmpty()) {
+            $activityAt = $this->modelTimestamp($user, 'created');
+
             $activities->push([
                 'title' => 'Conta criada',
                 'description' => 'Sua conta foi criada com sucesso.',
-                'time' => 'Agora',
+                'time' => $this->activityTimeLabel($activityAt),
+                'sort_at' => $activityAt,
             ]);
         }
 
-        return $activities;
+        return $activities
+            ->sortByDesc(fn ($activity) => data_get($activity, 'sort_at')?->timestamp ?? 0)
+            ->take(6)
+            ->values();
+    }
+
+    private function activityTimestamp($value): ?Carbon
+    {
+        if (! $value) {
+            return null;
+        }
+
+        if ($value instanceof DateTimeInterface) {
+            return Carbon::instance($value);
+        }
+
+        return Carbon::parse($value);
+    }
+
+    private function activityTimeLabel(?Carbon $timestamp): string
+    {
+        if (! $timestamp) {
+            return 'Sem data';
+        }
+
+        $diffInMinutes = (int) $timestamp->diffInMinutes(now());
+
+        if ($diffInMinutes < 1) {
+            return 'Agora';
+        }
+
+        if ($diffInMinutes < 60) {
+            return 'há ' . $diffInMinutes . ' min';
+        }
+
+        if ($diffInMinutes < 1440) {
+            $hours = (int) floor($diffInMinutes / 60);
+
+            return 'há ' . $hours . ' h';
+        }
+
+        if ($diffInMinutes < 10080) {
+            $days = (int) floor($diffInMinutes / 1440);
+
+            return 'há ' . $days . ' d';
+        }
+
+        return $timestamp->format('d/m/Y');
     }
 }

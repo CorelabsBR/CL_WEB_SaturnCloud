@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\MissingPterodactylEggVariablesException;
 use App\Models\CustomerService;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -37,6 +38,27 @@ class ProvisioningService
                         'game' => $this->pterodactyl->provision($service, $item),
                         default => $service->update(['status' => 'pending']),
                     };
+                } catch (MissingPterodactylEggVariablesException $e) {
+                    $service->provisioningConfiguration()->updateOrCreate(
+                        ['service_id' => $service->id],
+                        [
+                            'last_error' => [
+                                'type' => 'missing_required_egg_variables',
+                                'missing_variables' => $e->variables(),
+                                'message' => $e->getMessage(),
+                                'failed_at' => now()->toIso8601String(),
+                            ],
+                        ]
+                    );
+
+                    $service->update(['status' => 'pending']);
+
+                    Log::warning('Provisionamento aguardando configuração do servidor', [
+                        'order_id' => $order->id,
+                        'order_item_id' => $item->id,
+                        'service_id' => $service->id,
+                        'missing_variables' => $e->variables(),
+                    ]);
                 } catch (\Throwable $e) {
                     $service->update(['status' => 'failed']);
 
@@ -62,10 +84,16 @@ class ProvisioningService
                 ->first();
 
             if ($existing) {
+                if (! $existing->provision_identifier) {
+                    $existing->update([
+                        'provision_identifier' => $this->provisionIdentifier($existing),
+                    ]);
+                }
+
                 return $existing;
             }
 
-            return CustomerService::create([
+            $service = CustomerService::create([
                 'user_id' => $order->user_id,
                 'order_id' => $order->id,
                 'order_item_id' => $item->id,
@@ -75,7 +103,24 @@ class ProvisioningService
                 'name' => $this->serviceName($item, $copy),
                 'expires_at' => now()->addMonth(),
             ]);
+
+            $service->update([
+                'provision_identifier' => $this->provisionIdentifier($service),
+            ]);
+
+            return $service;
         });
+    }
+
+    private function provisionIdentifier(CustomerService $service): string
+    {
+        return sprintf(
+            'VTX-SRV-%06d-U%06d-O%06d-I%06d',
+            $service->id,
+            $service->user_id,
+            $service->order_id ?: 0,
+            $service->order_item_id ?: 0
+        );
     }
 
     private function typeFor(OrderItem $item): string
