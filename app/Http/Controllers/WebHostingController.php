@@ -14,7 +14,6 @@ class WebHostingController extends Controller
         ]);
 
         $produtos = Product::where('categoria_id', $categoria->id)
-            ->orderByDesc('featured')
             ->orderBy('sort_order')
             ->orderBy('preco')
             ->get();

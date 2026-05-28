@@ -32,10 +32,35 @@
 
                 <div class="checkout-items">
                     @foreach($items as $item)
+                        @php
+                            $category = Illuminate\Support\Str::lower((string) $item->product?->categoria?->nome);
+                            $isWebProduct = str_contains($category, 'web') || str_contains($category, 'hosped') || (int) $item->product?->categoria_id === 1;
+                        @endphp
                         <article class="checkout-item">
                             <div class="checkout-item-main">
                                 <strong>{{ $item->product->nome }}</strong>
                                 <span>{{ $item->quantidade }}x R$ {{ number_format($item->product->preco, 2, ',', '.') }}</span>
+
+                                @if($isWebProduct)
+                                    <label class="checkout-username">
+                                        <span>Usuário do painel</span>
+                                        <input
+                                            form="checkout-payment-form"
+                                            type="text"
+                                            name="requested_usernames[{{ $item->id }}]"
+                                            value="{{ old('requested_usernames.' . $item->id) }}"
+                                            placeholder="ex: minhaempresa"
+                                            autocomplete="off"
+                                            inputmode="latin"
+                                            pattern="[a-z][a-z0-9]{2,31}"
+                                            maxlength="32"
+                                            required
+                                        >
+                                    </label>
+                                    @error('requested_usernames.' . $item->id)
+                                        <small class="checkout-field-error">{{ $message }}</small>
+                                    @enderror
+                                @endif
                             </div>
 
                             <div class="checkout-subtotal">
@@ -75,6 +100,10 @@
                                 <button type="submit">Aplicar</button>
                             </form>
                         @endif
+
+                        @error('coupon_code')
+                            <small class="checkout-field-error">{{ $message }}</small>
+                        @enderror
                     </div>
 
                     @if($discount > 0)
@@ -94,7 +123,7 @@
                         <strong>R$ {{ number_format($finalTotal, 2, ',', '.') }}</strong>
                     </div>
 
-                    <form method="POST" action="{{ route('checkout.pay') }}">
+                    <form id="checkout-payment-form" method="POST" action="{{ route('checkout.pay') }}">
                         @csrf
 
                         <button type="submit" class="btn btn-primary btn-full">

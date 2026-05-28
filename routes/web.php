@@ -29,13 +29,13 @@ Route::middleware('guest')->group(function () {
     Route::post('/registro', [AuthController::class, 'register'])->name('registro.post');
 });
 
+Route::get('/completar-cadastro', [AuthController::class, 'showCompleteProfile'])
+    ->name('cadastro.completar');
+
+Route::post('/completar-cadastro', [AuthController::class, 'completeProfile'])
+    ->name('cadastro.completar.post');
+
 Route::middleware('auth')->group(function () {
-    Route::get('/completar-cadastro', [AuthController::class, 'showCompleteProfile'])
-        ->name('cadastro.completar');
-
-    Route::post('/completar-cadastro', [AuthController::class, 'completeProfile'])
-        ->name('cadastro.completar.post');
-
     Route::get('/perfil', [AuthController::class, 'showEditProfile'])
         ->name('perfil.edit');
 
@@ -59,20 +59,26 @@ Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect'
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])
     ->name('social.callback');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'profile.complete'])->group(function () {
     Route::get('/carrinho', [CartController::class, 'index'])->name('cart.index');
     Route::post('/carrinho/add-plan/{plan}', [CartController::class, 'addPlan'])->name('cart.addPlan');
     Route::post('/carrinho/produto/{product}', [CartController::class, 'addProduct'])->name('cart.addProduct');
     Route::patch('/carrinho/update/{cartItem}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/carrinho/remove/{cartItem}', [CartController::class, 'remove'])->name('cart.remove');
     Route::delete('/carrinho/clear', [CartController::class, 'clear'])->name('cart.clear');
+});
+
+Route::middleware('auth')->group(function () {
     Route::get('/suporte', [SupportTicketController::class, 'index'])->name('ticket.index');
     Route::get('/suporte/mensagens', [SupportTicketController::class, 'messages'])->name('ticket.messages');
-    Route::get('/painel', [DashboardController::class, 'index'])->name('dashboard.index');
-    Route::get('/dashboard', fn () => redirect()->route('dashboard.index'));
 
     Route::post('/suporte', [SupportTicketController::class, 'store'])->name('ticket.store');
 
+});
+
+Route::middleware(['auth', 'profile.complete'])->group(function () {
+    Route::get('/painel', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/dashboard', fn () => redirect()->route('dashboard.index'));
 });
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
@@ -89,7 +95,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::delete('/suporte/{ticket}', [AdminController::class, 'destroyTicket'])->name('tickets.destroy');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'profile.complete'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout/cupom', [CheckoutController::class, 'applyCoupon'])->name('checkout.coupon.apply');
     Route::delete('/checkout/cupom', [CheckoutController::class, 'removeCoupon'])->name('checkout.coupon.remove');

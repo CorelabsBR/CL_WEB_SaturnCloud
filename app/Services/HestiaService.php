@@ -39,11 +39,11 @@ class HestiaService
 
     public function provision(CustomerService $service, OrderItem $item): HestiaAccount
     {
-        $service->loadMissing(['product', 'order.user']);
+        $service->loadMissing(['product', 'order.user', 'orderItem']);
 
         $user = $service->order->user;
         $hestiaUser = $this->username($user, $service);
-        $password = $service->hestiaAccount?->password ?: Str::password(18);
+        $password = $service->hestiaAccount?->password ?: 'vtx' . Str::password(18);
         $package = $this->packageFor($service);
         $domain = $this->domainFor($service);
 
@@ -281,7 +281,7 @@ class HestiaService
 
         if (
             (! $response->successful() || $result['code'] === 10)
-            && isset($payload['access_key'])
+            && isset($payload['hash'])
             && config('services.hestia.user')
             && config('services.hestia.password')
         ) {
@@ -358,11 +358,11 @@ class HestiaService
         return $message;
     }
 
-    private function payload(string $command, array $arguments, bool $forcePasswordAuth = false): array
-    {
+    private function payload(string $command, array $arguments, bool $forcePasswordAuth = false): array{
         $accessKey = config('services.hestia.access_key');
         $secretKey = config('services.hestia.secret_key');
         $hash = $accessKey && $secretKey ? "{$accessKey}:{$secretKey}" : null;
+
         $user = config('services.hestia.user');
         $password = config('services.hestia.password');
 
@@ -372,8 +372,7 @@ class HestiaService
 
         if (! $forcePasswordAuth && $hash) {
             $payload = [
-                'access_key' => $accessKey,
-                'secret_key' => $secretKey,
+                'hash' => $hash,
             ];
         } elseif ($user && $password) {
             $payload = [
@@ -381,7 +380,7 @@ class HestiaService
                 'password' => $password,
             ];
         } else {
-            throw new \RuntimeException('Credenciais Hestia não configuradas.');
+            throw new \RuntimeException('Credenciais Hestia nao configuradas.');
         }
 
         $payload += [
@@ -431,6 +430,12 @@ class HestiaService
 
     private function username(User $user, CustomerService $service): string
     {
+        $requestedUsername = trim((string) $service->orderItem?->requested_username);
+
+        if ($requestedUsername !== '') {
+            return Str::lower($requestedUsername);
+        }
+
         $base = Str::lower(Str::before($user->email, '@'));
         $base = preg_replace('/[^a-z0-9]/', '', $base) ?: 'cliente';
 

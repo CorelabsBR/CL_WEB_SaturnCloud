@@ -8,16 +8,10 @@
 
         <div class="games-picker-head">
             <div>
-                <span class="games-eyebrow">Game hosting</span>
                 <h1 class="section-title">Escolha o jogo do seu servidor</h1>
                 <p class="section-sub">
                     Selecione uma base pronta, veja os planos disponíveis e coloque o servidor no ar com a configuração certa para cada jogo.
                 </p>
-            </div>
-
-            <div class="games-head-panel">
-                <span>{{ $jogos->count() }}</span>
-                <p>{{ $jogos->count() === 1 ? 'jogo disponível' : 'jogos disponíveis' }}</p>
             </div>
         </div>
 
@@ -26,7 +20,7 @@
             @forelse ($jogos as $jogo)
                 <a
                     href="{{ route('games.show', ['jogo' => $jogo->slug]) }}"
-                    class="game-choice-card {{ $loop->first ? 'is-featured' : '' }}"
+                    class="game-choice-card game-choice-{{ $jogo->slug }} {{ $loop->first ? 'is-featured' : '' }}"
                     aria-label="Ver planos para {{ $jogo->nome }}"
                 >
                     <div class="game-choice-media">

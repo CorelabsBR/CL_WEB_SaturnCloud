@@ -1,6 +1,5 @@
 @php
-    $hideSupportWidget = ! auth()->check()
-        || auth()->user()?->tipo_usuario === 'root'
+    $hideSupportWidget = auth()->user()?->tipo_usuario === 'root'
         || request()->routeIs('login', 'registro', 'cadastro.completar')
         || request()->is('login', 'registro', 'completar-cadastro');
 
@@ -65,13 +64,6 @@
                     @endforeach
                 @endforeach
             </div>
-
-            @if(session('success'))
-                <div class="support-message support-message-team">
-                    <strong>Suporte</strong>
-                    <p>{{ session('success') }}</p>
-                </div>
-            @endif
         </div>
 
         @auth
@@ -85,9 +77,20 @@
                 <div class="support-chat-tools">
                     <label class="support-image-button" title="Adicionar imagem">
                         <input type="file" name="image" accept="image/*" data-support-image>
-                        <span>Imagem</span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 17l4.5-4.5a2 2 0 0 1 2.8 0L16 17" />
+                            <path d="M14 15l1.5-1.5a2 2 0 0 1 2.8 0L20 15" />
+                            <path d="M5 5h14v14H5z" />
+                            <path d="M15 8h.01" />
+                        </svg>
                     </label>
                     <small data-support-image-name hidden></small>
+                    <button class="support-image-clear" type="button" data-support-image-clear hidden aria-label="Remover imagem anexada" title="Remover imagem">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M18 6 6 18" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
                 </div>
                 @error('message')
                     <small>{{ $message }}</small>
@@ -125,6 +128,9 @@
         const submitButton = form?.querySelector('button[type="submit"]');
         const imageInput = form?.querySelector('[data-support-image]');
         const imageName = form?.querySelector('[data-support-image-name]');
+        const imageClear = form?.querySelector('[data-support-image-clear]');
+        const compressedUploadLimit = 1800 * 1024;
+        const imageExtensionPattern = /\.(avif|bmp|gif|jpe?g|png|svg|webp)$/i;
 
         if (form && !formError) {
             formError = document.createElement('small');
@@ -144,13 +150,59 @@
             });
         }
 
-        imageInput?.addEventListener('change', () => {
+        const clearImage = () => {
+            if (imageInput) {
+                imageInput.value = '';
+            }
+
             if (!imageName) {
                 return;
             }
 
-            imageName.textContent = imageInput.files?.[0]?.name || '';
-            imageName.hidden = !imageName.textContent;
+            imageName.textContent = '';
+            imageName.hidden = true;
+
+            if (imageClear) {
+                imageClear.hidden = true;
+            }
+        };
+
+        imageInput?.addEventListener('change', () => {
+            const file = imageInput.files?.[0];
+
+            if (!file) {
+                clearImage();
+                setFormError();
+                return;
+            }
+
+            if (file.type && !file.type.startsWith('image/') && !imageExtensionPattern.test(file.name)) {
+                clearImage();
+                setFormError('Selecione um arquivo de imagem.');
+                return;
+            }
+
+            if (file.size > 8192 * 1024) {
+                clearImage();
+                setFormError('A imagem pode ter no máximo 8 MB.');
+                return;
+            }
+
+            if (imageName) {
+                imageName.textContent = file.name;
+                imageName.hidden = false;
+            }
+
+            if (imageClear) {
+                imageClear.hidden = false;
+            }
+
+            setFormError();
+        });
+
+        imageClear?.addEventListener('click', () => {
+            clearImage();
+            setFormError();
         });
 
         toggles.forEach((toggle) => {
@@ -219,6 +271,54 @@
             formError.hidden = !message;
         };
 
+        const compressImageFile = (file) => new Promise((resolve) => {
+            if (!file || (file.type && !file.type.startsWith('image/')) || file.type === 'image/gif' || file.type === 'image/svg+xml' || file.size <= compressedUploadLimit) {
+                resolve(file);
+                return;
+            }
+
+            const image = new Image();
+            const objectUrl = URL.createObjectURL(file);
+
+            image.onload = () => {
+                URL.revokeObjectURL(objectUrl);
+
+                const maxSide = 1600;
+                const ratio = Math.min(1, maxSide / Math.max(image.width, image.height));
+                const canvas = document.createElement('canvas');
+
+                canvas.width = Math.max(1, Math.round(image.width * ratio));
+                canvas.height = Math.max(1, Math.round(image.height * ratio));
+
+                const context = canvas.getContext('2d');
+
+                if (!context) {
+                    resolve(file);
+                    return;
+                }
+
+                context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                canvas.toBlob((blob) => {
+                    if (!blob) {
+                        resolve(file);
+                        return;
+                    }
+
+                    resolve(new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', {
+                        type: 'image/jpeg',
+                        lastModified: Date.now()
+                    }));
+                }, 'image/jpeg', 0.82);
+            };
+
+            image.onerror = () => {
+                URL.revokeObjectURL(objectUrl);
+                resolve(file);
+            };
+
+            image.src = objectUrl;
+        });
+
         const fetchMessages = async () => {
             try {
                 const response = await fetch(widget.dataset.supportMessagesUrl, {
@@ -254,9 +354,17 @@
             submitButton?.setAttribute('disabled', 'disabled');
 
             try {
+                const formData = new FormData(form);
+                const imageFile = imageInput?.files?.[0];
+
+                if (imageFile) {
+                    const uploadFile = await compressImageFile(imageFile);
+                    formData.set('image', uploadFile, uploadFile.name);
+                }
+
                 const response = await fetch(form.action, {
                     method: 'POST',
-                    body: new FormData(form),
+                    body: formData,
                     headers: {
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
@@ -280,13 +388,7 @@
                 }
 
                 textarea.value = '';
-                if (imageInput) {
-                    imageInput.value = '';
-                }
-                if (imageName) {
-                    imageName.textContent = '';
-                    imageName.hidden = true;
-                }
+                clearImage();
                 renderMessages(await response.json());
                 widget.classList.add('is-open');
             } catch (error) {

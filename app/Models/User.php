@@ -35,8 +35,7 @@ protected $fillable = [
     'avatar',
     'provider',
     'email_verified_at',
-    'pterodactyl_fivem_license',
-    'pterodactyl_cfx_license',
+    'profile_completed_at',
 ];
 
 protected $hidden = [

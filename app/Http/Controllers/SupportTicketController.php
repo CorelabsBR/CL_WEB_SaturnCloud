@@ -26,7 +26,7 @@ class SupportTicketController extends Controller
             'category' => ['required', 'string', 'max:60'],
             'priority' => ['required', 'in:baixa,normal,alta,urgente'],
             'message' => ['nullable', 'required_without:image', 'string', 'max:2000'],
-            'image' => ['nullable', 'image', 'max:4096'],
+            'image' => ['nullable', 'image', 'max:8192'],
         ]);
 
         $ticket = null;

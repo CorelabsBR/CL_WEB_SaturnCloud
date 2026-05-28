@@ -11,6 +11,9 @@
 @endpush
 
 @section('content')
+@php
+    $profileUser = $profileUser ?? auth()->user();
+@endphp
 
 <section class="register-split">
     <aside class="register-panel">
@@ -55,73 +58,73 @@
                     <div class="register-group full">
                         <label class="register-label" for="name">Nome completo</label>
                         <input class="register-input @error('name') is-invalid @enderror" type="text" id="name" name="name"
-                               value="{{ old('name', auth()->user()->nome) }}" required>
+                               value="{{ old('name', $profileUser?->nome) }}" required>
                     </div>
 
                     <div class="register-group">
                         <label class="register-label" for="cpf_cnpj">CPF / CNPJ</label>
                         <input class="register-input @error('cpf_cnpj') is-invalid @enderror" type="text" id="cpf_cnpj" name="cpf_cnpj"
-                               value="{{ old('cpf_cnpj', auth()->user()->cpf_cnpj) }}" required>
+                               value="{{ old('cpf_cnpj', $profileUser?->cpf_cnpj) }}" required inputmode="numeric" maxlength="18" data-mask="document">
                     </div>
 
                     <div class="register-group">
                         <label class="register-label" for="celular">Celular</label>
                         <input class="register-input @error('celular') is-invalid @enderror" type="text" id="celular" name="celular"
-                               value="{{ old('celular', auth()->user()->celular) }}" required>
+                               value="{{ old('celular', $profileUser?->celular) }}" required inputmode="numeric" maxlength="15" autocomplete="tel" data-mask="phone">
                     </div>
 
                     <div class="register-group">
                         <label class="register-label" for="data_nasc">Data de nascimento</label>
                         <input class="register-input @error('data_nasc') is-invalid @enderror" type="date" id="data_nasc" name="data_nasc"
-                               value="{{ old('data_nasc', optional(auth()->user()->data_nasc)->format('Y-m-d')) }}" required>
+                               value="{{ old('data_nasc', optional($profileUser?->data_nasc)->format('Y-m-d')) }}" required>
                     </div>
 
                     <div class="register-group">
                         <label class="register-label" for="cep">CEP</label>
-                        <input class="register-input @error('name') is-invalid @enderror" type="text" id="cep" name="cep"
-                               value="{{ old('cep', auth()->user()->cep) }}" required>
+                        <input class="register-input @error('cep') is-invalid @enderror" type="text" id="cep" name="cep"
+                               value="{{ old('cep', $profileUser?->cep) }}" required inputmode="numeric" maxlength="9" autocomplete="postal-code" data-mask="cep">
                     </div>
 
                     <div class="register-group full">
                         <label class="register-label" for="rua">Rua</label>
-                        <input class="register-input @error('name') is-invalid @enderror" type="text" id="rua" name="rua"
-                               value="{{ old('rua', auth()->user()->rua) }}" required>
+                        <input class="register-input @error('rua') is-invalid @enderror" type="text" id="rua" name="rua"
+                               value="{{ old('rua', $profileUser?->rua) }}" required>
                     </div>
 
                     <div class="register-group">
                         <label class="register-label" for="numero">Número</label>
-                        <input class="register-input @error('name') is-invalid @enderror" type="text" id="numero" name="numero"
-                               value="{{ old('numero', auth()->user()->numero) }}" required>
+                        <input class="register-input @error('numero') is-invalid @enderror" type="text" id="numero" name="numero"
+                               value="{{ old('numero', $profileUser?->numero) }}" required>
                     </div>
 
                     <div class="register-group">
                         <label class="register-label" for="complemento">Complemento</label>
-                        <input class="register-input @error('name') is-invalid @enderror" type="text" id="complemento" name="complemento"
-                               value="{{ old('complemento', auth()->user()->complemento) }}">
+                        <input class="register-input @error('complemento') is-invalid @enderror" type="text" id="complemento" name="complemento"
+                               value="{{ old('complemento', $profileUser?->complemento) }}">
                     </div>
 
                     <div class="register-group">
                         <label class="register-label" for="bairro">Bairro</label>
-                        <input class="register-input @error('name') is-invalid @enderror" type="text" id="bairro" name="bairro"
-                               value="{{ old('bairro', auth()->user()->bairro) }}" required>
+                        <input class="register-input @error('bairro') is-invalid @enderror" type="text" id="bairro" name="bairro"
+                               value="{{ old('bairro', $profileUser?->bairro) }}" required>
                     </div>
 
                     <div class="register-group">
                         <label class="register-label" for="cidade">Cidade</label>
-                        <input class="register-input @error('name') is-invalid @enderror" type="text" id="cidade" name="cidade"
-                               value="{{ old('cidade', auth()->user()->cidade) }}" required>
+                        <input class="register-input @error('cidade') is-invalid @enderror" type="text" id="cidade" name="cidade"
+                               value="{{ old('cidade', $profileUser?->cidade) }}" required>
                     </div>
 
                     <div class="register-group">
                         <label class="register-label" for="estado">Estado</label>
-                        <input class="register-input @error('name') is-invalid @enderror" type="text" id="estado" name="estado"
-                               value="{{ old('estado', auth()->user()->estado) }}" required>
+                        <input class="register-input @error('estado') is-invalid @enderror" type="text" id="estado" name="estado"
+                               value="{{ old('estado', $profileUser?->estado) }}" required>
                     </div>
 
                     <div class="register-group">
                         <label class="register-label" for="pais">País</label>
-                        <input class="register-input @error('name') is-invalid @enderror" type="text" id="pais" name="pais"
-                               value="{{ old('pais', auth()->user()->pais ?? 'Brasil') }}" required>
+                        <input class="register-input @error('pais') is-invalid @enderror" type="text" id="pais" name="pais"
+                               value="{{ old('pais', $profileUser?->pais ?? 'Brasil') }}" required>
                     </div>
                 </div>
 
@@ -134,3 +137,7 @@
 </section>
 
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/profile-masks.js') }}?v={{ filemtime(public_path('js/profile-masks.js')) }}"></script>
+@endpush

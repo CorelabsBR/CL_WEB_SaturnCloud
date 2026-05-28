@@ -11,16 +11,30 @@ class Coupon extends Model
         'type',
         'value',
         'active',
+        'usage_limit',
+        'used_count',
     ];
 
     protected $casts = [
         'active' => 'boolean',
         'value' => 'decimal:2',
+        'usage_limit' => 'integer',
+        'used_count' => 'integer',
     ];
+
+    public function isAvailable(): bool
+    {
+        if (! $this->active) {
+            return false;
+        }
+
+        return $this->usage_limit === null
+            || $this->used_count < $this->usage_limit;
+    }
 
     public function discountFor(float $subtotal): float
     {
-        if (! $this->active || $subtotal <= 0) {
+        if (! $this->isAvailable() || $subtotal <= 0) {
             return 0;
         }
 

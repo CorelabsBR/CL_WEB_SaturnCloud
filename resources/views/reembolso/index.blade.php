@@ -169,7 +169,7 @@
                         pelos canais oficiais de atendimento da VortexHost.
                     </p>
 
-                    <a href="/contato" class="btn btn-primary">Solicitar atendimento</a>
+                    <a href="#suporte" class="btn btn-primary" data-support-open>Solicitar atendimento</a>
                 </section>
             </article>
         </div>

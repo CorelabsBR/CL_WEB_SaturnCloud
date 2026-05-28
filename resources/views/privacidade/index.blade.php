@@ -199,7 +199,7 @@
                         entre em contato pelos canais oficiais da VortexHost.
                     </p>
 
-                    <a href="/contato" class="btn btn-primary">Falar com suporte</a>
+                    <a href="#suporte" class="btn btn-primary" data-support-open>Falar com suporte</a>
                 </section>
             </article>
         </div>

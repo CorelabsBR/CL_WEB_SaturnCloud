@@ -209,7 +209,12 @@
                                         <div class="admin-chat-composer-row">
                                             <label class="admin-chat-image-button" title="Adicionar imagem">
                                                 <input type="file" name="image" accept="image/*" data-admin-chat-image>
-                                                <span>Imagem</span>
+                                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                    <path d="M4 17l4.5-4.5a2 2 0 0 1 2.8 0L16 17" />
+                                                    <path d="M14 15l1.5-1.5a2 2 0 0 1 2.8 0L20 15" />
+                                                    <path d="M5 5h14v14H5z" />
+                                                    <path d="M15 8h.01" />
+                                                </svg>
                                             </label>
                                             <textarea name="message" rows="1" placeholder="Escrever mensagem..."></textarea>
                                             <button type="submit" aria-label="Enviar resposta" title="Enviar">
@@ -218,7 +223,15 @@
                                                 </svg>
                                             </button>
                                         </div>
-                                        <small data-admin-chat-image-name hidden></small>
+                                        <div class="admin-chat-attachment-row">
+                                            <small data-admin-chat-image-name hidden></small>
+                                            <button class="admin-chat-image-clear" type="button" data-admin-chat-image-clear hidden aria-label="Remover imagem anexada" title="Remover imagem">
+                                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                    <path d="M18 6 6 18" />
+                                                    <path d="m6 6 12 12" />
+                                                </svg>
+                                            </button>
+                                        </div>
                                     </form>
                                 </div>
                             </article>
@@ -386,6 +399,10 @@
                                 <input type="checkbox" name="active" value="1" checked>
                                 Ativo
                             </label>
+                            <label class="form-check-row">
+                                <input type="checkbox" name="single_use" value="1">
+                                Uso único
+                            </label>
                             <button class="btn btn-primary" type="submit">Criar cupom</button>
                         </div>
                     </div>
@@ -400,6 +417,7 @@
                                 <th>Código</th>
                                 <th>Tipo</th>
                                 <th>Valor</th>
+                                <th>Uso</th>
                                 <th>Status</th>
                                 <th>Ações</th>
                             </tr>
@@ -411,8 +429,11 @@
                                     <td>{{ $coupon->type === 'percent' ? 'Percentual' : 'Valor fixo' }}</td>
                                     <td>{{ $coupon->type === 'percent' ? number_format((float) $coupon->value, 2, ',', '.') . '%' : $money($coupon->value) }}</td>
                                     <td>
-                                        <span class="admin-status {{ $coupon->active ? 'is-answered' : 'is-closed' }}">
-                                            {{ $coupon->active ? 'Ativo' : 'Inativo' }}
+                                        {{ $coupon->usage_limit ? $coupon->used_count . '/' . $coupon->usage_limit : $coupon->used_count . '/ilimitado' }}
+                                    </td>
+                                    <td>
+                                        <span class="admin-status {{ $coupon->isAvailable() ? 'is-answered' : 'is-closed' }}">
+                                            {{ $coupon->isAvailable() ? 'Ativo' : ($coupon->active ? 'Esgotado' : 'Inativo') }}
                                         </span>
                                     </td>
                                     <td class="td-actions">
@@ -425,7 +446,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5">Nenhum cupom cadastrado.</td>
+                                    <td colspan="6">Nenhum cupom cadastrado.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -702,6 +723,8 @@
 
         let signature = supportBlock.dataset.adminSupportSignature || '';
         const csrfToken = supportBlock.dataset.adminCsrf || '';
+        const compressedUploadLimit = 1800 * 1024;
+        const imageExtensionPattern = /\.(avif|bmp|gif|jpe?g|png|svg|webp)$/i;
 
         document.querySelectorAll('.admin-chat-log').forEach((chatLog) => {
             chatLog.scrollTop = chatLog.scrollHeight;
@@ -817,7 +840,12 @@
                             <div class="admin-chat-composer-row">
                                 <label class="admin-chat-image-button" title="Adicionar imagem">
                                     <input type="file" name="image" accept="image/*" data-admin-chat-image>
-                                    <span>Imagem</span>
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M4 17l4.5-4.5a2 2 0 0 1 2.8 0L16 17" />
+                                        <path d="M14 15l1.5-1.5a2 2 0 0 1 2.8 0L20 15" />
+                                        <path d="M5 5h14v14H5z" />
+                                        <path d="M15 8h.01" />
+                                    </svg>
                                 </label>
                                 <textarea name="message" rows="1" placeholder="Escrever mensagem..."></textarea>
                                 <button type="submit" aria-label="Enviar resposta" title="Enviar">
@@ -826,7 +854,15 @@
                                     </svg>
                                 </button>
                             </div>
-                            <small data-admin-chat-image-name hidden></small>
+                            <div class="admin-chat-attachment-row">
+                                <small data-admin-chat-image-name hidden></small>
+                                <button class="admin-chat-image-clear" type="button" data-admin-chat-image-clear hidden aria-label="Remover imagem anexada" title="Remover imagem">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M18 6 6 18" />
+                                        <path d="m6 6 12 12" />
+                                    </svg>
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </article>
@@ -912,7 +948,121 @@
             error.hidden = !message;
         };
 
+        const compressImageFile = (file) => new Promise((resolve) => {
+            if (!file || (file.type && !file.type.startsWith('image/')) || file.type === 'image/gif' || file.type === 'image/svg+xml' || file.size <= compressedUploadLimit) {
+                resolve(file);
+                return;
+            }
+
+            const image = new Image();
+            const objectUrl = URL.createObjectURL(file);
+
+            image.onload = () => {
+                URL.revokeObjectURL(objectUrl);
+
+                const maxSide = 1600;
+                const ratio = Math.min(1, maxSide / Math.max(image.width, image.height));
+                const canvas = document.createElement('canvas');
+
+                canvas.width = Math.max(1, Math.round(image.width * ratio));
+                canvas.height = Math.max(1, Math.round(image.height * ratio));
+
+                const context = canvas.getContext('2d');
+
+                if (!context) {
+                    resolve(file);
+                    return;
+                }
+
+                context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                canvas.toBlob((blob) => {
+                    if (!blob) {
+                        resolve(file);
+                        return;
+                    }
+
+                    resolve(new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', {
+                        type: 'image/jpeg',
+                        lastModified: Date.now()
+                    }));
+                }, 'image/jpeg', 0.82);
+            };
+
+            image.onerror = () => {
+                URL.revokeObjectURL(objectUrl);
+                resolve(file);
+            };
+
+            image.src = objectUrl;
+        });
+
+        const clearComposerImage = (form) => {
+            const imageInput = form?.querySelector('[data-admin-chat-image]');
+            const imageName = form?.querySelector('[data-admin-chat-image-name]');
+            const clearImageButton = form?.querySelector('[data-admin-chat-image-clear]');
+
+            if (imageInput) {
+                imageInput.value = '';
+            }
+
+            if (imageName) {
+                imageName.textContent = '';
+                imageName.hidden = true;
+            }
+
+            if (clearImageButton) {
+                clearImageButton.hidden = true;
+            }
+        };
+
+        const validateComposerImage = (input) => {
+            const form = input.closest('form');
+            const file = input.files?.[0];
+
+            if (!file) {
+                clearComposerImage(form);
+                showComposerError(form);
+                return;
+            }
+
+            if (file.type && !file.type.startsWith('image/') && !imageExtensionPattern.test(file.name)) {
+                clearComposerImage(form);
+                showComposerError(form, 'Selecione um arquivo de imagem.');
+                return;
+            }
+
+            if (file.size > 8192 * 1024) {
+                clearComposerImage(form);
+                showComposerError(form, 'A imagem pode ter no máximo 8 MB.');
+                return;
+            }
+
+            const name = form?.querySelector('[data-admin-chat-image-name]');
+            const clear = form?.querySelector('[data-admin-chat-image-clear]');
+
+            if (name) {
+                name.textContent = file.name;
+                name.hidden = false;
+            }
+
+            if (clear) {
+                clear.hidden = false;
+            }
+
+            showComposerError(form);
+        };
+
         supportBlock.addEventListener('click', (event) => {
+            const clearImageButton = event.target.closest('[data-admin-chat-image-clear]');
+
+            if (clearImageButton && supportBlock.contains(clearImageButton)) {
+                const form = clearImageButton.closest('form');
+
+                clearComposerImage(form);
+                showComposerError(form);
+                return;
+            }
+
             const contact = event.target.closest('[data-admin-chat-target]');
 
             if (contact && supportBlock.contains(contact)) {
@@ -938,14 +1088,7 @@
                 return;
             }
 
-            const name = input.closest('form')?.querySelector('[data-admin-chat-image-name]');
-
-            if (!name) {
-                return;
-            }
-
-            name.textContent = input.files?.[0]?.name || '';
-            name.hidden = !name.textContent;
+            validateComposerImage(input);
         });
 
         supportBlock.addEventListener('submit', async (event) => {
@@ -977,9 +1120,16 @@
             submitButton?.setAttribute('disabled', 'disabled');
 
             try {
+                const formData = new FormData(form);
+
+                if (isComposer && imageInput?.files?.[0]) {
+                    const uploadFile = await compressImageFile(imageInput.files[0]);
+                    formData.set('image', uploadFile, uploadFile.name);
+                }
+
                 const response = await fetch(form.action, {
                     method: 'POST',
-                    body: new FormData(form),
+                    body: formData,
                     headers: {
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
@@ -1009,6 +1159,7 @@
 
                 if (isComposer && textarea) {
                     textarea.value = '';
+                    clearComposerImage(form);
                 }
             } catch (error) {
                 if (isComposer) {

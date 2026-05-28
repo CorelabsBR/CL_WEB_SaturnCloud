@@ -23,7 +23,9 @@ class AuthController extends Controller
     public function showRegister()
     {
         if (Auth::check()) {
-            return redirect()->route('dashboard.index');
+            return Auth::user()->hasCompletedProfile()
+                ? redirect()->route('dashboard.index')
+                : redirect()->route('cadastro.completar');
         }
 
         return view('auth.register');
@@ -45,30 +47,29 @@ class AuthController extends Controller
             'password.min' => 'A senha precisa ter pelo menos 6 caracteres.',
         ]);
 
-        $user = User::create([
+        $request->session()->put('pending_registration', [
             'email' => $data['email'],
             'senha' => Hash::make($data['password']),
             'tipo_usuario' => 'cliente',
         ]);
 
-        Auth::login($user);
-
         $request->session()->regenerate();
 
         return redirect()
             ->route('cadastro.completar')
-            ->with('success', 'Conta criada. Complete seu cadastro para continuar.');
+            ->with('success', 'Agora complete seu cadastro para criar sua conta.');
     }
 
     public function showCompleteProfile()
     {
         $user = Auth::user();
+        $pendingRegistration = session('pending_registration');
 
-        if (!$user) {
+        if (!$user && !$pendingRegistration) {
             return redirect()->route('login');
         }
 
-        if ($user->hasCompletedProfile()) {
+        if ($user && $user->hasCompletedProfile()) {
             if (empty($user->profile_completed_at)) {
                 $user->update(['profile_completed_at' => now()]);
             }
@@ -76,14 +77,18 @@ class AuthController extends Controller
             return redirect()->route('dashboard.index');
         }
 
-        return view('auth.complete-profile');
+        return view('auth.complete-profile', [
+            'profileUser' => $user,
+            'pendingRegistration' => $pendingRegistration,
+        ]);
     }
 
     public function completeProfile(Request $request)
     {
         $user = Auth::user();
+        $pendingRegistration = $request->session()->get('pending_registration');
 
-        if (!$user) {
+        if (!$user && !$pendingRegistration) {
             return redirect()->route('login');
         }
 
@@ -97,7 +102,7 @@ class AuthController extends Controller
                 'required',
                 'string',
                 'digits_between:11,14',
-                'unique:user,cpf_cnpj,' . $user->id,
+                Rule::unique('user', 'cpf_cnpj')->ignore($user?->id),
                 function (string $attribute, mixed $value, \Closure $fail) {
                     if (!$this->isValidCpfCnpj((string) $value)) {
                         $fail('Informe um CPF ou CNPJ válido.');
@@ -117,7 +122,7 @@ class AuthController extends Controller
             'pais' => ['required', 'string', 'max:255'],
         ]);
 
-        $user->update([
+        $profileData = [
             'nome' => $data['name'],
             'cpf_cnpj' => $data['cpf_cnpj'],
             'celular' => $data['celular'],
@@ -133,11 +138,27 @@ class AuthController extends Controller
             'pais' => $data['pais'],
 
             'profile_completed_at' => now(),
-        ]);
+        ];
 
-        return redirect()
-            ->route('dashboard.index')
-            ->with('success', 'Cadastro completo com sucesso.');
+        if ($user) {
+            $user->update($profileData);
+        } else {
+            if (User::where('email', $pendingRegistration['email'])->exists()) {
+                $request->session()->forget('pending_registration');
+
+                throw ValidationException::withMessages([
+                    'email' => 'Já existe uma conta com este e-mail. Entre na sua conta para continuar.',
+                ]);
+            }
+
+            $user = User::create($pendingRegistration + $profileData);
+
+            Auth::login($user);
+            $request->session()->forget('pending_registration');
+            $request->session()->regenerate();
+        }
+
+        return redirect()->route('dashboard.index');
     }
 
     public function showEditProfile()
@@ -159,15 +180,29 @@ class AuthController extends Controller
                 'max:255',
                 Rule::unique('user', 'email')->ignore($user->id),
             ],
-            'pterodactyl_fivem_license' => ['nullable', 'string', 'max:255'],
-            'pterodactyl_cfx_license' => ['nullable', 'string', 'max:255'],
+            'celular' => ['required', 'string', 'max:20'],
+            'cep' => ['required', 'string', 'max:20'],
+            'rua' => ['required', 'string', 'max:255'],
+            'numero' => ['required', 'string', 'max:20'],
+            'complemento' => ['nullable', 'string', 'max:255'],
+            'bairro' => ['required', 'string', 'max:255'],
+            'cidade' => ['required', 'string', 'max:255'],
+            'estado' => ['required', 'string', 'max:255'],
+            'pais' => ['required', 'string', 'max:255'],
         ]);
 
         $user->update([
             'nome' => $data['name'],
             'email' => $data['email'],
-            'pterodactyl_fivem_license' => $data['pterodactyl_fivem_license'] ?? null,
-            'pterodactyl_cfx_license' => $data['pterodactyl_cfx_license'] ?? null,
+            'celular' => $data['celular'],
+            'cep' => $data['cep'],
+            'rua' => $data['rua'],
+            'numero' => $data['numero'],
+            'complemento' => $data['complemento'] ?? null,
+            'bairro' => $data['bairro'],
+            'cidade' => $data['cidade'],
+            'estado' => $data['estado'],
+            'pais' => $data['pais'],
         ]);
 
         return redirect()

@@ -29,7 +29,7 @@
 
                     <div class="profile-edit-note">
                         <strong>Dados permitidos</strong>
-                        <span>Você pode alterar somente nome e e-mail. CPF e dados cadastrais sensíveis ficam protegidos.</span>
+                        <span>Você pode alterar seus dados de contato e endereço.</span>
                     </div>
                 </aside>
 
@@ -86,35 +86,151 @@
                             @enderror
                         </label>
 
-                        <label class="profile-field" for="pterodactyl_fivem_license">
-                            <span>Licença FiveM (opcional)</span>
+                        <label class="profile-field" for="celular">
+                            <span>Celular</span>
                             <input
-                                id="pterodactyl_fivem_license"
-                                name="pterodactyl_fivem_license"
+                                id="celular"
+                                name="celular"
                                 type="text"
-                                value="{{ old('pterodactyl_fivem_license', $user?->pterodactyl_fivem_license) }}"
-                                maxlength="255"
+                                value="{{ old('celular', $user?->celular) }}"
+                                required
+                                inputmode="numeric"
+                                maxlength="15"
+                                autocomplete="tel"
+                                data-mask="phone"
                             >
-                            <small>Somente preencha se for usar servers FiveM.</small>
-                            @error('pterodactyl_fivem_license')
+                            @error('celular')
                                 <small>{{ $message }}</small>
                             @enderror
                         </label>
 
-                        <label class="profile-field" for="pterodactyl_cfx_license">
-                            <span>Licença CFX (opcional)</span>
+                        <div class="profile-edit-grid">
+                            <label class="profile-field" for="cep">
+                                <span>CEP</span>
+                                <input
+                                    id="cep"
+                                    name="cep"
+                                    type="text"
+                                    value="{{ old('cep', $user?->cep) }}"
+                                    required
+                                    inputmode="numeric"
+                                    maxlength="9"
+                                    autocomplete="postal-code"
+                                    data-mask="cep"
+                                >
+                                @error('cep')
+                                    <small>{{ $message }}</small>
+                                @enderror
+                            </label>
+
+                            <label class="profile-field" for="numero">
+                                <span>Número</span>
+                                <input
+                                    id="numero"
+                                    name="numero"
+                                    type="text"
+                                    value="{{ old('numero', $user?->numero) }}"
+                                    required
+                                    maxlength="20"
+                                >
+                                @error('numero')
+                                    <small>{{ $message }}</small>
+                                @enderror
+                            </label>
+                        </div>
+
+                        <label class="profile-field" for="rua">
+                            <span>Rua</span>
                             <input
-                                id="pterodactyl_cfx_license"
-                                name="pterodactyl_cfx_license"
+                                id="rua"
+                                name="rua"
                                 type="text"
-                                value="{{ old('pterodactyl_cfx_license', $user?->pterodactyl_cfx_license) }}"
+                                value="{{ old('rua', $user?->rua) }}"
+                                required
                                 maxlength="255"
                             >
-                            <small>Somente preencha se for usar servers FiveM/RedM.</small>
-                            @error('pterodactyl_cfx_license')
+                            @error('rua')
                                 <small>{{ $message }}</small>
                             @enderror
                         </label>
+
+                        <label class="profile-field" for="complemento">
+                            <span>Complemento</span>
+                            <input
+                                id="complemento"
+                                name="complemento"
+                                type="text"
+                                value="{{ old('complemento', $user?->complemento) }}"
+                                maxlength="255"
+                            >
+                            @error('complemento')
+                                <small>{{ $message }}</small>
+                            @enderror
+                        </label>
+
+                        <div class="profile-edit-grid">
+                            <label class="profile-field" for="bairro">
+                                <span>Bairro</span>
+                                <input
+                                    id="bairro"
+                                    name="bairro"
+                                    type="text"
+                                    value="{{ old('bairro', $user?->bairro) }}"
+                                    required
+                                    maxlength="255"
+                                >
+                                @error('bairro')
+                                    <small>{{ $message }}</small>
+                                @enderror
+                            </label>
+
+                            <label class="profile-field" for="cidade">
+                                <span>Cidade</span>
+                                <input
+                                    id="cidade"
+                                    name="cidade"
+                                    type="text"
+                                    value="{{ old('cidade', $user?->cidade) }}"
+                                    required
+                                    maxlength="255"
+                                >
+                                @error('cidade')
+                                    <small>{{ $message }}</small>
+                                @enderror
+                            </label>
+                        </div>
+
+                        <div class="profile-edit-grid">
+                            <label class="profile-field" for="estado">
+                                <span>Estado</span>
+                                <input
+                                    id="estado"
+                                    name="estado"
+                                    type="text"
+                                    value="{{ old('estado', $user?->estado) }}"
+                                    required
+                                    maxlength="255"
+                                >
+                                @error('estado')
+                                    <small>{{ $message }}</small>
+                                @enderror
+                            </label>
+
+                            <label class="profile-field" for="pais">
+                                <span>País</span>
+                                <input
+                                    id="pais"
+                                    name="pais"
+                                    type="text"
+                                    value="{{ old('pais', $user?->pais ?? 'Brasil') }}"
+                                    required
+                                    maxlength="255"
+                                >
+                                @error('pais')
+                                    <small>{{ $message }}</small>
+                                @enderror
+                            </label>
+                        </div>
 
                         <div class="profile-edit-actions">
                             <a href="{{ route('dashboard.index') }}" class="btn btn-ghost">
@@ -131,3 +247,7 @@
     </section>
 </div>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/profile-masks.js') }}?v={{ filemtime(public_path('js/profile-masks.js')) }}"></script>
+@endpush

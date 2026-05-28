@@ -139,7 +139,7 @@ class AdminController extends Controller
 
         $data = $request->validate([
             'message' => ['nullable', 'required_without:image', 'string', 'max:2000'],
-            'image' => ['nullable', 'image', 'max:4096'],
+            'image' => ['nullable', 'image', 'max:8192'],
         ]);
 
         $ticket->messages()->create([
@@ -262,10 +262,13 @@ class AdminController extends Controller
             'type' => ['required', 'in:percent,fixed'],
             'value' => ['required', 'numeric', 'min:0.01', 'max:999999.99'],
             'active' => ['nullable', 'boolean'],
+            'single_use' => ['nullable', 'boolean'],
         ]);
 
         $data['code'] = trim($data['code']);
         $data['active'] = $request->boolean('active');
+        $data['usage_limit'] = $request->boolean('single_use') ? 1 : null;
+        unset($data['single_use']);
 
         if ($data['type'] === 'percent') {
             $data['value'] = min(100, (float) $data['value']);

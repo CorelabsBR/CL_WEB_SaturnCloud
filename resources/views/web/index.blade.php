@@ -24,7 +24,7 @@
                             <div class="plan-icon">🌐</div>
                         @endif
                         <span class="plan-label">
-                            {{ $produto->featured ? 'Mais vendido' : 'Hospedagem Web' }}
+                            {{ $produto->featured ? 'Destaque' : 'Hospedagem Web' }}
                         </span>
                     </div>
 
@@ -52,16 +52,16 @@
                                 <span class="period">/mês</span>
                             </div>
                         </div>
-<form method="POST" action="{{ route('cart.addProduct', $produto->id) }}" class="plan-checkout-form">
-    @csrf
+                        <form method="POST" action="{{ route('cart.addProduct', $produto->id) }}" class="plan-checkout-form">
+                            @csrf
 
-    <input type="hidden" name="items[0][plan_id]" value="{{ $produto->id }}">
-    <input type="hidden" name="items[0][quantity]" value="1">
+                            <input type="hidden" name="items[0][plan_id]" value="{{ $produto->id }}">
+                            <input type="hidden" name="items[0][quantity]" value="1">
 
-    <button type="submit" class="btn btn-primary">
-        Contratar agora
-    </button>
-</form>
+                            <button type="submit" class="btn btn-primary">
+                                Contratar agora
+                            </button>
+                        </form>
                     </div>
 
                 </div>

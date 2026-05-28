@@ -33,10 +33,9 @@
             <div class="footer-col">
                 <h4>Suporte</h4>
                 <ul class="footer-links">
-                    <li><a href="{{ url('/cliente') }}">Área do Cliente</a></li>
+                    <li><a href="{{ auth()->check() ? route('dashboard.index') : route('login') }}">Painel</a></li>
                     <li><a href="{{ url('/login') }}">Login</a></li>
                     <li><a href="{{ url('/registro') }}">Criar Conta</a></li>
-                    <li><a href="mailto:contato@vortexhost.com.br">Abrir Ticket</a></li>
                 </ul>
             </div>
 
@@ -53,7 +52,7 @@
                 <h4>Guilda</h4>
 
                 <div class="social-icons">
-                    <a href="https://instagram.com/Colocar_a_merda_do_link_aqui_gordao" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram">
+                    <a href="https://www.instagram.com/corelabs.dev.br" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="2" y="2" width="20" height="20" rx="5"></rect>
                             <circle cx="12" cy="12" r="4"></circle>

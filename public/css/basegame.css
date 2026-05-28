@@ -32,7 +32,7 @@ body {
 
 a   { text-decoration: none; color: inherit; }
 ul  { list-style: none; }
-img { max-width: 100%; display: block; }
+img { max-width: 100%; height: auto; display: block; }
 
 .container {
     max-width: var(--mw);

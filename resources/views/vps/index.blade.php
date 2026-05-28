@@ -53,7 +53,7 @@
                     Voltar ao início
                 </a>
 
-                <a href="/contato" class="btn btn-ghost">
+                <a href="#suporte" class="btn btn-ghost" data-support-open>
                     Entrar em contato
                 </a>
             </div>

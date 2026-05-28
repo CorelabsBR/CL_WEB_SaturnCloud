@@ -132,6 +132,12 @@
     gap: 1.1rem;
 }
 
+.profile-edit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem;
+}
+
 .profile-field {
     display: grid;
     gap: 0.45rem;
@@ -203,5 +209,9 @@
 
     .profile-edit-actions .btn {
         width: 100%;
+    }
+
+    .profile-edit-grid {
+        grid-template-columns: 1fr;
     }
 }

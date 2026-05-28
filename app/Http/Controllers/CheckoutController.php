@@ -14,13 +14,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class CheckoutController extends Controller
 {
     public function index()
     {
-        $items = CartItem::with('product')
+        $items = CartItem::with('product.categoria')
             ->where('user_id', Auth::id())
             ->get();
 
@@ -51,7 +52,7 @@ class CheckoutController extends Controller
         if (! $coupon) {
             return redirect()
                 ->route('checkout.index')
-                ->with('error', 'Cupom inválido ou inativo.');
+                ->with('error', 'Cupom invalido, inativo ou esgotado.');
         }
 
         session(['checkout_coupon_code' => $coupon->code]);
@@ -70,9 +71,9 @@ class CheckoutController extends Controller
             ->with('success', 'Cupom removido.');
     }
 
-    public function pay(MercadoPagoService $mercadoPago, ProvisioningService $provisioning)
+    public function pay(Request $request, MercadoPagoService $mercadoPago, ProvisioningService $provisioning)
     {
-        $cartItems = CartItem::with('product')
+        $cartItems = CartItem::with('product.categoria')
             ->where('user_id', Auth::id())
             ->get();
 
@@ -80,8 +81,18 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Carrinho vazio.');
         }
 
-        $order = DB::transaction(function () use ($cartItems) {
-            $totals = $this->cartTotals($cartItems);
+        $requestedUsernames = $this->validatedRequestedUsernames($request, $cartItems);
+
+        $order = DB::transaction(function () use ($cartItems, $requestedUsernames) {
+            $totals = $this->cartTotals($cartItems, true);
+
+            if (session('checkout_coupon_code') && ! $totals['coupon']) {
+                session()->forget('checkout_coupon_code');
+
+                throw ValidationException::withMessages([
+                    'coupon_code' => 'Este cupom nao esta mais disponivel.',
+                ]);
+            }
 
             $order = Order::create([
                 'user_id' => Auth::id(),
@@ -97,7 +108,12 @@ class CheckoutController extends Controller
                     'product_id' => $item->product_id,
                     'quantidade' => $item->quantidade,
                     'preco' => $item->product->preco,
+                    'requested_username' => $requestedUsernames[$item->id] ?? null,
                 ]);
+            }
+
+            if ($totals['coupon']) {
+                $totals['coupon']->increment('used_count');
             }
 
             CartItem::where('user_id', Auth::id())->delete();
@@ -225,10 +241,10 @@ class CheckoutController extends Controller
         }
     }
 
-    private function cartTotals($items): array
+    private function cartTotals($items, bool $lockCoupon = false): array
     {
         $subtotal = round((float) $items->sum(fn ($item) => $item->product->preco * $item->quantidade), 2);
-        $coupon = $this->activeSessionCoupon();
+        $coupon = $this->activeSessionCoupon($lockCoupon);
         $discount = $coupon?->discountFor($subtotal) ?? 0;
 
         return [
@@ -239,20 +255,91 @@ class CheckoutController extends Controller
         ];
     }
 
-    private function activeSessionCoupon(): ?Coupon
+    private function validatedRequestedUsernames(Request $request, $cartItems): array
+    {
+        $requested = $request->input('requested_usernames', []);
+        $values = [];
+        $errors = [];
+        $seen = [];
+
+        foreach ($cartItems as $item) {
+            if (! $this->isWebProduct($item->product)) {
+                continue;
+            }
+
+            $value = Str::lower(trim((string) ($requested[$item->id] ?? '')));
+
+            if ($value === '') {
+                $errors["requested_usernames.{$item->id}"] = 'Informe o usuário do painel para o plano web.';
+                continue;
+            }
+
+            if (! preg_match('/^[a-z][a-z0-9]{2,31}$/', $value)) {
+                $errors["requested_usernames.{$item->id}"] = 'Use 3 a 32 caracteres, começando com letra, apenas letras minúsculas e números.';
+                continue;
+            }
+
+            if (isset($seen[$value])) {
+                $errors["requested_usernames.{$item->id}"] = 'Use um usuário diferente para cada plano web.';
+                continue;
+            }
+
+            $alreadyUsed = OrderItem::query()
+                ->where('requested_username', $value)
+                ->whereHas('order', fn ($query) => $query->whereIn('status', ['pendente', 'pago']))
+                ->exists();
+
+            if ($alreadyUsed) {
+                $errors["requested_usernames.{$item->id}"] = 'Este usuário já está em uso. Escolha outro.';
+                continue;
+            }
+
+            $seen[$value] = true;
+            $values[$item->id] = $value;
+        }
+
+        if ($errors) {
+            throw ValidationException::withMessages($errors);
+        }
+
+        return $values;
+    }
+
+    private function isWebProduct($product): bool
+    {
+        $category = Str::lower((string) $product?->categoria?->nome);
+
+        if (str_contains($category, 'web') || str_contains($category, 'hosped')) {
+            return true;
+        }
+
+        return (int) $product?->categoria_id === 1;
+    }
+
+    private function activeSessionCoupon(bool $lock = false): ?Coupon
     {
         $code = session('checkout_coupon_code');
 
-        return $code ? $this->findCoupon($code) : null;
+        return $code ? $this->findCoupon($code, $lock) : null;
     }
 
-    private function findCoupon(string $code): ?Coupon
+    private function findCoupon(string $code, bool $lock = false): ?Coupon
     {
         $code = trim($code);
 
-        return Coupon::query()
+        $query = Coupon::query()
             ->where('active', true)
-            ->get()
+            ->where(function ($query) {
+                $query
+                    ->whereNull('usage_limit')
+                    ->orWhereColumn('used_count', '<', 'usage_limit');
+            });
+
+        if ($lock) {
+            $query->lockForUpdate();
+        }
+
+        return $query->get()
             ->first(fn (Coupon $coupon) => trim($coupon->code) === $code);
     }
 
