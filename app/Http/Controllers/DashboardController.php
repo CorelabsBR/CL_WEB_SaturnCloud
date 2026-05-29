@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\Payment;
-use App\Services\PterodactylService;
+use App\Services\RenewalBillingService;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Support\Facades\Auth;
@@ -14,19 +13,10 @@ use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
-    public function index(PterodactylService $pterodactyl)
+    public function index()
     {
         $userId = Auth::id();
         $user = Auth::user();
-
-        try {
-            $pterodactyl->pruneDeletedServersForUser($userId);
-        } catch (\Throwable $e) {
-            Log::warning('Falha ao sincronizar servidores removidos do Pterodactyl no dashboard', [
-                'user_id' => $userId,
-                'error' => $e->getMessage(),
-            ]);
-        }
 
         $services = DB::table('services as s')
             ->leftJoin('products as p', 's.product_id', '=', 'p.id')
@@ -67,9 +57,6 @@ class DashboardController extends Controller
             ->where('s.user_id', $userId)
             ->orderByDesc('s.created_at')
             ->get();
-
-        $this->expirePendingInvoices($userId);
-        $this->createRenewalInvoices($services);
 
         $invoices = $this->dashboardInvoices($userId);
 
@@ -139,6 +126,32 @@ class DashboardController extends Controller
         ));
     }
 
+    public function processRenewals(RenewalBillingService $billing)
+    {
+        $userId = Auth::id();
+
+        try {
+            $result = $billing->processUser($userId);
+        } catch (\Throwable $e) {
+            Log::warning('Falha ao processar renovações em background', [
+                'user_id' => $userId,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'ok' => false,
+                'changed' => false,
+            ], 202);
+        }
+
+        return response()->json([
+            'ok' => true,
+            'changed' => ($result['generated'] ?? 0) > 0 || ($result['terminated'] ?? 0) > 0,
+            'generated' => $result['generated'] ?? 0,
+            'terminated' => $result['terminated'] ?? 0,
+        ]);
+    }
+
     private function buildStats($user, $services, $invoices): array
     {
         $pendingInvoices = $invoices->where('status', 'pendente');
@@ -166,68 +179,16 @@ class DashboardController extends Controller
         ];
     }
 
-    private function expirePendingInvoices(int $userId): void
-    {
-        Order::where('user_id', $userId)
-            ->where('status', 'pendente')
-            ->where('billing_type', 'renewal')
-            ->where('due_at', '<=', now())
-            ->update(['status' => 'cancelado']);
-    }
-
-    private function createRenewalInvoices($services): void
-    {
-        foreach ($services as $service) {
-            if ($service->status !== 'active' || ! $service->expires_at || Carbon::parse($service->expires_at)->isFuture()) {
-                continue;
-            }
-
-            if (! $this->serviceAllowsRenewalInvoice($service)) {
-                continue;
-            }
-
-            $exists = Order::where('user_id', $service->user_id)
-                ->where('billing_type', 'renewal')
-                ->where('service_id', $service->id)
-                ->whereIn('status', ['pendente', 'pago'])
-                ->exists();
-
-            if ($exists) {
-                continue;
-            }
-
-            $order = Order::create([
-                'user_id' => $service->user_id,
-                'total' => $service->product_price ?: 0,
-                'status' => 'pendente',
-                'billing_type' => 'renewal',
-                'service_id' => $service->id,
-                'due_at' => now()->addDays(5),
-            ]);
-
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $service->product_id,
-                'quantidade' => 1,
-                'preco' => $service->product_price ?: 0,
-            ]);
-        }
-    }
-
     private function dashboardInvoices(int $userId)
     {
         return Order::with(['items.product', 'renewalService'])
             ->where('user_id', $userId)
-            ->where(function ($query) {
-                $query
-                    ->whereHas('items.product.categoria', fn ($category) => $category->where('nome', 'like', '%VPS%'))
-                    ->orWhereHas('renewalService.product.categoria', fn ($category) => $category->where('nome', 'like', '%VPS%'));
-            })
+            ->where('status', 'pendente')
             ->where(function ($query) {
                 $query
                     ->where('status', '!=', 'cancelado')
                     ->orWhere('billing_type', '!=', 'renewal')
-                    ->orWhere('due_at', '>', now()->subMinutes(5));
+                    ->orWhere('due_at', '>', now()->subDays(5));
             })
             ->orderByDesc('id')
             ->get()
@@ -254,25 +215,6 @@ class DashboardController extends Controller
                     'due_at_iso' => $order->billing_type === 'renewal' ? $order->due_at?->toIso8601String() : null,
                 ];
             });
-    }
-
-    private function serviceAllowsRenewalInvoice($service): bool
-    {
-        if (! $service->order_id) {
-            return false;
-        }
-
-        $payment = DB::table('payments')
-            ->where('order_id', $service->order_id)
-            ->where('status', 'approved')
-            ->orderByDesc('id')
-            ->first();
-
-        $method = strtolower((string) ($payment->payment_method_id ?? ''));
-        $type = strtolower((string) ($payment->payment_type_id ?? ''));
-
-        return in_array($method, ['pix', 'bolbradesco', 'boleto'], true)
-            || in_array($type, ['ticket', 'bank_transfer'], true);
     }
 
     private function servicePanelLink($service): ?array

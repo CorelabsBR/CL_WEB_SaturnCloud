@@ -9,8 +9,6 @@
         {{-- HEADER --}}
         <div class="game-header">
             <div class="game-header-info">
-                <span class="game-eyebrow">Servidor de Jogo</span>
-
                 <h1 class="game-title">
                     {{ $jogo->nome }}
                 </h1>

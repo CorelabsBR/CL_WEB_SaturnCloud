@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/checkout.css') }}?v={{ filemtime(public_path('css/checkout.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}?v={{ filemtime(public_path('css/responsive.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/notifications.css') }}?v={{ filemtime(public_path('css/notifications.css')) }}">
 
 
     @stack('styles')
@@ -41,25 +42,7 @@
 
 @include('partials.support-widget')
 
-<script>
-    (() => {
-        const alerts = document.querySelectorAll(
-            '[data-auto-dismiss], .flash-success, .admin-alert-success, .register-alert-success, .auth-success-box'
-        );
-
-        alerts.forEach((alert) => {
-            window.setTimeout(() => {
-                alert.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
-                alert.style.opacity = '0';
-                alert.style.transform = 'translateY(-6px)';
-
-                window.setTimeout(() => {
-                    alert.remove();
-                }, 380);
-            }, 4500);
-        });
-    })();
-</script>
+<script src="{{ asset('js/notifications.js') }}?v={{ filemtime(public_path('js/notifications.js')) }}"></script>
 
 @stack('scripts')
 

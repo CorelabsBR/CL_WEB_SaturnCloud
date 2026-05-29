@@ -7,32 +7,10 @@
 @endpush
 
 @section('content')
-@php
-    $profileName = old('name', $user?->nome ?? 'Cliente');
-    $profileEmail = old('email', $user?->email ?? '');
-    $profileInitial = strtoupper(substr(trim($profileName) ?: 'C', 0, 1));
-@endphp
-
 <div class="client-page">
     <section class="profile-edit-page">
         <div class="container">
             <div class="profile-edit-panel">
-                <aside class="profile-edit-summary">
-                    <div class="profile-edit-avatar" aria-hidden="true">
-                        {{ $profileInitial }}
-                    </div>
-                    <div>
-                        <span>Conta</span>
-                        <h2>{{ $profileName }}</h2>
-                        <p>{{ $profileEmail ?: 'E-mail não informado' }}</p>
-                    </div>
-
-                    <div class="profile-edit-note">
-                        <strong>Dados permitidos</strong>
-                        <span>Você pode alterar seus dados de contato e endereço.</span>
-                    </div>
-                </aside>
-
                 <div class="profile-edit-content">
                     <div class="profile-edit-head">
                         <span>Perfil</span>

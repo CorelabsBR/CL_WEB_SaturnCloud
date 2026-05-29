@@ -22,6 +22,14 @@ class EnsureProfileIsComplete
                 ->with('error', 'Complete seu cadastro antes de contratar serviços.');
         }
 
+        if (!$user->email_verified_at) {
+            $request->session()->put('pending_email_verification_user_id', $user->id);
+
+            return redirect()
+                ->route('cadastro.verificar.email')
+                ->with('error', 'Verifique seu e-mail antes de continuar.');
+        }
+
         return $next($request);
     }
 }

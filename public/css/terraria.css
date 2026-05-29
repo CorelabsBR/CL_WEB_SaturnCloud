@@ -1,950 +1,536 @@
-/* ══════════════════════════════════════════════════════
-   VORTEXHOST — TERRARIA EXTREMO THEME
-   arquivo: public/css/terraria.css
-   ══════════════════════════════════════════════════════ */
+/* Terraria forest theme - scoped to the game page content */
+
+@font-face {
+    font-family: "Terraria";
+    src: url("../ttf/Terraria.TTF") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
 
 :root {
-    --leaf: #4fd66d;
-    --leaf-dark: #1f7a3a;
-    --mana: #4ea8ff;
-    --crystal: #88f7ff;
-    --sun: #ffd166;
-    --blood: #d63b46;
+    --tr-sky: #517a8b;
+    --tr-sky-deep: #314b63;
+    --tr-fog: rgba(202, 235, 220, .22);
+    --tr-leaf: #25b64f;
+    --tr-leaf-light: #6ce36c;
+    --tr-leaf-dark: #126b35;
+    --tr-earth: #7b4c2c;
+    --tr-earth-dark: #3b2118;
+    --tr-bark: #7c4b35;
+    --tr-bark-dark: #43291f;
+    --tr-panel: #14251e;
+    --tr-panel-soft: #1d3329;
+    --tr-line: rgba(160, 255, 154, .18);
+    --tr-text: #f4fff0;
+    --tr-muted: #b5cbb5;
+    --tr-gold: #f3d35d;
+    --tr-mw: 1200px;
+}
 
-    --wood: #6b3f22;
-    --wood-2: #2d1a10;
-    --cave: #23283a;
-    --cave-2: #101421;
-    --night: #060814;
-    --void: #07080d;
-
-    --text: #f5f5f5;
-    --muted: rgba(255,255,255,.62);
-    --dim: rgba(255,255,255,.38);
-    --border: rgba(255,255,255,.12);
-
-    --mw: 1200px;
-    --pixel: 4px;
-    --ease: .18s steps(2, end);
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
 *,
 *::before,
 *::after {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html {
-    scroll-behavior: smooth;
 }
 
 body {
     min-height: 100vh;
-    color: var(--text);
-    font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
-    background:
-        linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.7)),
-        repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 2px, transparent 2px 32px),
-        repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 2px, transparent 2px 32px),
-        linear-gradient(180deg, #102913 0%, #0b1510 38%, #08090d 100%);
-    image-rendering: pixelated;
     display: flex;
     flex-direction: column;
+    font-family: "Terraria", "Trebuchet MS", system-ui, sans-serif;
+    background: #06100c;
 }
 
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background:
-        radial-gradient(circle at 15% 15%, rgba(85,255,85,.16), transparent 28%),
-        radial-gradient(circle at 82% 12%, rgba(94,231,255,.12), transparent 26%),
-        radial-gradient(circle at 50% 110%, rgba(255,64,64,.13), transparent 34%);
-    z-index: -2;
+.site-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    width: 100%;
+    background: transparent;
 }
 
-body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background-image:
-        linear-gradient(45deg, rgba(255,255,255,.03) 25%, transparent 25%),
-        linear-gradient(-45deg, rgba(255,255,255,.03) 25%, transparent 25%);
-    background-size: 16px 16px;
-    opacity: .35;
-    z-index: -1;
+.site-header .nav-links a,
+.site-footer,
+.site-footer a,
+.site-footer p,
+.site-footer span,
+.site-footer h3,
+.site-footer h4,
+.site-footer li {
+    font-family: "Terraria", "Trebuchet MS", system-ui, sans-serif;
+    color: #ffffff;
 }
 
-a {
-    color: inherit;
+.site-header .nav-actions,
+.site-header .nav-actions *,
+.site-header .profile-dropdown,
+.site-header .profile-dropdown *,
+.site-header .profile-menu,
+.site-header .profile-menu *,
+.site-header .profile-menu-item,
+.site-header .mobile-nav,
+.site-header .mobile-nav *,
+.site-header .mobile-nav .mobile-cart,
+.site-header .mobile-nav .mobile-cart *,
+.site-header .mobile-nav .mobile-logout-btn {
+    font-family: "Terraria", "Trebuchet MS", system-ui, sans-serif;
+}
+
+.site-header .profile-btn,
+.site-header .profile-menu-item,
+.site-header .nav-cart,
+.site-header .mobile-nav a,
+.site-header .mobile-logout-btn {
+    color: var(--text);
+}
+
+.site-header .nav-cart,
+.site-header .nav-cart *,
+.site-header .profile-btn,
+.site-header .profile-btn * {
+    color: #ffffff;
+    stroke: #ffffff;
+    fill: #ffffff;
+}
+
+.site-header .profile-menu {
+    background: var(--bg-dark, #0a0e0c);
+    border-color: var(--border-s);
+}
+
+.site-header .profile-menu-item {
+    font-family: "Terraria", "Trebuchet MS", system-ui, sans-serif;
+    color: #ffffff;
     text-decoration: none;
 }
 
-ul {
-    list-style: none;
+.site-header .profile-menu-item svg {
+    color: currentColor;
+    fill: currentColor;
 }
 
-img {
-    max-width: 100%;
-    display: block;
-    image-rendering: pixelated;
+.site-header .profile-menu-item:hover {
+    color: #ffffff;
 }
 
-.container {
-    max-width: var(--mw);
-    margin: 0 auto;
-    padding: 0 1.5rem;
+.site-header .profile-menu-item.logout-btn {
+    color: #ff4757;
 }
 
-/* HEADER */
-
-.site-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background:
-        linear-gradient(180deg, rgba(24,15,8,.96), rgba(12,8,6,.94)),
-        repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 16px, transparent 16px 32px);
-    border-bottom: 4px solid #2b160b;
-    box-shadow:
-        0 4px 0 #000,
-        0 12px 30px rgba(0,0,0,.45);
+.site-header .profile-menu-item.logout-btn:hover {
+    color: #ff4757;
 }
 
-.nav-inner {
-    height: 72px;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    filter: drop-shadow(4px 4px 0 #000);
-}
-
-#logo_img {
-    height: 42px;
-    width: auto;
-}
-
-.nav-links {
-    display: flex;
-    gap: .65rem;
+.site-footer > .container {
+    width: 100%;
+    max-width: var(--tr-mw);
     margin-right: auto;
-}
-
-.nav-links a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 36px;
-    padding: .45rem .8rem;
-    color: #e9e0c5;
-    font-size: .78rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    background: rgba(0,0,0,.22);
-    border: 2px solid rgba(255,255,255,.09);
-    box-shadow: inset 0 -3px 0 rgba(0,0,0,.35);
-    transition: transform var(--ease), border-color var(--ease), background var(--ease);
-}
-
-.nav-links a:hover {
-    transform: translateY(-2px);
-    color: #fff;
-    background: rgba(85,255,85,.12);
-    border-color: rgba(85,255,85,.55);
-}
-
-.nav-actions {
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-}
-
-.nav-area-note {
-    font-size: .72rem;
-    color: var(--dim);
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.nav-cart {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: .45rem;
-    min-height: 38px;
-    padding: .55rem .85rem;
-    border: 3px solid #111;
-    background: linear-gradient(180deg, #3f4347, #202326);
-    color: #eee;
-    font-size: .72rem;
-    font-weight: 950;
-    text-transform: uppercase;
-    box-shadow: inset 0 3px 0 rgba(255,255,255,.12), 0 4px 0 #000;
-}
-
-.nav-cart svg {
-    width: 18px;
-    height: 18px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.nav-cart:hover {
-    color: var(--leaf);
-}
-
-.nav-cart-count {
-    position: absolute !important;
-    top: -7px !important;
-    right: -7px !important;
-    z-index: 2 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-width: 22px !important;
-    height: 22px !important;
-    padding: 0 .4rem !important;
-    border: 2px solid #111 !important;
-    border-radius: 999px !important;
-    background: var(--leaf) !important;
-    color: #061006 !important;
-    font-family: Arial, Helvetica, sans-serif !important;
-    font-size: .72rem !important;
-    font-weight: 950 !important;
-    line-height: 1 !important;
-    letter-spacing: 0 !important;
-    text-shadow: none !important;
-}
-.mobile-cart-count {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-width: 22px !important;
-    height: 22px !important;
-    padding: 0 .4rem !important;
-    border: 2px solid #111 !important;
-    border-radius: 999px !important;
-    background: var(--leaf) !important;
-    color: #061006 !important;
-    font-family: Arial, Helvetica, sans-serif !important;
-    font-size: .72rem !important;
-    font-weight: 950 !important;
-    line-height: 1 !important;
-    letter-spacing: 0 !important;
-    text-shadow: none !important;
-}
-
-.hamburger {
-    display: none;
     margin-left: auto;
-    background: #2d2f32;
-    border: 3px solid #111;
-    padding: .55rem;
-    cursor: pointer;
-    box-shadow: inset 0 3px 0 rgba(255,255,255,.12), 0 4px 0 #000;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
 }
-
-.hamburger span {
-    display: block;
-    width: 24px;
-    height: 3px;
-    margin: 4px 0;
-    background: var(--leaf);
-}
-
-.mobile-nav {
-    display: none;
-    padding: 1rem 0;
-    border-top: 3px solid rgba(255,255,255,.08);
-}
-
-.mobile-nav.open {
-    display: grid;
-    gap: .6rem;
-}
-
-.mobile-nav a {
-    padding: .85rem;
-    background: rgba(0,0,0,.35);
-    border: 2px solid rgba(255,255,255,.09);
-    color: var(--muted);
-    font-weight: 900;
-    text-transform: uppercase;
-}
-
-.mobile-nav a:hover {
-    color: white;
-    border-color: var(--leaf);
-}
-
-.mobile-cart {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: .75rem;
-}
-
-/* BUTTONS */
-
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: .45rem;
-    border: 3px solid #111;
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: 950;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    border-radius: 0;
-    white-space: nowrap;
-    box-shadow:
-        inset 0 3px 0 rgba(255,255,255,.25),
-        inset 0 -4px 0 rgba(0,0,0,.35),
-        4px 4px 0 #000;
-    transition: transform var(--ease), filter var(--ease), box-shadow var(--ease);
-}
-
-.btn:hover {
-    transform: translate(-2px, -2px);
-    filter: brightness(1.08);
-    box-shadow:
-        inset 0 3px 0 rgba(255,255,255,.25),
-        inset 0 -4px 0 rgba(0,0,0,.35),
-        6px 6px 0 #000;
-}
-
-.btn:active {
-    transform: translate(2px, 2px);
-    box-shadow:
-        inset 0 2px 0 rgba(255,255,255,.18),
-        inset 0 -2px 0 rgba(0,0,0,.3),
-        2px 2px 0 #000;
-}
-
-.btn-sm {
-    font-size: .72rem;
-    padding: .55rem .9rem;
-}
-
-.btn-md {
-    font-size: .85rem;
-    padding: .7rem 1.25rem;
-}
-
-.btn-lg {
-    font-size: .95rem;
-    padding: .85rem 1.6rem;
-}
-
-.btn-primary {
-    background: linear-gradient(180deg, #73ff73, #1fb33b);
-    color: #061006;
-}
-
-.btn-ghost {
-    background: linear-gradient(180deg, #3f4347, #202326);
-    color: #eee;
-}
-
-/* MAIN PAGE */
 
 .terraria-section {
     position: relative;
     flex: 1;
+    width: 100%;
+    max-width: 100%;
     overflow: hidden;
-    padding: 4rem 1.5rem 6rem;
+    padding: 0 0 5.5rem;
+    color: var(--tr-text);
     background:
-        linear-gradient(180deg, rgba(13,20,13,.88), rgba(6,7,10,.96)),
-        repeating-linear-gradient(0deg, transparent 0 28px, rgba(255,255,255,.035) 28px 32px),
-        repeating-linear-gradient(90deg, transparent 0 28px, rgba(255,255,255,.035) 28px 32px);
+        linear-gradient(180deg, #07120d 0%, #0a160f 48%, #06100c 100%),
+        radial-gradient(circle at 18% 20%, rgba(108, 227, 108, .16), transparent 22rem),
+        radial-gradient(circle at 82% 14%, rgba(243, 211, 93, .1), transparent 18rem),
+        #07120d;
 }
 
 .terraria-section::before {
     content: "";
     position: absolute;
-    inset: 0;
-    pointer-events: none;
+    inset: auto 0 0;
+    height: 150px;
     background:
-        linear-gradient(180deg, rgba(85,255,85,.16) 0 8px, transparent 8px 100%),
-        linear-gradient(90deg, rgba(91,53,28,.25), transparent 28%, transparent 72%, rgba(91,53,28,.25));
-}
-
-.terraria-section::after {
-    content: "";
-    position: absolute;
-    width: 520px;
-    height: 520px;
-    top: 70px;
-    right: -160px;
-    background:
-        linear-gradient(45deg, transparent 0 30%, rgba(255,255,255,.16) 30% 34%, transparent 34%),
-        radial-gradient(circle, rgba(0,216,111,.14), transparent 68%);
-    filter: blur(.2px);
+        linear-gradient(180deg, rgba(37, 182, 79, .32) 0 16px, transparent 16px),
+        linear-gradient(180deg, rgba(123, 76, 44, .18) 16px, rgba(59, 33, 24, .24));
     pointer-events: none;
 }
 
-/* HERO */
+.terraria-section > .container {
+    position: relative;
+    z-index: 2;
+    max-width: var(--tr-mw);
+    width: 100%;
+    min-width: 0;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
 
 .terraria-header {
     position: relative;
-    z-index: 2;
-    margin-bottom: 3.5rem;
-    padding: 2.4rem 1.5rem;
+    z-index: 1;
+    width: 100vw;
+    max-width: none;
+    margin: 0 calc(50% - 50vw) .25rem;
+    min-height: clamp(680px, 78vh, 920px);
+    padding: clamp(7.5rem, 12vh, 10rem) 1rem clamp(18rem, 31vh, 27rem);
     text-align: center;
+    overflow: hidden;
     background:
-        linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.6)),
-        linear-gradient(135deg, rgba(85,255,85,.15), rgba(94,231,255,.08)),
-        repeating-linear-gradient(0deg, rgba(255,255,255,.045) 0 4px, transparent 4px 32px),
-        #17210f;
-    border: 4px solid #111;
-    outline: 4px solid rgba(85,255,85,.18);
-    box-shadow:
-        inset 0 4px 0 rgba(255,255,255,.08),
-        inset 0 -6px 0 rgba(0,0,0,.34),
-        0 12px 0 rgba(0,0,0,.55),
-        0 26px 50px rgba(0,0,0,.45);
+        linear-gradient(180deg, rgba(17, 33, 38, .02), rgba(7, 18, 13, .02) 86%, rgba(7, 18, 13, .46) 100%),
+        url("../img/terraria_fundo.jpg") center top / cover no-repeat,
+        var(--tr-sky-deep);
+    border-bottom: 0;
 }
 
 .terraria-header::before {
-    content: "🌳  ◆  🗡️  ◆  🌙";
-    display: block;
-    color: rgba(255,255,255,.75);
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    letter-spacing: .55rem;
-    text-shadow: 3px 3px 0 #000;
+    content: none;
+}
+
+.terraria-header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: clamp(210px, 24vh, 330px);
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(7, 18, 13, 0), rgba(7, 18, 13, .04) 58%, rgba(7, 18, 13, .56) 88%, #07120d 100%);
+}
+
+.terraria-header-info {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    justify-items: center;
+    gap: .85rem;
 }
 
 .terraria-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: .5rem;
-    margin-bottom: 1rem;
-    padding: .45rem .85rem;
-    background: #101a10;
-    color: var(--leaf);
-    border: 3px solid #050805;
-    box-shadow:
-        inset 0 3px 0 rgba(255,255,255,.12),
-        3px 3px 0 #000;
-    font-size: .65rem;
-    font-weight: 950;
-    letter-spacing: .16em;
+    min-height: 34px;
+    padding: .48rem .9rem;
+    color: #fff7b8;
+    font: 400 .74rem/1 "Terraria", "Trebuchet MS", system-ui, sans-serif;
+    letter-spacing: .08em;
     text-transform: uppercase;
-}
-
-.terraria-eyebrow::before {
-    content: "✦";
-    color: var(--leaf);
+    background: rgba(28, 22, 18, .72);
+    border: 2px solid rgba(243, 211, 93, .42);
+    border-radius: 6px;
+    box-shadow: 0 8px 18px rgba(0,0,0,.25);
 }
 
 .terraria-title {
-    color: #fff;
-    font-size: clamp(2.3rem, 7vw, 5.2rem);
-    font-weight: 1000;
-    line-height: .95;
-    letter-spacing: -.04em;
-    text-transform: uppercase;
+    color: #7cff66;
+    max-width: 100%;
+    font: 400 clamp(3.6rem, 10vw, 7.8rem)/.82 "Terraria", "Trebuchet MS", system-ui, sans-serif;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
     text-shadow:
-        4px 4px 0 #000,
-        8px 8px 0 rgba(0,0,0,.36),
-        0 0 22px rgba(85,255,85,.28);
+        2px 0 0 #8a5138,
+        -2px 0 0 #8a5138,
+        0 2px 0 #8a5138,
+        0 -2px 0 #8a5138,
+        4px 0 0 #5a3428,
+        -4px 0 0 #5a3428,
+        0 4px 0 #5a3428,
+        0 -4px 0 #5a3428,
+        6px 6px 0 rgba(44, 24, 18, .86),
+        0 0 18px rgba(124, 255, 102, .42);
+    transform: rotate(-3deg);
+    transform-origin: center;
 }
 
 .terraria-sub {
-    max-width: 620px;
-    margin: 1.2rem auto 0;
-    color: #d8d8d8;
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1.65;
-    text-shadow: 2px 2px 0 #000;
+    max-width: 720px;
+    margin: 0;
+    color: #eaf7e8;
+    font: 400 1rem/1.65 "Terraria", "Trebuchet MS", system-ui, sans-serif;
+    text-shadow: 2px 2px 0 rgba(0,0,0,.45);
 }
-
-/* PLANS */
 
 .terraria-plans-grid {
-    position: relative;
-    z-index: 2;
-    max-width: 1120px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    max-width: var(--tr-mw);
+    min-width: 0;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
-    gap: 1.45rem;
+    padding: 1rem 0;
 }
-
-/* CARD */
 
 .terraria-card {
-    position: relative;
+    --card-accent: var(--tr-leaf-light);
+    flex: 0 1 calc(33.333% - 20px);
+    min-width: 300px;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
-    min-height: 390px;
-    padding: 1.45rem;
+    align-items: center;
+    padding: 34px 28px;
+    color: var(--tr-text);
     background:
-        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015)),
-        repeating-linear-gradient(45deg, rgba(255,255,255,.025) 0 8px, transparent 8px 16px),
-        linear-gradient(180deg, #2f3337, #151719);
-    border: 4px solid #090909;
-    outline: 2px solid rgba(255,255,255,.08);
+        linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.01)),
+        #12251d;
+    border: 1px solid rgba(255,255,255,.1);
+    border-top: 3px solid var(--card-accent);
+    border-radius: 10px;
     box-shadow:
-        inset 0 5px 0 rgba(255,255,255,.1),
-        inset 0 -7px 0 rgba(0,0,0,.38),
-        8px 8px 0 rgba(0,0,0,.78),
-        0 18px 38px rgba(0,0,0,.38);
-    transition: transform var(--ease), filter var(--ease), outline-color var(--ease);
-}
-
-.terraria-card:nth-child(1) {
-    background:
-        linear-gradient(180deg, rgba(90,60,30,.65), rgba(35,22,12,.95)),
-        repeating-linear-gradient(45deg, rgba(255,255,255,.035) 0 8px, transparent 8px 16px);
+        0 16px 34px rgba(0,0,0,.28),
+        inset 0 1px 0 rgba(255,255,255,.06);
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
 }
 
 .terraria-card:nth-child(2) {
-    background:
-        linear-gradient(180deg, rgba(120,126,130,.55), rgba(35,38,42,.96)),
-        repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 8px, transparent 8px 16px);
+    --card-accent: #8fe2ff;
 }
 
 .terraria-card:nth-child(3) {
-    background:
-        linear-gradient(180deg, rgba(255,216,74,.45), rgba(83,57,12,.96)),
-        repeating-linear-gradient(45deg, rgba(255,255,255,.035) 0 8px, transparent 8px 16px);
+    --card-accent: var(--tr-gold);
 }
 
 .terraria-card:nth-child(4) {
-    background:
-        linear-gradient(180deg, rgba(94,231,255,.42), rgba(10,52,65,.98)),
-        repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 8px, transparent 8px 16px);
+    --card-accent: #ff9ad7;
 }
 
 .terraria-card:nth-child(5) {
-    background:
-        linear-gradient(180deg, rgba(68,35,104,.72), rgba(8,7,13,.98)),
-        repeating-linear-gradient(45deg, rgba(255,255,255,.035) 0 8px, transparent 8px 16px);
-}
-
-.terraria-card::before {
-    content: "";
-    position: absolute;
-    inset: 8px;
-    border: 2px solid rgba(255,255,255,.055);
-    pointer-events: none;
-}
-
-.terraria-card::after {
-    content: "BOSS";
-    position: absolute;
-    top: .75rem;
-    right: .75rem;
-    color: rgba(255,255,255,.08);
-    font-size: .7rem;
-    font-weight: 1000;
-    letter-spacing: .18em;
+    --card-accent: #b695ff;
 }
 
 .terraria-card:hover {
-    transform: translate(-4px, -6px);
-    filter: brightness(1.08);
-    outline-color: rgba(85,255,85,.75);
+    transform: translateY(-8px);
+    border-color: color-mix(in srgb, var(--card-accent) 55%, transparent);
+    box-shadow:
+        0 22px 46px rgba(0,0,0,.36),
+        0 0 0 1px color-mix(in srgb, var(--card-accent) 18%, transparent);
 }
 
-
-
-
-
-/* ICON */
-
-.terraria-card-icon,
 .terraria-icon-fallback {
     width: 58px;
     height: 58px;
-    margin-bottom: 1.2rem;
+    margin: 0 auto 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background:
-        linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.2)),
-        #111;
-    border: 4px solid #050505;
-    box-shadow:
-        inset 0 4px 0 rgba(255,255,255,.14),
-        4px 4px 0 #000;
+    overflow: hidden;
+    padding: 9px;
+    color: var(--card-accent);
+    background: rgba(255,255,255,.04);
+    border: 1px solid color-mix(in srgb, var(--card-accent) 55%, rgba(255,255,255,.12));
+    border-radius: 8px;
+    box-shadow: none;
+    transition: transform .25s ease, filter .25s ease;
+}
+
+.terraria-card:hover .terraria-icon-fallback {
+    transform: scale(1.08);
+    filter: brightness(1.08);
 }
 
 .terraria-icon-img {
-    width: 36px;
-    height: 36px;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
-    filter:
-        drop-shadow(2px 2px 0 #000)
-        drop-shadow(0 0 8px rgba(85,255,85,.28));
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--card-accent) 38%, transparent));
 }
-
-.terraria-icon-fallback:has(img) {
-    font-size: 0;
-}
-
-/* TEXT */
 
 .terraria-plan-tag {
-    color: rgba(255,255,255,.55);
-    font-size: .62rem;
-    font-weight: 1000;
-    letter-spacing: .18em;
+    margin: 0 0 .42rem;
+    color: var(--card-accent);
+    font: 400 .68rem/1.2 "Terraria", "Trebuchet MS", system-ui, sans-serif;
+    letter-spacing: .08em;
+    text-align: center;
     text-transform: uppercase;
-    margin-bottom: .35rem;
 }
 
 .terraria-plan-name {
-    min-height: 2.4rem;
+    min-height: 2.45rem;
+    margin: 0 0 1.25rem;
     color: #fff;
-    font-size: 1.25rem;
-    font-weight: 1000;
-    line-height: 1.05;
-    letter-spacing: -.02em;
-    text-transform: uppercase;
-    margin-bottom: 1.2rem;
-    text-shadow: 3px 3px 0 #000;
+    font: 400 1.45rem/1.05 "Terraria", "Trebuchet MS", system-ui, sans-serif;
+    text-align: center;
+    text-shadow: 2px 2px 0 rgba(0,0,0,.55);
 }
 
-/* SPECS */
-
 .terraria-plan-specs {
-    overflow: hidden;
-    margin-bottom: 1.35rem;
-    border: 4px solid #080808;
-    background: rgba(0,0,0,.42);
-    box-shadow:
-        inset 0 4px 0 rgba(255,255,255,.06),
-        4px 4px 0 rgba(0,0,0,.65);
+    width: 100%;
+    margin: 0 0 1.5rem;
+    padding: .85rem;
+    list-style: none;
+    background: rgba(0,0,0,.15);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 8px;
 }
 
 .terraria-plan-specs li {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: .8rem;
-    padding: .75rem .85rem;
-    border-bottom: 2px solid rgba(255,255,255,.08);
-    background:
-        linear-gradient(90deg, rgba(255,255,255,.04), transparent);
+    gap: 1rem;
+    padding: .48rem 0;
+    border-bottom: 1px solid rgba(255,255,255,.075);
+    font: 400 .84rem/1.25 "Terraria", "Trebuchet MS", system-ui, sans-serif;
+}
+
+.terraria-plan-specs li:first-child {
+    padding-top: 0;
 }
 
 .terraria-plan-specs li:last-child {
+    padding-bottom: 0;
     border-bottom: 0;
 }
 
 .spec-label {
-    color: rgba(255,255,255,.55);
-    font-size: .7rem;
-    font-weight: 1000;
-    text-transform: uppercase;
-    letter-spacing: .1em;
+    color: var(--tr-muted);
+    opacity: .9;
 }
 
 .spec-value {
-    color: #d7ffd7;
-    font-size: .82rem;
-    font-weight: 1000;
-    text-shadow: 2px 2px 0 #000;
+    color: var(--tr-text);
+    text-align: right;
+    text-shadow: none;
 }
 
-.terraria-plan-specs li:nth-child(1) .spec-value::before {
-    content: "💎 ";
+.terraria-plan-specs li:last-child .spec-value {
+    color: var(--card-accent);
 }
 
-.terraria-plan-specs li:nth-child(2) .spec-value::before {
-    content: "🪵 ";
-}
-
-.terraria-plan-specs li:nth-child(3) .spec-value::before {
-    content: "⚔️ ";
+.spec-value small {
+    color: var(--tr-muted);
+    font-size: .72rem;
 }
 
 .terraria-divider {
-    margin: auto 0 1.25rem;
+    width: 100%;
+    height: 1px;
+    margin: auto 0 1rem;
     border: 0;
-    height: 4px;
-    background:
-        repeating-linear-gradient(90deg, #111 0 12px, rgba(255,255,255,.16) 12px 24px);
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--card-accent) 52%, transparent), transparent);
 }
 
 .terraria-card-footer {
-    margin-top: auto;
+    width: 100%;
     display: flex;
+    justify-content: center;
+    margin-top: auto;
 }
 
 .terraria-card-footer form {
-    width: 100%;
-}
-
-.terraria-card-footer .btn {
-    width: 100%;
+    display: flex;
     justify-content: center;
 }
 
-/* EMPTY */
+.terraria-card-footer .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: .62rem 1.65rem;
+    color: #ffffff;
+    background: linear-gradient(180deg, #77658e, #5f4e76);
+    border: 3px solid #2b2039;
+    border-radius: 0;
+    cursor: pointer;
+    font: 400 .82rem/1.1 "Terraria", "Trebuchet MS", system-ui, sans-serif;
+    text-decoration: none;
+    text-shadow: 2px 2px 0 #2b2039;
+    box-shadow:
+        inset 3px 3px 0 rgba(255,255,255,.22),
+        inset -4px -4px 0 rgba(43,32,57,.42),
+        4px 4px 0 rgba(0,0,0,.38);
+    transition: transform .12s steps(2, end), filter .12s steps(2, end), box-shadow .12s steps(2, end);
+}
+
+.terraria-card-footer .btn:hover {
+    transform: translate(-2px, -2px);
+    filter: brightness(1.08);
+    box-shadow:
+        inset 3px 3px 0 rgba(255,255,255,.24),
+        inset -4px -4px 0 rgba(43,32,57,.42),
+        6px 6px 0 rgba(0,0,0,.38);
+}
+
+.terraria-card-footer .btn:active {
+    transform: translate(1px, 1px);
+    box-shadow:
+        inset 2px 2px 0 rgba(43,32,57,.42),
+        inset -2px -2px 0 rgba(255,255,255,.16),
+        2px 2px 0 rgba(0,0,0,.35);
+}
+
+.terraria-card-footer .btn:disabled {
+    cursor: not-allowed;
+    filter: grayscale(1);
+    opacity: .65;
+}
 
 .terraria-empty {
-    grid-column: 1 / -1;
+    flex: 1 1 100%;
+    padding: 3rem 2rem;
     text-align: center;
-    padding: 4rem 2rem;
-    background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)),
-        #161616;
-    border: 4px solid #090909;
-    box-shadow: 8px 8px 0 #000;
+    background: rgba(29, 51, 41, .72);
+    border: 1px solid var(--tr-line);
+    border-radius: 10px;
 }
 
 .terraria-empty-icon {
     display: block;
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    filter: drop-shadow(4px 4px 0 #000);
+    margin-bottom: .75rem;
+    font-size: 2.4rem;
 }
 
 .terraria-empty h3 {
-    color: white;
-    font-size: 1.4rem;
-    font-weight: 1000;
-    text-transform: uppercase;
-    margin-bottom: .5rem;
+    margin: 0 0 .45rem;
+    color: #fff;
+    font: 400 1.55rem/1 "Terraria", "Trebuchet MS", system-ui, sans-serif;
 }
 
 .terraria-empty p {
-    color: var(--muted);
-    font-weight: 700;
+    margin: 0;
+    color: var(--tr-muted);
+    font: 400 .95rem/1.5 "Terraria", "Trebuchet MS", system-ui, sans-serif;
 }
 
-/* FOOTER */
-
-.site-footer {
-    margin-top: auto;
-    padding: 4rem 0 2rem;
-    background:
-        linear-gradient(180deg, #121416, #070707),
-        repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 16px, transparent 16px 32px);
-    border-top: 4px solid #111;
-    box-shadow: inset 0 6px 0 rgba(255,255,255,.04);
-}
-
-.footer-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-    gap: 2.5rem;
-    margin-bottom: 3rem;
-}
-
-.footer-brand p {
-    max-width: 290px;
-    margin: 1rem 0;
-    color: var(--muted);
-    font-size: .86rem;
-    line-height: 1.65;
-    font-weight: 700;
-}
-
-.footer-brand a {
-    color: var(--leaf);
-    font-weight: 900;
-}
-
-.footer-status {
-    margin-top: .875rem;
-    display: inline-flex;
-    align-items: center;
-    gap: .45rem;
-    padding: .45rem .75rem;
-    background: rgba(85,255,85,.12);
-    border: 3px solid #071107;
-    color: var(--leaf);
-    font-size: .62rem;
-    font-weight: 1000;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    box-shadow: 3px 3px 0 #000;
-}
-
-.footer-status::before {
-    content: "";
-    width: 8px;
-    height: 8px;
-    background: var(--leaf);
-    box-shadow: 0 0 10px var(--leaf);
-    animation: pulse 1.4s steps(2, end) infinite;
-}
-
-.footer-col h4 {
-    margin-bottom: 1.1rem;
-    color: rgba(255,255,255,.45);
-    font-size: .7rem;
-    font-weight: 1000;
-    text-transform: uppercase;
-    letter-spacing: .14em;
-}
-
-.footer-links {
-    display: grid;
-    gap: .7rem;
-}
-
-.footer-links a {
-    color: var(--muted);
-    font-size: .84rem;
-    font-weight: 800;
-}
-
-.footer-links a:hover {
-    color: var(--leaf);
-}
-
-.social-icons {
-    display: flex;
-    gap: .75rem;
-    flex-wrap: wrap;
-}
-
-.social-icon {
-    width: 40px;
-    height: 40px;
-    display: grid;
-    place-items: center;
-    background: #171a1d;
-    border: 3px solid #070707;
-    color: var(--muted);
-    box-shadow:
-        inset 0 3px 0 rgba(255,255,255,.08),
-        4px 4px 0 #000;
-    transition: transform var(--ease), color var(--ease);
-}
-
-.social-icon svg {
-    width: 17px;
-    height: 17px;
-}
-
-.social-icon:hover {
-    transform: translate(-2px, -2px);
-    color: var(--leaf);
-}
-
-.footer-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-    padding-top: 1.5rem;
-    border-top: 3px solid rgba(255,255,255,.07);
-}
-
-.footer-copy {
-    color: var(--dim);
-    font-size: .78rem;
-    font-weight: 800;
-}
-
-.footer-payments {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .5rem;
-}
-
-.payment-badge {
-    padding: .3rem .55rem;
-    background: rgba(0,0,0,.35);
-    border: 2px solid rgba(255,255,255,.12);
-    color: var(--muted);
-    font-size: .62rem;
-    font-weight: 1000;
-    text-transform: uppercase;
-}
-
-/* ANIMATION */
-
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: .35;
-    }
-}
-
-/* RESPONSIVE */
-
-@media (max-width: 900px) {
-    .footer-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .footer-brand {
-        grid-column: 1 / -1;
+@media (max-width: 1024px) {
+    .terraria-card {
+        flex: 0 1 calc(50% - 20px);
     }
 }
 
 @media (max-width: 768px) {
-    .nav-links,
-    .nav-actions,
-    .nav-area-note {
-        display: none;
-    }
-
-    .hamburger {
-        display: block;
-    }
-
-    .terraria-section {
-        padding: 2.5rem 1rem 4rem;
-    }
-
     .terraria-header {
-        padding: 2rem 1rem;
+        min-height: clamp(560px, 82vh, 760px);
+        padding: clamp(6rem, 13vh, 8rem) 1rem clamp(13rem, 30vh, 18rem);
     }
 
-    .terraria-header::before {
-        font-size: 1rem;
-        letter-spacing: .3rem;
+    .terraria-title {
+        font-size: clamp(2.8rem, 15vw, 4.5rem);
+    }
+
+    .terraria-sub {
+        font-size: .94rem;
     }
 }
 
-@media (max-width: 500px) {
-    .container {
-        padding: 0 1rem;
-    }
-
-    .footer-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .footer-bottom {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .terraria-plans-grid {
-        grid-template-columns: 1fr;
-    }
-
+@media (max-width: 650px) {
     .terraria-card {
-        min-height: auto;
+        flex: 0 1 100%;
+        min-width: 0;
     }
 }

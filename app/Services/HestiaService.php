@@ -37,6 +37,22 @@ class HestiaService
         20 => 'Falha ao reiniciar servico',
     ];
 
+    public function deleteUser(CustomerService $service): bool
+    {
+        $service->loadMissing('hestiaAccount');
+        $account = $service->hestiaAccount;
+
+        if (! $account?->hestia_user) {
+            return false;
+        }
+
+        $this->command('v-delete-user', [
+            $account->hestia_user,
+        ], [0, 3]);
+
+        return true;
+    }
+
     public function provision(CustomerService $service, OrderItem $item): HestiaAccount
     {
         $service->loadMissing(['product', 'order.user', 'orderItem']);

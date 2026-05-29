@@ -1,0 +1,176 @@
+/* Shared layout rules for custom game pages */
+
+:root {
+    --game-page-max: 1200px;
+    --game-hero-min: 560px;
+    --game-card-min: 300px;
+    --game-card-padding-y: 40px;
+    --game-card-padding-x: 30px;
+    --game-grid-gap: 30px;
+}
+
+.minecraftjava-section,
+.gta5-section,
+.sa-section,
+.terraria-section,
+.game-section {
+    overflow-x: hidden;
+}
+
+.minecraftjava-section > .container,
+.gta5-section > .container,
+.sa-section > .container,
+.terraria-section > .container,
+.game-section > .container {
+    width: 100%;
+    max-width: var(--game-page-max);
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+
+.minecraftjava-header,
+.gta5-hero,
+.sa-hero,
+.terraria-header,
+.game-header {
+    min-height: var(--game-hero-min);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+}
+
+.minecraftjava-header,
+.terraria-header,
+.game-header {
+    margin-bottom: 3.5rem;
+}
+
+.gta5-hero,
+.sa-hero {
+    max-width: var(--game-page-max);
+    margin-right: auto;
+    margin-bottom: 3.5rem;
+    margin-left: auto;
+    padding-top: 7rem;
+}
+
+.minecraftjava-header-info,
+.terraria-header-info,
+.game-header-info {
+    width: min(100%, 820px);
+}
+
+.gta5-sub,
+.sa-sub,
+.minecraftjava-sub,
+.terraria-sub,
+.game-sub {
+    max-width: 760px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.minecraftjava-title,
+.terraria-title,
+.game-title {
+    max-width: 100%;
+    margin: 0 0 1rem;
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: .95;
+    text-align: center;
+}
+
+.minecraftjava-title {
+    font-size: clamp(2.1rem, 5vw, 3.7rem);
+}
+
+.gta5-meta,
+.sa-tags {
+    justify-content: center;
+}
+
+.minecraftjava-plans-grid,
+.gta5-plans-grid,
+.sa-plans-grid,
+.terraria-plans-grid,
+.game-plans-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--game-grid-gap);
+    width: 100%;
+    max-width: var(--game-page-max);
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.minecraftjava-card,
+.gta5-card,
+.sa-card,
+.terraria-card,
+.game-card {
+    flex: 0 1 calc(33.333% - 20px);
+    min-width: var(--game-card-min);
+    min-height: 390px;
+    padding: var(--game-card-padding-y) var(--game-card-padding-x);
+}
+
+.minecraftjava-plan-name,
+.gta5-plan-name,
+.sa-plan-name,
+.terraria-plan-name,
+.game-plan-name {
+    min-height: 2.6rem;
+    text-align: center;
+}
+
+.terraria-header {
+    width: 100vw;
+    max-width: none;
+    margin-right: calc(50% - 50vw);
+    margin-left: calc(50% - 50vw);
+}
+
+@media (max-width: 1024px) {
+    .minecraftjava-card,
+    .gta5-card,
+    .sa-card,
+    .terraria-card,
+    .game-card {
+        flex-basis: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --game-hero-min: 460px;
+    }
+
+    .minecraftjava-header,
+    .gta5-hero,
+    .sa-hero,
+    .terraria-header,
+    .game-header {
+        margin-bottom: 2.5rem;
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+}
+
+@media (max-width: 650px) {
+    .minecraftjava-card,
+    .gta5-card,
+    .sa-card,
+    .terraria-card,
+    .game-card {
+        flex-basis: 100%;
+        min-width: 0;
+    }
+}

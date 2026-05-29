@@ -341,7 +341,7 @@
                             <div class="panel-head">
                                 <div>
                                     <h2>Faturas</h2>
-                                    <p>Status financeiro dos pedidos e renovações de VPS.</p>
+                                    <p>Status financeiro dos pedidos e renovações mensais.</p>
                                 </div>
                                 <a href="/checkout" class="btn btn-sm btn-primary">
                                     Ver checkout
@@ -408,7 +408,7 @@
                                     <div class="empty-state">
                                         <div class="empty-icon" role="img" aria-label="Ícone de cartão">💳</div>
                                         <h3>Nenhuma fatura pendente</h3>
-                                        <p>Quando houver compra ou renovação de VPS, a fatura aparecerá aqui.</p>
+                                        <p>Quando houver compra ou renovação mensal, a fatura aparecerá aqui.</p>
                                     </div>
                                 @endforelse
                             </div>
@@ -441,7 +441,7 @@
             return;
         }
 
-        const showView = (viewName, updateUrl = true) => {
+        const showView = (viewName, updateUrl = true, processInvoices = true) => {
             const target = tabs.querySelector(`[data-dashboard-view="${viewName}"]`)
                 || tabs.querySelector('[data-dashboard-view="dashboard"]');
 
@@ -465,80 +465,189 @@
             if (updateUrl) {
                 history.replaceState(null, '', `#${target.dataset.dashboardView}`);
             }
+
+            if (processInvoices && target.dataset.dashboardView === 'faturas') {
+                processRenewals(true);
+            }
         };
 
-        links.forEach((link) => {
-            link.addEventListener('click', (event) => {
-                event.preventDefault();
-                showView(link.getAttribute('href').replace('#', ''));
-            });
-        });
+        document.addEventListener('click', (event) => {
+            const link = event.target.closest('[data-dashboard-link]');
 
-        showView(window.location.hash.replace('#', '') || 'dashboard', false);
-
-        document.querySelectorAll('[data-service-table]').forEach((table) => {
-            const search = table.querySelector('[data-service-search]');
-            const summary = table.querySelector('[data-service-summary]');
-            const rows = Array.from(table.querySelectorAll('[data-service-row]'));
-            const emptyRow = table.querySelector('[data-service-empty-row]');
-            const previous = table.querySelector('[data-service-prev]');
-            const next = table.querySelector('[data-service-next]');
-            const perPage = 3;
-            let currentPage = 1;
-
-            if (!search || !previous || !next || !rows.length) {
+            if (!link) {
                 return;
             }
 
-            const updateRows = () => {
-                const query = search.value.trim().toLowerCase();
-                const matchingRows = rows.filter((row) => row.textContent.toLowerCase().includes(query));
-                const total = matchingRows.length;
-                const totalPages = Math.max(1, Math.ceil(total / perPage));
-
-                currentPage = Math.min(currentPage, totalPages);
-
-                const start = total ? (currentPage - 1) * perPage : 0;
-                const end = Math.min(start + perPage, total);
-                const visibleRows = new Set(matchingRows.slice(start, end));
-
-                rows.forEach((row) => {
-                    row.hidden = !visibleRows.has(row);
-                });
-
-                if (summary) {
-                    summary.textContent = total
-                        ? `Mostrando ${start + 1} a ${end} de ${total} registros`
-                        : `Mostrando 0 a 0 de ${rows.length} registros`;
-                }
-
-                previous.disabled = currentPage <= 1 || total === 0;
-                next.disabled = currentPage >= totalPages || total === 0;
-
-                if (emptyRow) {
-                    emptyRow.hidden = total > 0;
-                }
-            };
-
-            search.addEventListener('input', () => {
-                currentPage = 1;
-                updateRows();
-            });
-
-            previous.addEventListener('click', () => {
-                currentPage = Math.max(1, currentPage - 1);
-                updateRows();
-            });
-
-            next.addEventListener('click', () => {
-                currentPage += 1;
-                updateRows();
-            });
-
-            updateRows();
+            event.preventDefault();
+            showView(link.getAttribute('href').replace('#', ''));
         });
 
-        const timers = document.querySelectorAll('[data-invoice-timer]');
+        const initServiceTables = () => {
+            document.querySelectorAll('[data-service-table]').forEach((table) => {
+                if (table.dataset.tableReady === '1') {
+                    return;
+                }
+
+                table.dataset.tableReady = '1';
+
+                const search = table.querySelector('[data-service-search]');
+                const summary = table.querySelector('[data-service-summary]');
+                const rows = Array.from(table.querySelectorAll('[data-service-row]'));
+                const emptyRow = table.querySelector('[data-service-empty-row]');
+                const previous = table.querySelector('[data-service-prev]');
+                const next = table.querySelector('[data-service-next]');
+                const perPage = 3;
+                let currentPage = 1;
+
+                if (!search || !previous || !next || !rows.length) {
+                    return;
+                }
+
+                const updateRows = () => {
+                    const query = search.value.trim().toLowerCase();
+                    const matchingRows = rows.filter((row) => row.textContent.toLowerCase().includes(query));
+                    const total = matchingRows.length;
+                    const totalPages = Math.max(1, Math.ceil(total / perPage));
+
+                    currentPage = Math.min(currentPage, totalPages);
+
+                    const start = total ? (currentPage - 1) * perPage : 0;
+                    const end = Math.min(start + perPage, total);
+                    const visibleRows = new Set(matchingRows.slice(start, end));
+
+                    rows.forEach((row) => {
+                        row.hidden = !visibleRows.has(row);
+                    });
+
+                    if (summary) {
+                        summary.textContent = total
+                            ? `Mostrando ${start + 1} a ${end} de ${total} registros`
+                            : `Mostrando 0 a 0 de ${rows.length} registros`;
+                    }
+
+                    previous.disabled = currentPage <= 1 || total === 0;
+                    next.disabled = currentPage >= totalPages || total === 0;
+
+                    if (emptyRow) {
+                        emptyRow.hidden = total > 0;
+                    }
+                };
+
+                search.addEventListener('input', () => {
+                    currentPage = 1;
+                    updateRows();
+                });
+
+                previous.addEventListener('click', () => {
+                    currentPage = Math.max(1, currentPage - 1);
+                    updateRows();
+                });
+
+                next.addEventListener('click', () => {
+                    currentPage += 1;
+                    updateRows();
+                });
+
+                updateRows();
+            });
+        };
+
+        initServiceTables();
+
+        let timers = Array.from(document.querySelectorAll('[data-invoice-timer]'));
+        let renewalCheckInProgress = false;
+        let fragmentRefreshInProgress = false;
+
+        const collectTimers = () => {
+            timers = Array.from(document.querySelectorAll('[data-invoice-timer]'));
+        };
+
+        const refreshDashboardFragments = async () => {
+            if (fragmentRefreshInProgress) {
+                return;
+            }
+
+            fragmentRefreshInProgress = true;
+
+            try {
+                const response = await fetch(window.location.pathname, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    cache: 'no-store',
+                    credentials: 'same-origin',
+                });
+
+                if (!response.ok) {
+                    return;
+                }
+
+                const html = await response.text();
+                const nextDocument = new DOMParser().parseFromString(html, 'text/html');
+                const selectors = [
+                    '.hero-status-grid',
+                    '.dashboard-cards',
+                    '[data-service-table]',
+                    '#faturas .service-list',
+                ];
+
+                selectors.forEach((selector) => {
+                    const current = document.querySelector(selector);
+                    const next = nextDocument.querySelector(selector);
+
+                    if (current && next) {
+                        current.innerHTML = next.innerHTML;
+                        current.removeAttribute('data-table-ready');
+                    }
+                });
+
+                initServiceTables();
+                collectTimers();
+                updateTimers();
+                showView(window.location.hash.replace('#', '') || 'dashboard', false, false);
+            } catch (error) {
+                console.warn('Falha ao atualizar painel em background.', error);
+            } finally {
+                fragmentRefreshInProgress = false;
+            }
+        };
+
+        const currentViewName = () => {
+            return window.location.hash.replace('#', '') || 'dashboard';
+        };
+
+        const processRenewals = async (refreshWhenUnchanged = false) => {
+            if (renewalCheckInProgress) {
+                return;
+            }
+
+            renewalCheckInProgress = true;
+
+            try {
+                const response = await fetch('{{ route('dashboard.renewals.process') }}', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    cache: 'no-store',
+                    credentials: 'same-origin',
+                });
+
+                if (!response.ok) {
+                    return;
+                }
+
+                const result = await response.json();
+
+                if (result.changed || refreshWhenUnchanged) {
+                    refreshDashboardFragments();
+                }
+            } catch (error) {
+                console.warn('Falha ao processar renovações em background.', error);
+            } finally {
+                renewalCheckInProgress = false;
+            }
+        };
 
         const updateTimers = () => {
             timers.forEach((timer) => {
@@ -551,6 +660,7 @@
 
                 if (remaining <= 0) {
                     timer.textContent = 'expirada';
+                    processRenewals();
                     return;
                 }
 
@@ -560,8 +670,10 @@
             });
         };
 
+        showView(window.location.hash.replace('#', '') || 'dashboard', false);
         updateTimers();
         setInterval(updateTimers, 1000);
+        setInterval(() => processRenewals(currentViewName() === 'faturas'), 10000);
     })();
 </script>
 @endpush

@@ -137,6 +137,13 @@
     transform: translateY(-1px);
 }
 
+.nav-cart,
+.nav-cart:hover,
+.nav-cart:focus,
+.nav-cart:active {
+    text-decoration: none;
+}
+
 .nav-cart-count {
     position: absolute !important;
     top: -7px !important;

@@ -7,6 +7,7 @@
 
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
     <link rel="stylesheet" href="{{ asset('css/minecraft_bed.css') }}?v={{ filemtime(public_path('css/minecraft_bed.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/game-standard.css') }}?v={{ filemtime(public_path('css/game-standard.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
@@ -19,8 +20,6 @@
     <section class="minecraftjava-header">
         @include('partials.header')
         <div class="minecraftjava-header-info">
-            <span class="minecraftjava-eyebrow">Mundo dedicado</span>
-
             <h1 class="minecraftjava-title">
                 {{ $jogo->nome }}
             </h1>

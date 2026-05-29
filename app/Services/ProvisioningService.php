@@ -114,13 +114,16 @@ class ProvisioningService
 
     private function provisionIdentifier(CustomerService $service): string
     {
-        return sprintf(
-            'VTX-SRV-%06d-U%06d-O%06d-I%06d',
-            $service->id,
-            $service->user_id,
-            $service->order_id ?: 0,
-            $service->order_item_id ?: 0
+        do {
+            $identifier = 'VTX-' . Str::upper(Str::random(12));
+        } while (
+            CustomerService::query()
+                ->where('provision_identifier', $identifier)
+                ->whereKeyNot($service->id)
+                ->exists()
         );
+
+        return $identifier;
     }
 
     private function typeFor(OrderItem $item): string

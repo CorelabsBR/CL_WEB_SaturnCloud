@@ -7,6 +7,7 @@
 
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
     <link rel="stylesheet" href="{{ asset('css/gtav.css') }}?v={{ filemtime(public_path('css/gtav.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/game-standard.css') }}?v={{ filemtime(public_path('css/game-standard.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
@@ -21,7 +22,6 @@
 
     <div class="container">
         <div class="gta5-hero">
-            <div class="gta5-badge">Premium Game Hosting</div>
             <h1 class="gta5-title">{{ $jogo->nome }}</h1>
             <p class="gta5-sub">
                 Hospedagem no clima de Los Santos: rápida, estável e pronta pra caos pesado de servidor.

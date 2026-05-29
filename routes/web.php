@@ -35,6 +35,15 @@ Route::get('/completar-cadastro', [AuthController::class, 'showCompleteProfile']
 Route::post('/completar-cadastro', [AuthController::class, 'completeProfile'])
     ->name('cadastro.completar.post');
 
+Route::get('/verificar-email', [AuthController::class, 'showEmailVerification'])
+    ->name('cadastro.verificar.email');
+
+Route::post('/verificar-email', [AuthController::class, 'verifyEmail'])
+    ->name('cadastro.verificar.email.post');
+
+Route::post('/verificar-email/reenviar', [AuthController::class, 'resendEmailVerificationCode'])
+    ->name('cadastro.verificar.email.reenviar');
+
 Route::middleware('auth')->group(function () {
     Route::get('/perfil', [AuthController::class, 'showEditProfile'])
         ->name('perfil.edit');
@@ -78,6 +87,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'profile.complete'])->group(function () {
     Route::get('/painel', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/painel/renovacoes/processar', [DashboardController::class, 'processRenewals'])
+        ->name('dashboard.renewals.process');
     Route::get('/dashboard', fn () => redirect()->route('dashboard.index'));
 });
 

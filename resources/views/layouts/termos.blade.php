@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('css/privacidade.css') }}">
     <link rel="stylesheet" href="{{ asset('css/reembolso.css') }}">
     <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/notifications.css') }}?v={{ filemtime(public_path('css/notifications.css')) }}">
 
 
     @stack('styles')
@@ -34,6 +35,8 @@
 @endif
 
 @include('partials.support-widget')
+
+<script src="{{ asset('js/notifications.js') }}?v={{ filemtime(public_path('js/notifications.js')) }}"></script>
 
 @stack('scripts')
 

@@ -7,6 +7,7 @@
 
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
     <link rel="stylesheet" href="{{ asset('css/gtasa.css') }}?v={{ filemtime(public_path('css/gtasa.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/game-standard.css') }}?v={{ filemtime(public_path('css/game-standard.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
@@ -20,7 +21,6 @@
 
     <div class="container">
         <div class="sa-hero">
-            <span class="sa-eyebrow">VortexHost Roleplay Division</span>
             <h1 class="sa-title">{{ $jogo->nome }}</h1>
             <p class="sa-sub">
                 Servidor no estilo San Andreas: rua, calor, gangue, rádio chiando e performance sem cair no tiroteio.

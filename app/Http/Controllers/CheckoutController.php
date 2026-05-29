@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Services\MercadoPagoService;
 use App\Services\ProvisioningService;
+use App\Services\RenewalBillingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -146,16 +147,19 @@ class CheckoutController extends Controller
         return $this->redirectToPayment($order, $mercadoPago);
     }
 
-    public function payOrder(Order $order, MercadoPagoService $mercadoPago)
+    public function payOrder(Order $order, MercadoPagoService $mercadoPago, RenewalBillingService $billing)
     {
         abort_if((int) $order->user_id !== (int) Auth::id(), 403);
 
         if ($this->isExpiredPendingOrder($order)) {
-            $order->update(['status' => 'cancelado']);
+            $terminated = $billing->terminateOverdueOrder($order);
 
             return redirect()
                 ->route('dashboard.index')
-                ->with('error', 'Esta fatura expirou após 1 minuto e foi cancelada.');
+                ->with('error', $terminated
+                    ? 'Esta fatura passou do prazo de 5 dias e o serviço foi cancelado.'
+                    : 'Esta fatura passou do prazo de 5 dias e não pode mais ser paga. Nossa equipe foi avisada para revisar a remoção do serviço.'
+                );
         }
 
         if ($order->status === 'pago') {

@@ -4,13 +4,26 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 use App\Models\Order;
+use App\Models\User;
 use App\Services\HestiaService;
 use App\Services\ProvisioningService;
 use App\Services\PterodactylService;
+use App\Services\RenewalBillingService;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+Artisan::command('auth:purge-unverified', function () {
+    $deleted = User::query()
+        ->whereNull('email_verified_at')
+        ->where('criado_em', '<=', now()->subDay())
+        ->delete();
+
+    $this->info("Contas não verificadas removidas: {$deleted}");
+
+    return self::SUCCESS;
+})->purpose('Remove contas que não verificaram o e-mail em até 1 dia.');
 
 Artisan::command('pterodactyl:check', function (PterodactylService $pterodactyl) {
     try {
@@ -102,5 +115,18 @@ Artisan::command('hestia:process-queue {order_id?} {--limit=50}', function (Hest
     return empty($result['failed']) ? self::SUCCESS : self::FAILURE;
 })->purpose('Processa a fila local de criação de usuários Hestia.');
 
+Artisan::command('billing:process-renewals {--user_id= : Processa apenas um cliente}', function (RenewalBillingService $billing) {
+    $userId = $this->option('user_id') ? (int) $this->option('user_id') : null;
+    $result = $billing->process($userId);
+
+    $this->info("Faturas mensais criadas: {$result['generated']}");
+    $this->info("Serviços vencidos apagados: {$result['terminated']}");
+
+    return self::SUCCESS;
+})->purpose('Cria faturas mensais e apaga serviços com fatura vencida há 5 dias.');
+
 Schedule::command('hestia:process-queue')
+    ->everyMinute();
+
+Schedule::command('billing:process-renewals')
     ->everyMinute();

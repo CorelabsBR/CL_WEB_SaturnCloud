@@ -230,6 +230,32 @@
     background: rgba(4, 15, 8, 0.98);
 }
 
+.support-quick-questions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
+.support-quick-questions button {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid rgba(61, 255, 160, 0.18);
+    border-radius: 999px;
+    background: rgba(61, 255, 160, 0.07);
+    color: var(--muted, #87b89d);
+    font-size: 0.76rem;
+    font-weight: 800;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.support-quick-questions button:hover {
+    border-color: rgba(61, 255, 160, 0.38);
+    background: rgba(61, 255, 160, 0.12);
+    color: var(--text, #f0fdf6);
+    transform: translateY(-1px);
+}
+
 .support-chat-form textarea {
     width: 100%;
     min-height: 82px;

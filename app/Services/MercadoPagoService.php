@@ -134,6 +134,18 @@ class MercadoPagoService
             return [$lockedOrder->fresh(), $orderStatus, $previousStatus];
         });
 
+        if ($orderStatus === 'pago' && $order->billing_type === 'renewal' && $order->due_at?->isPast()) {
+            $order->update(['status' => 'cancelado']);
+
+            Log::warning('Pagamento aprovado apos prazo de renovacao; servico nao foi reativado automaticamente', [
+                'order_id' => $order->id,
+                'service_id' => $order->service_id,
+                'due_at' => $order->due_at?->toIso8601String(),
+            ]);
+
+            return $order->fresh();
+        }
+
         if ($orderStatus === 'pago' && $order->billing_type === 'renewal') {
             $this->renewService($order);
         }

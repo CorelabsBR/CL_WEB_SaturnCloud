@@ -3,6 +3,13 @@
     padding-bottom: 4rem;
 }
 
+.cart-page a,
+.cart-page a:hover,
+.cart-page a:focus,
+.cart-page a:active {
+    text-decoration: none;
+}
+
 .cart-header {
     margin-bottom: 2rem;
 }

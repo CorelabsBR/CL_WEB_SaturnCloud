@@ -49,6 +49,18 @@
             <h1 class="register-title">Criar conta</h1>
             <p class="register-subtitle">Primeiro, crie seu acesso. Depois você completa seus dados.</p>
 
+            @if (session('error'))
+                <div class="register-alert register-alert-error">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="register-alert register-alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <form method="POST" action="{{ route('registro.post') }}" class="register-form" novalidate>
                 @csrf
 

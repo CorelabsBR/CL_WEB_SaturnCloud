@@ -6,10 +6,11 @@
     <title>{{ $jogo->nome }} - VortexHost</title>
 
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
-    <link rel="stylesheet" href="{{ asset('css/terraria.css') }}?v={{ filemtime(public_path('css/terraria.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/terraria.css') }}?v={{ filemtime(public_path('css/terraria.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/game-standard.css') }}?v={{ filemtime(public_path('css/game-standard.css')) }}">
 </head>
 
 <body>
@@ -20,8 +21,6 @@
 
         <section class="terraria-header">
             <div class="terraria-header-info">
-                <span class="terraria-eyebrow">Bioma dedicado</span>
-
                 <h1 class="terraria-title">
                     {{ $jogo->nome }}
                 </h1>
@@ -35,6 +34,10 @@
 
         <section class="terraria-plans-grid">
             @forelse ($plans as $plan)
+                @php
+                    $planId = $plan->plan ?? $plan->id ?? null;
+                @endphp
+
                 <article class="terraria-card">
                     <div class="terraria-icon-fallback">
                         @if ($jogo->icon)
@@ -79,12 +82,18 @@
                     <hr class="terraria-divider">
 
                     <div class="terraria-card-footer">
-                        <form method="POST" action="{{ route('cart.addPlan', $plan->plan) }}">
-                            @csrf
-                            <button type="submit" class="btn btn-primary btn-sm">
-                                Invocar servidor →
+                        @if ($planId)
+                            <form method="POST" action="{{ route('cart.addPlan', $planId) }}">
+                                @csrf
+                                <button type="submit" class="btn btn-primary">
+                                    Invocar servidor
+                                </button>
+                            </form>
+                        @else
+                            <button type="button" class="btn btn-primary" disabled>
+                                Plano indisponível
                             </button>
-                        </form>
+                        @endif
                     </div>
                 </article>
             @empty

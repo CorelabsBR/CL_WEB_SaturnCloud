@@ -238,6 +238,23 @@
     text-decoration: underline;
 }
 
+.register-link-button {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    border: 0;
+    background: transparent;
+    color: #00ff64;
+    font-size: .9rem;
+    font-weight: 800;
+    cursor: pointer;
+    text-align: center;
+}
+
+.register-link-button:hover {
+    text-decoration: underline;
+}
+
 @media (max-width: 900px) {
     .register-split {
         flex-direction: column;

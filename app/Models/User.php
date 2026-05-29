@@ -35,11 +35,13 @@ protected $fillable = [
     'avatar',
     'provider',
     'email_verified_at',
+    'email_verification_code',
     'profile_completed_at',
 ];
 
 protected $hidden = [
     'senha',
+    'email_verification_code',
 ];
 
 protected $casts = [

@@ -19,6 +19,40 @@ use Illuminate\Support\Str;
 
 class PterodactylService
 {
+    public function deleteServer(CustomerService $service): bool
+    {
+        $service->loadMissing('pterodactylServer');
+        $server = $service->pterodactylServer;
+
+        if (! $server) {
+            return false;
+        }
+
+        $serverId = $server->pterodactyl_server_id;
+
+        if (! $serverId && $server->external_id) {
+            $remoteServer = $this->findServerByExternalId($server->external_id);
+            $serverId = data_get($remoteServer, 'attributes.id');
+        }
+
+        if (! $serverId) {
+            return false;
+        }
+
+        $response = $this->client()->delete("/api/application/servers/{$serverId}?force=true");
+
+        if ($response->successful() || $response->status() === 404) {
+            Log::info('Servidor Pterodactyl removido por fatura vencida', [
+                'service_id' => $service->id,
+                'pterodactyl_server_id' => $serverId,
+            ]);
+
+            return true;
+        }
+
+        throw new \RuntimeException("Pterodactyl delete server HTTP {$response->status()}: {$response->body()}");
+    }
+
     public function pruneDeletedServersForUser(int $userId): int
     {
         if (! config('services.pterodactyl.url') || ! config('services.pterodactyl.api_key')) {
@@ -387,7 +421,8 @@ class PterodactylService
         $allocationId = config('services.pterodactyl.allocation_id');
 
         $payload = [
-            'name' => $this->serverName($service, $provisionIdentifier),
+            'name' => $this->serverName($service),
+            'description' => "Vortex | ID: {$provisionIdentifier} | Serviço #{$service->id}",
             'external_id' => $externalId,
             'user' => $pterodactylUserId,
             'egg' => $egg->egg_id,
@@ -538,12 +573,13 @@ class PterodactylService
             return $service->provision_identifier;
         }
 
-        $identifier = sprintf(
-            'VTX-SRV-%06d-U%06d-O%06d-I%06d',
-            $service->id,
-            $service->user_id,
-            $service->order_id ?: 0,
-            $service->order_item_id ?: 0
+        do {
+            $identifier = 'VTX-' . Str::upper(Str::random(12));
+        } while (
+            CustomerService::query()
+                ->where('provision_identifier', $identifier)
+                ->whereKeyNot($service->id)
+                ->exists()
         );
 
         $service->forceFill(['provision_identifier' => $identifier])->save();
@@ -561,11 +597,11 @@ class PterodactylService
             ->toString();
     }
 
-    private function serverName(CustomerService $service, string $provisionIdentifier): string
+    private function serverName(CustomerService $service): string
     {
         $name = $service->name ?: "{$service->product->nome} #{$service->id}";
 
-        return Str::limit("{$name} ({$provisionIdentifier})", 191, '');
+        return Str::limit($name, 191, '');
     }
 
     private function configuration(CustomerService $service): ServiceProvisioningConfiguration

@@ -8,21 +8,43 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Carbon;
 
 class AuthController extends Controller
 {
-    public function showLogin()
+    public function showLogin(Request $request)
     {
         if (Auth::check()) {
+            if ($this->expireUnverifiedUserIfNeeded($request, Auth::user())) {
+                return redirect()
+                    ->route('registro')
+                    ->with('error', 'Seu cadastro expirou porque o e-mail não foi verificado em até 1 dia. Faça o cadastro novamente.');
+            }
+
+            if (!Auth::user()?->email_verified_at) {
+                return redirect()->route('cadastro.verificar.email');
+            }
+
             return redirect()->route('dashboard.index');
         }
 
         return view('auth.login');
     }
 
-    public function showRegister()
+    public function showRegister(Request $request)
     {
         if (Auth::check()) {
+            if ($this->expireUnverifiedUserIfNeeded($request, Auth::user())) {
+                return redirect()
+                    ->route('registro')
+                    ->with('error', 'Seu cadastro expirou porque o e-mail não foi verificado em até 1 dia. Faça o cadastro novamente.');
+            }
+
+            if (!Auth::user()?->email_verified_at) {
+                return redirect()->route('cadastro.verificar.email');
+            }
+
             return Auth::user()->hasCompletedProfile()
                 ? redirect()->route('dashboard.index')
                 : redirect()->route('cadastro.completar');
@@ -52,7 +74,6 @@ class AuthController extends Controller
             'senha' => Hash::make($data['password']),
             'tipo_usuario' => 'cliente',
         ]);
-
         $request->session()->regenerate();
 
         return redirect()
@@ -142,6 +163,18 @@ class AuthController extends Controller
 
         if ($user) {
             $user->update($profileData);
+
+            if (!$user->email_verified_at) {
+                $user->update([
+                    'email_verification_code' => $this->generateEmailVerificationCode(),
+                ]);
+
+                $this->sendEmailVerificationCode($user);
+
+                return redirect()
+                    ->route('cadastro.verificar.email')
+                    ->with('success', 'Cadastro completo! Enviamos um código para seu e-mail.');
+            }
         } else {
             if (User::where('email', $pendingRegistration['email'])->exists()) {
                 $request->session()->forget('pending_registration');
@@ -151,14 +184,123 @@ class AuthController extends Controller
                 ]);
             }
 
-            $user = User::create($pendingRegistration + $profileData);
+            $user = User::create($pendingRegistration + $profileData + [
+                'email_verification_code' => $this->generateEmailVerificationCode(),
+                'email_verified_at' => null,
+            ]);
 
-            Auth::login($user);
+            $this->sendEmailVerificationCode($user);
+
             $request->session()->forget('pending_registration');
+            $request->session()->put('pending_email_verification_user_id', $user->id);
             $request->session()->regenerate();
+
+            return redirect()
+                ->route('cadastro.verificar.email')
+                ->with('success', 'Cadastro criado! Enviamos um código para seu e-mail.');
         }
 
-        return redirect()->route('dashboard.index');
+        return redirect()
+            ->route('dashboard.index')
+            ->with('success', 'Cadastro completo com sucesso.');
+    }
+
+    public function showEmailVerification(Request $request)
+    {
+        $user = $this->pendingEmailVerificationUser($request);
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if ($this->expireUnverifiedUserIfNeeded($request, $user)) {
+            return redirect()
+                ->route('registro')
+                ->with('error', 'Seu cadastro expirou porque o e-mail não foi verificado em até 1 dia. Faça o cadastro novamente.');
+        }
+
+        if ($user->email_verified_at) {
+            if (!Auth::check()) {
+                Auth::login($user);
+                $request->session()->regenerate();
+            }
+
+            return redirect()->route(
+                $user->hasCompletedProfile() ? 'dashboard.index' : 'cadastro.completar'
+            );
+        }
+
+        return view('auth.verification-email', [
+            'email' => $user->email,
+        ]);
+    }
+
+    public function verifyEmail(Request $request)
+    {
+        $user = $this->pendingEmailVerificationUser($request);
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if ($this->expireUnverifiedUserIfNeeded($request, $user)) {
+            return redirect()
+                ->route('registro')
+                ->with('error', 'Seu cadastro expirou porque o e-mail não foi verificado em até 1 dia. Faça o cadastro novamente.');
+        }
+
+        $data = $request->validate([
+            'code' => ['required', 'digits:6'],
+        ], [
+            'code.required' => 'Informe o código enviado para seu e-mail.',
+            'code.digits' => 'O código precisa ter 6 números.',
+        ]);
+
+        if (!hash_equals((string) $user->email_verification_code, (string) $data['code'])) {
+            throw ValidationException::withMessages([
+                'code' => 'Código inválido. Confira o e-mail e tente novamente.',
+            ]);
+        }
+
+        $user->update([
+            'email_verified_at' => now(),
+            'email_verification_code' => null,
+        ]);
+
+        Auth::login($user);
+        $request->session()->forget('pending_email_verification_user_id');
+        $request->session()->regenerate();
+
+        return redirect()
+            ->route($user->hasCompletedProfile() ? 'dashboard.index' : 'cadastro.completar')
+            ->with('success', 'E-mail verificado com sucesso. Você já está logado.');
+    }
+
+    public function resendEmailVerificationCode(Request $request)
+    {
+        $user = $this->pendingEmailVerificationUser($request);
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if ($this->expireUnverifiedUserIfNeeded($request, $user)) {
+            return redirect()
+                ->route('registro')
+                ->with('error', 'Seu cadastro expirou porque o e-mail não foi verificado em até 1 dia. Faça o cadastro novamente.');
+        }
+
+        if ($user->email_verified_at) {
+            return redirect()->route('dashboard.index');
+        }
+
+        $user->update([
+            'email_verification_code' => $this->generateEmailVerificationCode(),
+        ]);
+
+        $this->sendEmailVerificationCode($user);
+
+        return back()->with('success', 'Enviamos um novo código para seu e-mail.');
     }
 
     public function showEditProfile()
@@ -236,6 +378,27 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
+        if (!$user->email_verified_at) {
+            if ($this->expireUnverifiedUserIfNeeded($request, $user)) {
+                throw ValidationException::withMessages([
+                    'email' => 'Seu cadastro expirou porque o e-mail não foi verificado em até 1 dia. Faça o cadastro novamente.',
+                ]);
+            }
+
+            $user->update([
+                'email_verification_code' => $this->generateEmailVerificationCode(),
+            ]);
+
+            $this->sendEmailVerificationCode($user);
+
+            Auth::logout();
+            $request->session()->put('pending_email_verification_user_id', $user->id);
+
+            return redirect()
+                ->route('cadastro.verificar.email')
+                ->with('success', 'Antes de entrar, confirme seu e-mail. Enviamos um novo código.');
+        }
+
         if (! $user->hasCompletedProfile()) {
             return redirect()->route('cadastro.completar');
         }
@@ -255,6 +418,55 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('home');
+    }
+
+    private function pendingEmailVerificationUser(Request $request): ?User
+    {
+        if (Auth::check()) {
+            return Auth::user();
+        }
+
+        $userId = $request->session()->get('pending_email_verification_user_id');
+
+        if (!$userId) {
+            return null;
+        }
+
+        return User::find($userId);
+    }
+
+    private function expireUnverifiedUserIfNeeded(Request $request, ?User $user): bool
+    {
+        if (!$user || $user->email_verified_at || !$this->emailVerificationExpired($user)) {
+            return false;
+        }
+
+        if (Auth::id() === $user->id) {
+            Auth::logout();
+        }
+
+        $request->session()->forget('pending_email_verification_user_id');
+        $user->delete();
+
+        return true;
+    }
+
+    private function emailVerificationExpired(User $user): bool
+    {
+        return Carbon::parse($user->criado_em)->lte(now()->subDay());
+    }
+
+    private function generateEmailVerificationCode(): string
+    {
+        return (string) random_int(100000, 999999);
+    }
+
+    private function sendEmailVerificationCode(User $user): void
+    {
+        Mail::raw("Seu código de verificação da Vortex é: {$user->email_verification_code}", function ($message) use ($user) {
+            $message->to($user->email)
+                ->subject('Código de verificação - Vortex');
+        });
     }
 
     private function isValidCpfCnpj(string $value): bool

@@ -73,6 +73,13 @@
                 <input type="hidden" name="category" value="Suporte geral">
                 <input type="hidden" name="priority" value="normal">
 
+                <div class="support-quick-questions" aria-label="Perguntas rápidas">
+                    <button type="button" data-support-question="Como acompanho meu pedido?">Como acompanho meu pedido?</button>
+                    <button type="button" data-support-question="Meu servidor ainda não foi criado.">Servidor não criado</button>
+                    <button type="button" data-support-question="Preciso de ajuda para configurar meu servidor.">Configurar servidor</button>
+                    <button type="button" data-support-question="Quero tirar uma dúvida sobre pagamento.">Pagamento</button>
+                </div>
+
                 <textarea name="message" rows="3" placeholder="Digite sua mensagem...">{{ old('message') }}</textarea>
                 <div class="support-chat-tools">
                     <label class="support-image-button" title="Adicionar imagem">
@@ -129,6 +136,7 @@
         const imageInput = form?.querySelector('[data-support-image]');
         const imageName = form?.querySelector('[data-support-image-name]');
         const imageClear = form?.querySelector('[data-support-image-clear]');
+        const quickQuestions = form?.querySelectorAll('[data-support-question]');
         const compressedUploadLimit = 1800 * 1024;
         const imageExtensionPattern = /\.(avif|bmp|gif|jpe?g|png|svg|webp)$/i;
 
@@ -149,6 +157,19 @@
                 form.requestSubmit();
             });
         }
+
+        quickQuestions?.forEach((button) => {
+            button.addEventListener('click', () => {
+                if (!textarea) {
+                    return;
+                }
+
+                textarea.value = button.dataset.supportQuestion || button.textContent.trim();
+                textarea.focus();
+                textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+                setFormError();
+            });
+        });
 
         const clearImage = () => {
             if (imageInput) {
