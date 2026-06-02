@@ -608,6 +608,12 @@
     border: 1px solid rgba(61, 255, 160, .2);
 }
 
+.game-choice-status.is-maintenance {
+    color: #ffbf87;
+    background: rgba(150, 74, 18, .22);
+    border-color: rgba(189, 91, 24, .36);
+}
+
 .game-choice-featured {
     color: #061009;
     background: var(--accent);

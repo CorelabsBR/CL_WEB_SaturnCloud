@@ -94,16 +94,35 @@ class PterodactylService
         return $deleted;
     }
 
-    public function healthCheck(): array
+    public function healthCheck(?int $serverId = null): array
     {
-        $response = $this->client()->get('/api/application/users', [
+        $usersResponse = $this->client()->get('/api/application/users', [
             'per_page' => 1,
         ]);
 
+        $checks = [
+            'users' => [
+                'ok' => $usersResponse->successful(),
+                'status' => $usersResponse->status(),
+                'body' => $usersResponse->json() ?: $usersResponse->body(),
+            ],
+        ];
+
+        if ($serverId) {
+            $databasesResponse = $this->client()->get("/api/application/servers/{$serverId}/databases", [
+                'per_page' => 1,
+            ]);
+
+            $checks['server_databases'] = [
+                'ok' => $databasesResponse->successful(),
+                'status' => $databasesResponse->status(),
+                'body' => $databasesResponse->json() ?: $databasesResponse->body(),
+            ];
+        }
+
         return [
-            'ok' => $response->successful(),
-            'status' => $response->status(),
-            'body' => $response->json() ?: $response->body(),
+            'ok' => collect($checks)->every(fn (array $check) => $check['ok']),
+            'checks' => $checks,
         ];
     }
 
@@ -113,18 +132,23 @@ class PterodactylService
 
         $service->loadMissing([
             'product.planModel.pterodactylEgg.variables',
+            'product.planModel.jogo',
             'order.user',
             'provisioningConfiguration',
         ]);
 
         $plan = $service->product?->planModel
-            ?: Plan::query()->with('pterodactylEgg.variables')->where('plan', $service->product?->plan)->firstOrFail();
+            ?: Plan::query()->with(['pterodactylEgg.variables', 'jogo'])->where('plan', $service->product?->plan)->firstOrFail();
+
+        $plan->loadMissing('jogo');
 
         $egg = $plan->pterodactylEgg;
 
         if (! $egg) {
             throw new \RuntimeException("Egg local do plano {$plan->plan} não encontrado.");
         }
+
+        $egg = $this->ensureEggMetadata($egg);
 
         if (! $egg->startup || ! $this->dockerImage($egg)) {
             throw new \RuntimeException("Egg {$egg->egg_id} sem startup/docker_image no banco. Rode php artisan pterodactyl:sync-eggs.");
@@ -152,7 +176,10 @@ class PterodactylService
         $existingServer = $this->findServerByExternalId($payload['external_id']);
 
         if ($existingServer) {
-            return $this->recordServer($service, $plan, $pterodactylUser['id'], $egg->egg_id, $payload, $existingServer);
+            $record = $this->recordServer($service, $plan, $pterodactylUser['id'], $egg->egg_id, $payload, $existingServer);
+            $this->createDatabaseIfRequired($record, $plan);
+
+            return $record;
         }
 
         $response = $this->client()->post('/api/application/servers', $payload);
@@ -184,7 +211,10 @@ class PterodactylService
             throw new \RuntimeException("Pterodactyl HTTP {$response->status()}: {$response->body()}");
         }
 
-        return $this->recordServer($service, $plan, $pterodactylUser['id'], $egg->egg_id, $payload, $response->json());
+        $record = $this->recordServer($service, $plan, $pterodactylUser['id'], $egg->egg_id, $payload, $response->json());
+        $this->createDatabaseIfRequired($record, $plan);
+
+        return $record;
     }
 
     public function payloadPreview(CustomerService $service): array
@@ -202,6 +232,8 @@ class PterodactylService
             throw new \RuntimeException('Plano/egg do serviço não encontrado.');
         }
 
+        $egg = $this->ensureEggMetadata($egg);
+
         return $this->serverPayload($service, $plan, $egg, 0);
     }
 
@@ -214,6 +246,8 @@ class PterodactylService
         if (! $egg) {
             return [];
         }
+
+        $egg = $this->ensureEggMetadata($egg);
 
         $environment = $this->configuredEnvironment($service);
 
@@ -246,76 +280,11 @@ class PterodactylService
         $synced = [];
 
         foreach (PterodactylEgg::query()->get() as $localEgg) {
-            $nestId = $localEgg->nest_id ?: $this->nestIdForEgg($localEgg->egg_id);
+            $localEgg = $this->syncSingleEggMetadata($localEgg);
 
-            if (! $nestId) {
-                $matchedEgg = $this->findEggByName($localEgg->name);
-
-                if (! $matchedEgg) {
-                    Log::warning('Egg não encontrada nos nests do Pterodactyl', [
-                        'local_egg_id' => $localEgg->id,
-                        'egg_id' => $localEgg->egg_id,
-                        'name' => $localEgg->name,
-                    ]);
-
-                    continue;
-                }
-
-                $localEgg->update([
-                    'egg_id' => $matchedEgg['egg_id'],
-                    'nest_id' => $matchedEgg['nest_id'],
-                    'name' => $matchedEgg['name'],
-                ]);
-
-                $localEgg = $localEgg->fresh();
-                $nestId = $matchedEgg['nest_id'];
+            if (! $localEgg) {
+                continue;
             }
-
-            $response = $this->client()->get("/api/application/nests/{$nestId}/eggs/{$localEgg->egg_id}", [
-                'include' => 'variables',
-            ]);
-
-            if (! $response->successful()) {
-                throw new \RuntimeException("Pterodactyl egg {$localEgg->egg_id} HTTP {$response->status()}: {$response->body()}");
-            }
-
-            $attributes = data_get($response->json(), 'attributes', []);
-            $dockerImages = data_get($attributes, 'docker_images', []);
-
-            $localEgg->update([
-                'nest_id' => $nestId,
-                'name' => $attributes['name'] ?? $localEgg->name,
-                'startup' => $attributes['startup'] ?? $localEgg->startup,
-                'docker_image' => $this->firstDockerImage($dockerImages) ?: $localEgg->docker_image,
-                'docker_images' => $dockerImages ?: null,
-            ]);
-
-            foreach (data_get($attributes, 'relationships.variables.data', []) as $variable) {
-                $variableAttributes = data_get($variable, 'attributes', []);
-                $envVariable = $variableAttributes['env_variable'] ?? null;
-
-                if (! $envVariable) {
-                    continue;
-                }
-
-                PterodactylEggVariable::updateOrCreate(
-                    [
-                        'pterodactyl_egg_id' => $localEgg->id,
-                        'env_variable' => $envVariable,
-                    ],
-                    [
-                        'pterodactyl_variable_id' => $variableAttributes['id'] ?? null,
-                        'name' => $variableAttributes['name'] ?? null,
-                        'default_value' => $variableAttributes['default_value'] ?? null,
-                        'rules' => $variableAttributes['rules'] ?? null,
-                        'required' => $this->rulesRequireValue((string) ($variableAttributes['rules'] ?? '')),
-                        'user_viewable' => (bool) ($variableAttributes['user_viewable'] ?? false),
-                        'user_editable' => (bool) ($variableAttributes['user_editable'] ?? false),
-                    ]
-                );
-            }
-
-            $localEgg->load('variables');
 
             $synced[] = [
                 'egg_id' => $localEgg->egg_id,
@@ -326,6 +295,91 @@ class PterodactylService
         }
 
         return $synced;
+    }
+
+    public function ensureEggMetadata(PterodactylEgg $egg): PterodactylEgg
+    {
+        $egg->loadMissing('variables');
+
+        if ($egg->startup && $this->dockerImage($egg) && $egg->variables->isNotEmpty()) {
+            return $egg;
+        }
+
+        return $this->syncSingleEggMetadata($egg) ?: $egg->fresh('variables');
+    }
+
+    private function syncSingleEggMetadata(PterodactylEgg $localEgg): ?PterodactylEgg
+    {
+        $nestId = $localEgg->nest_id ?: $this->nestIdForEgg($localEgg->egg_id);
+
+        if (! $nestId) {
+            $matchedEgg = $this->findEggByName($localEgg->name);
+
+            if (! $matchedEgg) {
+                Log::warning('Egg não encontrada nos nests do Pterodactyl', [
+                    'local_egg_id' => $localEgg->id,
+                    'egg_id' => $localEgg->egg_id,
+                    'name' => $localEgg->name,
+                ]);
+
+                return null;
+            }
+
+            $localEgg->update([
+                'egg_id' => $matchedEgg['egg_id'],
+                'nest_id' => $matchedEgg['nest_id'],
+                'name' => $matchedEgg['name'],
+            ]);
+
+            $localEgg = $localEgg->fresh();
+            $nestId = $matchedEgg['nest_id'];
+        }
+
+        $response = $this->client()->get("/api/application/nests/{$nestId}/eggs/{$localEgg->egg_id}", [
+            'include' => 'variables',
+        ]);
+
+        if (! $response->successful()) {
+            throw new \RuntimeException("Pterodactyl egg {$localEgg->egg_id} HTTP {$response->status()}: {$response->body()}");
+        }
+
+        $attributes = data_get($response->json(), 'attributes', []);
+        $dockerImages = data_get($attributes, 'docker_images', []);
+
+        $localEgg->update([
+            'nest_id' => $nestId,
+            'name' => $attributes['name'] ?? $localEgg->name,
+            'startup' => $attributes['startup'] ?? $localEgg->startup,
+            'docker_image' => $this->firstDockerImage($dockerImages) ?: $localEgg->docker_image,
+            'docker_images' => $dockerImages ?: null,
+        ]);
+
+        foreach (data_get($attributes, 'relationships.variables.data', []) as $variable) {
+            $variableAttributes = data_get($variable, 'attributes', []);
+            $envVariable = $variableAttributes['env_variable'] ?? null;
+
+            if (! $envVariable) {
+                continue;
+            }
+
+            PterodactylEggVariable::updateOrCreate(
+                [
+                    'pterodactyl_egg_id' => $localEgg->id,
+                    'env_variable' => $envVariable,
+                ],
+                [
+                    'pterodactyl_variable_id' => $variableAttributes['id'] ?? null,
+                    'name' => $variableAttributes['name'] ?? null,
+                    'default_value' => $variableAttributes['default_value'] ?? null,
+                    'rules' => $variableAttributes['rules'] ?? null,
+                    'required' => $this->rulesRequireValue((string) ($variableAttributes['rules'] ?? '')),
+                    'user_viewable' => (bool) ($variableAttributes['user_viewable'] ?? false),
+                    'user_editable' => (bool) ($variableAttributes['user_editable'] ?? false),
+                ]
+            );
+        }
+
+        return $localEgg->fresh('variables');
     }
 
     private function findOrCreateUser(User $user): array
@@ -438,7 +492,7 @@ class PterodactylService
                 'oom_disabled' => (bool) config('services.pterodactyl.oom_disabled', false),
             ],
             'feature_limits' => [
-                'databases' => (int) config('services.pterodactyl.databases', 1),
+                'databases' => $this->pterodactylDatabases($plan),
                 'allocations' => (int) config('services.pterodactyl.allocations', 1),
                 'backups' => (int) config('services.pterodactyl.backups', 1),
             ],
@@ -646,6 +700,82 @@ class PterodactylService
     private function dockerImage(PterodactylEgg $egg): ?string
     {
         return $egg->docker_image ?: $this->firstDockerImage($egg->docker_images ?? []);
+    }
+
+    private function pterodactylDatabases(Plan $plan): int
+    {
+        if ($this->requiresPterodactylDatabase($plan)) {
+            return max(1, (int) config('services.pterodactyl.databases', 1));
+        }
+
+        return (int) config('services.pterodactyl.databases', 1);
+    }
+
+    private function requiresPterodactylDatabase(Plan $plan): bool
+    {
+        return in_array($plan->jogo?->slug, ['gta-v', 'rdr2'], true);
+    }
+
+    private function createDatabaseIfRequired(PterodactylServer $server, Plan $plan): void
+    {
+        if (! $this->requiresPterodactylDatabase($plan)) {
+            return;
+        }
+
+        if (! $server->pterodactyl_server_id) {
+            return;
+        }
+
+        try {
+            $existingDatabases = $this->listDatabases($server->pterodactyl_server_id);
+
+            if (! empty($existingDatabases)) {
+                return;
+            }
+
+            $databaseName = $this->pterodactylDatabaseName($server);
+            $this->createPterodactylDatabase($server->pterodactyl_server_id, $databaseName);
+        } catch (\Throwable $e) {
+            Log::warning('Falha ao criar banco de dados Pterodactyl automaticamente', [
+                'service_id' => $server->service_id,
+                'pterodactyl_server_id' => $server->pterodactyl_server_id,
+                'plan_id' => $plan->plan,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    private function listDatabases(int $serverId): array
+    {
+        $response = $this->client()->get("/api/application/servers/{$serverId}/databases", [
+            'per_page' => 100,
+        ]);
+
+        if (! $response->successful()) {
+            return [];
+        }
+
+        return $response->json('data', []);
+    }
+
+    private function createPterodactylDatabase(int $serverId, string $databaseName): array
+    {
+        $response = $this->client()->post("/api/application/servers/{$serverId}/databases", [
+            'database' => $databaseName,
+            'host' => (int) config('services.pterodactyl.database_host_id', 1),
+            'remote' => '%',
+        ]);
+
+        if (! $response->successful()) {
+            throw new \RuntimeException("Falha ao criar banco de dados Pterodactyl HTTP {$response->status()}: {$response->body()}");
+        }
+
+        return $response->json();
+    }
+
+    private function pterodactylDatabaseName(PterodactylServer $server): string
+    {
+        return Str::slug($server->external_id ?: 'vtx-' . $server->service_id, '_');
     }
 
     private function firstDockerImage(mixed $dockerImages): ?string

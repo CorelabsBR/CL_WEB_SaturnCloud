@@ -88,6 +88,7 @@ return [
     'cpu' => env('PTERODACTYL_CPU', 0),
     'oom_disabled' => env('PTERODACTYL_OOM_DISABLED', false),
     'databases' => env('PTERODACTYL_DATABASES', 1),
+    'database_host_id' => env('PTERODACTYL_DATABASE_HOST_ID', 2),
     'allocations' => env('PTERODACTYL_ALLOCATIONS', 1),
     'backups' => env('PTERODACTYL_BACKUPS', 1),
     'unlimited_memory' => env('PTERODACTYL_UNLIMITED_MEMORY', 0),

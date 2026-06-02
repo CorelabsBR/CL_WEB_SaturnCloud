@@ -3,44 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GTA V - VortexHost</title>
+    <title>{{ $jogo->nome }} - VortexHost</title>
 
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
     <link rel="stylesheet" href="{{ asset('css/gtav.css') }}?v={{ filemtime(public_path('css/gtav.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/game-standard.css') }}?v={{ filemtime(public_path('css/game-standard.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
 </head>
 <body>
 
-@include('partials.header')
-
 <section class="gta5-section">
-    <div class="gta5-skyline"></div>
-    <div class="gta5-noise"></div>
+    <section class="gta5-hero" style="--game-hero-bg: url('{{ $jogo->heroImageUrl() }}'); --game-font-family: {{ $jogo->fontFamilyCss() }};">
+        @include('partials.header')
 
-    <div class="container">
-        <div class="gta5-hero">
+        <div class="gta5-hero-info">
             <h1 class="gta5-title">{{ $jogo->nome }}</h1>
             <p class="gta5-sub">
                 Hospedagem no clima de Los Santos: rápida, estável e pronta pra caos pesado de servidor.
             </p>
-            <div class="gta5-meta">
-                <span>Fivem</span>
-                <span>SSD NVMe</span>
-                <span>Proteção DDoS</span>
-                <span>Deploy instantâneo</span>
-            </div>
         </div>
+    </section>
 
+    <div class="container">
         <div class="gta5-plans-grid">
             @forelse ($plans as $plan)
                 <article class="gta5-card">
                     <div class="gta5-card-top">
                         <div class="gta5-icon-box">
-                            @if ($jogo->icon)
-                                <img src="{{ asset('img/games/icons/' . $jogo->icon) }}" alt="{{ $jogo->nome }}" class="gta5-icon-img">
+                            @if ($jogo->iconUrl())
+                                <img src="{{ $jogo->iconUrl() }}" alt="{{ $jogo->nome }}" class="gta5-icon-img">
                             @else
                                 <span>V</span>
                             @endif
@@ -80,6 +73,5 @@
 
 @include('partials.footer')
 @include('partials.support-widget')
-<script src="{{ asset('js/header.js') }}"></script>
 </body>
 </html>

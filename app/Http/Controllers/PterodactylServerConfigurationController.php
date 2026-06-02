@@ -50,6 +50,8 @@ class PterodactylServerConfigurationController extends Controller
             ]);
         }
 
+        $egg = $pterodactyl->ensureEggMetadata($egg);
+
         $allowedVariables = $egg->variables->pluck('env_variable')->all();
         $environment = collect($request->input('environment', []))
             ->only($allowedVariables)

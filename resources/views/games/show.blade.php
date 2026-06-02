@@ -1,5 +1,7 @@
 @extends('layouts.showgame')
 
+@section('hide_header', true)
+
 @section('content')
 
 <section class="game-section">
@@ -7,7 +9,9 @@
     <div class="container">
 
         {{-- HEADER --}}
-        <div class="game-header">
+        <div class="game-header" style="--game-hero-bg: url('{{ $jogo->heroImageUrl() }}'); --game-font-family: {{ $jogo->fontFamilyCss() }};">
+            @include('partials.header')
+
             <div class="game-header-info">
                 <h1 class="game-title">
                     {{ $jogo->nome }}
@@ -26,9 +30,9 @@
                 <div class="game-card">
 
                     <div class="game-card-icon">
-                        @if ($jogo->icon)
+                        @if ($jogo->iconUrl())
                             <img
-                                src="{{ asset('img/games/icons/' . $jogo->icon) }}"
+                                src="{{ $jogo->iconUrl() }}"
                                 alt="{{ $jogo->nome }}"
                                 class="game-icon-img"
                             >

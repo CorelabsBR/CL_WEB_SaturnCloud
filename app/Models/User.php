@@ -37,6 +37,8 @@ protected $fillable = [
     'email_verified_at',
     'email_verification_code',
     'profile_completed_at',
+    'timeout_until',
+    'timeout_reason',
 ];
 
 protected $hidden = [
@@ -47,6 +49,7 @@ protected $hidden = [
 protected $casts = [
     'email_verified_at' => 'datetime',
     'profile_completed_at' => 'datetime',
+    'timeout_until' => 'datetime',
     'data_nasc' => 'date',
     'password' => 'hashed',
 ];
@@ -71,5 +74,26 @@ public function hasCompletedProfile(): bool
             && filled($this->estado)
             && filled($this->pais)
         );
+}
+
+public function isTimedOut(): bool
+{
+    return $this->timeout_until !== null && $this->timeout_until->isFuture();
+}
+
+public function hasUnlimitedTimeout(): bool
+{
+    return $this->timeout_until !== null && $this->timeout_until->gte(now()->addYears(50));
+}
+
+public function timeoutLabel(): string
+{
+    if (! $this->isTimedOut()) {
+        return 'Sem timeout';
+    }
+
+    return $this->hasUnlimitedTimeout()
+        ? 'Ilimitado'
+        : 'Até ' . $this->timeout_until->format('d/m/Y H:i');
 }
 }

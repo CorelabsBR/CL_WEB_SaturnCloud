@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CustomerService;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Services\RenewalBillingService;
 use Carbon\Carbon;
 use DateTimeInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(RenewalBillingService $billing)
     {
         $userId = Auth::id();
         $user = Auth::user();
+
+        $billing->purgeExpiredInitialPendingOrders($userId);
 
         $services = DB::table('services as s')
             ->leftJoin('products as p', 's.product_id', '=', 'p.id')
@@ -36,6 +40,7 @@ class DashboardController extends Controller
                 's.domain',
                 's.provision_identifier',
                 's.expires_at',
+                's.cancellation_requested_at',
                 's.created_at',
                 's.updated_at',
                 'p.nome as product_name',
@@ -100,6 +105,14 @@ class DashboardController extends Controller
                     'expires_at' => $service->expires_at
                         ? date('d/m/Y', strtotime($service->expires_at))
                         : 'Sem renovação definida',
+                    'cancellation_requested_at' => $service->cancellation_requested_at
+                        ? date('d/m/Y H:i', strtotime($service->cancellation_requested_at))
+                        : null,
+                    'cancellation_identifier' => $this->serviceCancellationIdentifier($service),
+                    'is_cancellation_scheduled' => (bool) $service->cancellation_requested_at,
+                    'can_schedule_cancellation' => $service->status === 'active'
+                        && ! $service->cancellation_requested_at
+                        && (bool) $service->expires_at,
                     'resources' => $this->buildServiceResources($service->ram, $service->armazenamento, $service->processamento),
                     'panel' => $this->servicePanelLink($service),
                     'configuration_url' => $service->type === 'game' && data_get($lastError, 'type') === 'missing_required_egg_variables'
@@ -126,6 +139,64 @@ class DashboardController extends Controller
         ));
     }
 
+    public function cancelService(Request $request, CustomerService $service)
+    {
+        abort_if((int) $service->user_id !== (int) Auth::id(), 403);
+
+        $servicesUrl = route('dashboard.index') . '#servicos';
+        $expectedIdentifier = $this->serviceCancellationIdentifier($service);
+        $typedIdentifier = trim((string) $request->input('service_identifier'));
+
+        if ($typedIdentifier === '' || $typedIdentifier !== $expectedIdentifier) {
+            return redirect()
+                ->to($servicesUrl)
+                ->with('error', "Digite exatamente {$expectedIdentifier} para confirmar o cancelamento.");
+        }
+
+        if ($service->status !== 'active') {
+            return redirect()
+                ->to($servicesUrl)
+                ->with('error', 'Somente serviços ativos podem ter cancelamento agendado.');
+        }
+
+        if (! $service->expires_at) {
+            return redirect()
+                ->to($servicesUrl)
+                ->with('error', 'Este serviço não possui vencimento definido para agendar cancelamento.');
+        }
+
+        if ($service->cancellation_requested_at) {
+            return redirect()
+                ->to($servicesUrl)
+                ->with('success', 'O cancelamento deste plano já estava agendado.');
+        }
+
+        DB::transaction(function () use ($service) {
+            $service->forceFill([
+                'cancellation_requested_at' => now(),
+            ])->save();
+
+            Order::query()
+                ->where('billing_type', 'renewal')
+                ->where('service_id', $service->id)
+                ->where('status', 'pendente')
+                ->update(['status' => 'cancelado']);
+        });
+
+        return redirect()
+            ->to($servicesUrl)
+            ->with('success', 'Cancelamento agendado. O plano fica ativo até o vencimento e não será cobrado no próximo mês.');
+    }
+
+    private function serviceCancellationIdentifier($service): string
+    {
+        return (string) (
+            $service->provision_identifier
+            ?: $service->domain
+            ?: $this->displayId('SRV', $service->id)
+        );
+    }
+
     public function processRenewals(RenewalBillingService $billing)
     {
         $userId = Auth::id();
@@ -146,9 +217,12 @@ class DashboardController extends Controller
 
         return response()->json([
             'ok' => true,
-            'changed' => ($result['generated'] ?? 0) > 0 || ($result['terminated'] ?? 0) > 0,
+            'changed' => ($result['generated'] ?? 0) > 0
+                || ($result['terminated'] ?? 0) > 0
+                || ($result['expired_initial_orders'] ?? 0) > 0,
             'generated' => $result['generated'] ?? 0,
             'terminated' => $result['terminated'] ?? 0,
+            'expired_initial_orders' => $result['expired_initial_orders'] ?? 0,
         ]);
     }
 
@@ -184,10 +258,10 @@ class DashboardController extends Controller
         return Order::with(['items.product', 'renewalService'])
             ->where('user_id', $userId)
             ->where('status', 'pendente')
+            ->where('billing_type', 'renewal')
             ->where(function ($query) {
                 $query
-                    ->where('status', '!=', 'cancelado')
-                    ->orWhere('billing_type', '!=', 'renewal')
+                    ->whereNull('due_at')
                     ->orWhere('due_at', '>', now()->subDays(5));
             })
             ->orderByDesc('id')
@@ -198,21 +272,23 @@ class DashboardController extends Controller
                 })->filter()->unique()->values()->join(', ');
 
                 $createdAt = $this->modelTimestamp($order, 'created');
+                $isRenewal = $order->billing_type === 'renewal';
+                $expiresAt = $isRenewal
+                    ? $order->due_at
+                    : $createdAt?->copy()->addDay();
 
                 return [
                     'id' => $order->id,
                     'display_id' => $this->displayId('VTX', $order->id),
                     'status' => $order->status,
                     'billing_type' => $order->billing_type,
-                    'description' => $description ?: ($order->billing_type === 'renewal' ? 'Renovação de mensalidade' : 'Compra inicial'),
+                    'description' => $description ?: ($isRenewal ? 'Renovação de mensalidade' : 'Compra inicial'),
                     'amount' => $order->total,
                     'created_at' => $createdAt?->format('d/m/Y H:i') ?? 'Sem data',
                     'created_at_raw' => $createdAt,
-                    'due_at' => $order->billing_type === 'renewal'
-                        ? ($order->due_at?->format('d/m/Y H:i') ?? 'Sem vencimento')
-                        : ($createdAt?->format('d/m/Y H:i') ?? 'Sem data'),
-                    'due_at_raw' => $order->due_at,
-                    'due_at_iso' => $order->billing_type === 'renewal' ? $order->due_at?->toIso8601String() : null,
+                    'due_at' => $expiresAt?->format('d/m/Y H:i') ?? 'Sem vencimento',
+                    'due_at_raw' => $expiresAt,
+                    'due_at_iso' => $expiresAt?->toIso8601String(),
                 ];
             });
     }

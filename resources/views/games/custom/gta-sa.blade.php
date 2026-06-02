@@ -3,42 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GTA San Andreas - VortexHost</title>
+    <title>{{ $jogo->nome }} - VortexHost</title>
 
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
     <link rel="stylesheet" href="{{ asset('css/gtasa.css') }}?v={{ filemtime(public_path('css/gtasa.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/game-standard.css') }}?v={{ filemtime(public_path('css/game-standard.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
 </head>
 <body>
-@include('partials.header')
 
 <section class="sa-section">
-    <div class="sa-poster-layer"></div>
-    <div class="sa-scanlines"></div>
+    <section class="sa-hero" style="--game-hero-bg: url('{{ $jogo->heroImageUrl() }}'); --game-font-family: {{ $jogo->fontFamilyCss() }};">
+        @include('partials.header')
 
-    <div class="container">
-        <div class="sa-hero">
+        <div class="sa-hero-info">
             <h1 class="sa-title">{{ $jogo->nome }}</h1>
             <p class="sa-sub">
                 Servidor no estilo San Andreas: rua, calor, gangue, rádio chiando e performance sem cair no tiroteio.
             </p>
-            <div class="sa-tags">
-                <span>Grove Street</span>
-                <span>RP / Freeroam</span>
-                <span>Baixa latência</span>
-            </div>
         </div>
+    </section>
 
+    <div class="container">
         <div class="sa-plans-grid">
             @forelse ($plans as $plan)
                 <article class="sa-card">
                     <div class="sa-card-header">
                         <div class="sa-icon-box">
-                            @if ($jogo->icon)
-                                <img src="{{ asset('img/games/icons/' . $jogo->icon) }}" alt="{{ $jogo->nome }}" class="sa-icon-img">
+                            @if ($jogo->iconUrl())
+                                <img src="{{ $jogo->iconUrl() }}" alt="{{ $jogo->nome }}" class="sa-icon-img">
                             @else
                                 <span>SA</span>
                             @endif
@@ -78,6 +73,5 @@
 
 @include('partials.footer')
 @include('partials.support-widget')
-<script src="{{ asset('js/header.js') }}"></script>
 </body>
 </html>

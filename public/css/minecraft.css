@@ -38,25 +38,6 @@ html, body {
     image-rendering: pixelated;
 }
 
-/* --- 2. HEADER TRANSPARENTE E POR CIMA DA IMAGEM --- */
-/* Aplica 'absolute' APENAS no contêiner pai, preservando o layout do menu de antes */
-header, .site-header {
-    background-color: transparent !important; 
-    position: absolute !important; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 999; 
-}
-
-nav, .navbar {
-    background-color: transparent !important;
-}
-
-header *, .site-header *, nav * {
-    font-size: 0.8rem !important;
-}
-
 /* --- 3. BOTOES --- */
 /* --- 3. BOTOES (Estilo UI Vanilla) --- */
 .btn {

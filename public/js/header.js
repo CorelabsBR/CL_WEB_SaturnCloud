@@ -1,44 +1,55 @@
 // Profile dropdown functionality
-const profileBtn = document.getElementById('profile-btn');
-const profileMenu = document.getElementById('profile-menu');
+document.querySelectorAll('.profile-dropdown').forEach((dropdown) => {
+    const profileBtn = dropdown.querySelector('.profile-btn');
+    const profileMenu = dropdown.querySelector('.profile-menu');
 
-if (profileBtn && profileMenu) {
-    // Toggle menu on button click
+    if (!profileBtn || !profileMenu || profileBtn.dataset.headerBound) {
+        return;
+    }
+
+    profileBtn.dataset.headerBound = '1';
+
     profileBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        document.querySelectorAll('.profile-menu.active').forEach((menu) => {
+            if (menu !== profileMenu) {
+                menu.classList.remove('active');
+            }
+        });
         profileMenu.classList.toggle('active');
     });
 
-    // Close menu when clicking outside
     document.addEventListener('click', (e) => {
-        if (!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
+        if (!dropdown.contains(e.target)) {
             profileMenu.classList.remove('active');
         }
     });
 
-    // Close menu when clicking a menu item (except form submit)
-    const menuItems = profileMenu.querySelectorAll('a');
-    menuItems.forEach(item => {
+    profileMenu.querySelectorAll('a').forEach(item => {
         item.addEventListener('click', () => {
             profileMenu.classList.remove('active');
         });
     });
-}
+});
 
 // Mobile hamburger menu
 const hamburger = document.getElementById('hamburger');
 const mobileNav = document.getElementById('mobile-nav');
 
-if (hamburger && mobileNav) {
+if (hamburger && mobileNav && !hamburger.dataset.headerBound) {
+    hamburger.dataset.headerBound = '1';
+
     hamburger.addEventListener('click', () => {
-        mobileNav.classList.toggle('active');
+        mobileNav.classList.toggle('open');
+        hamburger.classList.toggle('is-open');
     });
 
     // Close mobile menu when clicking a link
     const mobileLinks = mobileNav.querySelectorAll('a');
     mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
-            mobileNav.classList.remove('active');
+            mobileNav.classList.remove('open');
+            hamburger.classList.remove('is-open');
         });
     });
 }

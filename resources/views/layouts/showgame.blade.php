@@ -8,13 +8,13 @@
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
 
     <link rel="stylesheet" href="{{ asset('css/basegame.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/headergame.css') }}?v={{ filemtime(public_path('css/headergame.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footergame.css') }}">
     <link rel="stylesheet" href="{{ asset('css/game2.css') }}">
     <link rel="stylesheet" href="{{ asset('css/game-standard.css') }}?v={{ filemtime(public_path('css/game-standard.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}?v={{ filemtime(public_path('css/responsive.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/notifications.css') }}?v={{ filemtime(public_path('css/notifications.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
 
     @stack('styles')
 </head>

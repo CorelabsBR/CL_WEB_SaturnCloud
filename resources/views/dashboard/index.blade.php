@@ -280,8 +280,15 @@
                                                         <div class="table-service-name">{{ data_get($service, 'name', 'Servidor Vortex') }}</div>
                                                         <div class="table-service-meta">
                                                             <span>{{ data_get($service, 'plan', 'Plano sob demanda') }}</span>
-                                                            @if (data_get($service, 'ip') && data_get($service, 'ip') !== 'Aguardando provisionamento')
+                                                            @if (data_get($service, 'provision_identifier'))
+                                                                <span class="table-service-provision-id">
+                                                                    {{ data_get($service, 'provision_identifier') }}
+                                                                </span>
+                                                            @elseif (data_get($service, 'ip') && data_get($service, 'ip') !== 'Aguardando provisionamento')
                                                                 <span>{{ data_get($service, 'ip') }}</span>
+                                                            @endif
+                                                            @if (data_get($service, 'is_cancellation_scheduled'))
+                                                                <span class="table-service-cancelled">Cancela no vencimento</span>
                                                             @endif
                                                         </div>
 
@@ -303,6 +310,21 @@
                                                                 >
                                                                     Configurar
                                                                 </a>
+                                                            @endif
+                                                            @if (data_get($service, 'can_schedule_cancellation'))
+                                                                @php
+                                                                    $cancelIdentifier = data_get($service, 'cancellation_identifier');
+                                                                @endphp
+                                                                <button
+                                                                    type="button"
+                                                                    class="table-panel-link table-panel-link-danger"
+                                                                    data-open-service-cancel
+                                                                    data-cancel-url="{{ route('services.cancel', data_get($service, 'id')) }}"
+                                                                    data-cancel-identifier="{{ $cancelIdentifier }}"
+                                                                    data-cancel-name="{{ data_get($service, 'name', 'Servidor Vortex') }}"
+                                                                >
+                                                                    Cancelar plano
+                                                                </button>
                                                             @endif
                                                         </div>
                                                     </td>
@@ -380,14 +402,10 @@
 
                                         <div class="service-usage">
                                             <strong>
-                                                @if($isRenewalInvoice)
-                                                    {{ $invoiceStatus === 'pendente' ? 'Expira em' : 'Expirou em' }}
-                                                @else
-                                                    Compra em
-                                                @endif
+                                                {{ $invoiceStatus === 'pendente' ? 'Expira em' : 'Expirou em' }}
                                             </strong>
                                             {{ data_get($invoice, 'due_at', 'Sem vencimento') }}
-                                            @if ($isRenewalInvoice && $invoiceStatus === 'pendente' && data_get($invoice, 'due_at_iso'))
+                                            @if ($invoiceStatus === 'pendente' && data_get($invoice, 'due_at_iso'))
                                                 <span class="invoice-timer" data-invoice-timer="{{ data_get($invoice, 'due_at_iso') }}">
                                                     calculando...
                                                 </span>
@@ -422,6 +440,56 @@
         </div>
     </section>
 </main>
+
+<div class="cancel-modal" data-cancel-modal hidden>
+    <div class="cancel-modal-backdrop" data-cancel-modal-close></div>
+    <div
+        class="cancel-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cancel-modal-title"
+    >
+        <button type="button" class="cancel-modal-close" aria-label="Fechar" data-cancel-modal-close>
+            ×
+        </button>
+
+        <h2 id="cancel-modal-title">Cancelar plano</h2>
+        <p>
+            O plano continuará ativo até o vencimento e não será cobrado no próximo mês.
+        </p>
+
+        <div class="cancel-modal-service">
+            <span>Serviço</span>
+            <strong data-cancel-modal-name>Servidor Vortex</strong>
+            <code data-cancel-modal-identifier>srv.vortex</code>
+        </div>
+
+        <form method="POST" data-cancel-modal-form>
+            @csrf
+            <label class="cancel-modal-field">
+                <span>Digite o identificador acima para confirmar</span>
+                <input
+                    type="text"
+                    name="service_identifier"
+                    autocomplete="off"
+                    data-cancel-modal-input
+                    required
+                >
+            </label>
+            <small class="cancel-modal-error" data-cancel-modal-error hidden>
+                O identificador precisa ser igual ao do serviço.
+            </small>
+            <div class="cancel-modal-actions">
+                <button type="button" class="cancel-modal-secondary" data-cancel-modal-close>
+                    Voltar
+                </button>
+                <button type="submit" class="cancel-modal-danger" data-cancel-modal-submit disabled>
+                    Confirmar cancelamento
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
 @endsection
 
@@ -480,6 +548,96 @@
 
             event.preventDefault();
             showView(link.getAttribute('href').replace('#', ''));
+        });
+
+        const cancelModal = document.querySelector('[data-cancel-modal]');
+        const cancelForm = cancelModal?.querySelector('[data-cancel-modal-form]');
+        const cancelInput = cancelModal?.querySelector('[data-cancel-modal-input]');
+        const cancelSubmit = cancelModal?.querySelector('[data-cancel-modal-submit]');
+        const cancelError = cancelModal?.querySelector('[data-cancel-modal-error]');
+        const cancelName = cancelModal?.querySelector('[data-cancel-modal-name]');
+        const cancelIdentifier = cancelModal?.querySelector('[data-cancel-modal-identifier]');
+        let expectedCancelIdentifier = '';
+
+        const updateCancelSubmit = () => {
+            if (!cancelInput || !cancelSubmit) {
+                return;
+            }
+
+            const matches = cancelInput.value.trim() === expectedCancelIdentifier;
+            cancelSubmit.disabled = !matches;
+
+            if (cancelError) {
+                cancelError.hidden = matches || cancelInput.value.trim() === '';
+            }
+        };
+
+        const closeCancelModal = () => {
+            if (!cancelModal) {
+                return;
+            }
+
+            cancelModal.hidden = true;
+            document.body.classList.remove('has-cancel-modal');
+            expectedCancelIdentifier = '';
+
+            if (cancelForm) {
+                cancelForm.removeAttribute('action');
+            }
+        };
+
+        const openCancelModal = (trigger) => {
+            if (!cancelModal || !cancelForm || !cancelInput) {
+                return;
+            }
+
+            expectedCancelIdentifier = trigger.dataset.cancelIdentifier || '';
+            cancelForm.action = trigger.dataset.cancelUrl || '';
+
+            if (cancelName) {
+                cancelName.textContent = trigger.dataset.cancelName || 'Servidor Vortex';
+            }
+
+            if (cancelIdentifier) {
+                cancelIdentifier.textContent = expectedCancelIdentifier;
+            }
+
+            cancelInput.value = '';
+            updateCancelSubmit();
+            cancelModal.hidden = false;
+            document.body.classList.add('has-cancel-modal');
+            cancelInput.focus();
+        };
+
+        document.addEventListener('click', (event) => {
+            const openTrigger = event.target.closest('[data-open-service-cancel]');
+
+            if (openTrigger) {
+                event.preventDefault();
+                openCancelModal(openTrigger);
+                return;
+            }
+
+            if (event.target.closest('[data-cancel-modal-close]')) {
+                event.preventDefault();
+                closeCancelModal();
+            }
+        });
+
+        cancelInput?.addEventListener('input', updateCancelSubmit);
+
+        cancelForm?.addEventListener('submit', (event) => {
+            if (cancelInput?.value.trim() !== expectedCancelIdentifier) {
+                event.preventDefault();
+                updateCancelSubmit();
+                cancelInput?.focus();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && cancelModal && !cancelModal.hidden) {
+                closeCancelModal();
+            }
         });
 
         const initServiceTables = () => {

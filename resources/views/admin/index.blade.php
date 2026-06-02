@@ -22,7 +22,7 @@
         return [
             'id' => 'game-' . $game->id,
             'name' => $game->nome,
-            'icon' => $game->icon ? asset('img/games/' . $game->icon) : null,
+            'icon' => $game->iconUrl(),
             'products' => $products->where('jogo_id', $game->id),
         ];
     });
@@ -77,6 +77,8 @@
             </div>
         @endif
 
+        <div class="admin-toast" data-admin-toast role="status" aria-live="polite" hidden></div>
+
         <div class="admin-stats">
             <article class="admin-stat-card">
                 <span class="admin-stat-lbl">Clientes</span>
@@ -112,6 +114,9 @@
             </button>
             <button type="button" data-admin-tab="jogos" role="tab" aria-selected="false">
                 Fotos dos jogos
+            </button>
+            <button type="button" data-admin-tab="clientes" role="tab" aria-selected="false">
+                Clientes
             </button>
             <button type="button" data-admin-tab="pedidos" role="tab" aria-selected="false">
                 Pedidos
@@ -265,7 +270,7 @@
 
             <div class="admin-product-workspace">
                 <div data-product-panel="novo">
-                    <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data" class="admin-product-form admin-create-form">
+                    <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data" class="admin-product-form admin-create-form" data-admin-async>
                         @csrf
                         @include('admin.partials.product-fields', ['product' => null])
                         <div class="admin-form-actions">
@@ -319,7 +324,7 @@
                                                 <details class="row-actions">
                                                     <summary>Editar</summary>
                                                     <div class="edit-dropdown admin-edit-panel">
-                                                        <form method="POST" action="{{ route('admin.products.update', $product) }}" enctype="multipart/form-data" class="admin-product-form">
+                                                        <form method="POST" action="{{ route('admin.products.update', $product) }}" enctype="multipart/form-data" class="admin-product-form" data-admin-async>
                                                             @csrf
                                                             @method('PATCH')
                                                             @include('admin.partials.product-fields', ['product' => $product])
@@ -330,7 +335,7 @@
                                                     </div>
                                                 </details>
 
-                                                <form method="POST" action="{{ route('admin.products.destroy', $product) }}" onsubmit="return confirm('Remover este produto?')">
+                                                <form method="POST" action="{{ route('admin.products.destroy', $product) }}" data-admin-async data-admin-confirm="Remover este produto?">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="btn btn-ghost btn-sm" type="submit">Remover</button>
@@ -368,7 +373,7 @@
             </div>
 
             <div data-coupon-panel="criar">
-                <form method="POST" action="{{ route('admin.coupons.store') }}" class="admin-product-form admin-create-form" data-coupon-form>
+                <form method="POST" action="{{ route('admin.coupons.store') }}" class="admin-product-form admin-create-form" data-coupon-form data-admin-async>
                     @csrf
                     <div class="admin-form-section admin-form-section-main">
                         <div class="admin-form-section-head">
@@ -429,7 +434,7 @@
                                     <td>{{ $coupon->type === 'percent' ? 'Percentual' : 'Valor fixo' }}</td>
                                     <td>{{ $coupon->type === 'percent' ? number_format((float) $coupon->value, 2, ',', '.') . '%' : $money($coupon->value) }}</td>
                                     <td>
-                                        {{ $coupon->usage_limit ? $coupon->used_count . '/' . $coupon->usage_limit : $coupon->used_count . '/ilimitado' }}
+                                        {{ $coupon->isSingleUsePerUser() ? $coupon->used_count . ' usos · 1 por usuário' : $coupon->used_count . '/ilimitado' }}
                                     </td>
                                     <td>
                                         <span class="admin-status {{ $coupon->isAvailable() ? 'is-answered' : 'is-closed' }}">
@@ -437,7 +442,7 @@
                                         </span>
                                     </td>
                                     <td class="td-actions">
-                                        <form method="POST" action="{{ route('admin.coupons.destroy', $coupon) }}" onsubmit="return confirm('Excluir este cupom?')">
+                                        <form method="POST" action="{{ route('admin.coupons.destroy', $coupon) }}" data-admin-async data-admin-confirm="Excluir este cupom?">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-ghost btn-sm" type="submit">Excluir</button>
@@ -458,8 +463,8 @@
         <section class="admin-block admin-tab-panel" id="jogos" data-admin-panel="jogos" hidden>
             <div class="admin-block-head">
                 <div>
-                    <h2>Fotos e jogos</h2>
-                    <p>Atualize nome, slug, banner, ícone e visibilidade dos jogos.</p>
+                    <h2>Imagens dos jogos</h2>
+                    <p>Troque a imagem grande da aba, o ícone dos cards e os dados básicos de cada jogo.</p>
                 </div>
                 <div class="admin-block-actions">
                     <button class="btn btn-primary btn-sm" type="button" id="save-all-games-button">Salvar todos</button>
@@ -468,42 +473,252 @@
 
             <div class="admin-game-grid">
                 @foreach($games as $game)
-                    <article class="admin-game-card">
+                    @php
+                        $cardImageUrl = $game->cardImageUrl();
+                        $heroImageUrl = $game->heroImageUrl();
+                        $iconUrl = $game->iconUrl();
+                    @endphp
+                    <details class="admin-game-card">
+                        <summary class="admin-game-card-head">
+                            <div class="admin-game-card-icon">
+                                @if($iconUrl)
+                                    <img src="{{ $iconUrl }}" alt="{{ $game->nome }}">
+                                @else
+                                    <span>{{ strtoupper(substr($game->nome, 0, 1)) }}</span>
+                                @endif
+                            </div>
+                            <div>
+                                <strong>{{ $game->nome }}</strong>
+                                <small>
+                                    Cliente: {{ $game->ativo ? 'ativo' : 'oculto' }}
+                                    · Admin: {{ $game->ativo_admin ? 'ativo' : 'oculto' }}
+                                </small>
+                            </div>
+                            <span class="admin-game-collapse-icon" aria-hidden="true"></span>
+                        </summary>
+
                         <div class="admin-game-preview">
-                            @if($game->banner)
-                                <img src="{{ asset('img/games/' . $game->banner) }}" alt="{{ $game->nome }}">
+                            @if($heroImageUrl)
+                                <img src="{{ $heroImageUrl }}" alt="{{ $game->nome }}">
                             @else
-                                <span>Sem banner</span>
+                                <span>Sem imagem do topo</span>
                             @endif
+                            <div class="admin-game-preview-shade"></div>
+                            <div class="admin-game-preview-content">
+                                <div class="admin-game-icon-preview">
+                                    @if($iconUrl)
+                                        <img src="{{ $iconUrl }}" alt="{{ $game->nome }}">
+                                    @else
+                                        <span>{{ strtoupper(substr($game->nome, 0, 1)) }}</span>
+                                    @endif
+                                </div>
+                                <strong>{{ $game->nome }}</strong>
+                                <small>{{ $game->slug }}</small>
+                            </div>
                         </div>
 
-                        <form method="POST" action="{{ route('admin.games.update', $game) }}" enctype="multipart/form-data" class="admin-form-stack">
+                        <form method="POST" action="{{ route('admin.games.update', $game) }}" enctype="multipart/form-data" class="admin-form-stack" data-admin-async>
                             @csrf
                             @method('PATCH')
-                            <label>
-                                Nome
-                                <input type="text" name="nome" value="{{ old('nome', $game->nome) }}" required>
-                            </label>
-                            <label>
-                                Slug
-                                <input type="text" name="slug" value="{{ old('slug', $game->slug) }}">
-                            </label>
-                            <label>
-                                Banner
-                                <input type="file" name="banner" accept="image/*">
-                            </label>
-                            <label>
-                                Ícone
-                                <input type="file" name="icon" accept="image/*">
-                            </label>
-                            <label class="form-check-row">
-                                <input type="checkbox" name="ativo" value="1" @checked($game->ativo)>
-                                Ativo na loja
-                            </label>
-                            <button class="btn btn-primary btn-sm" type="submit">Salvar jogo</button>
+                            <div class="admin-game-fields">
+                                <label>
+                                    Nome
+                                    <input type="text" name="nome" value="{{ old('nome', $game->nome) }}" required>
+                                </label>
+
+                                <label>
+                                    Slug
+                                    <input type="text" name="slug" value="{{ old('slug', $game->slug) }}">
+                                </label>
+
+                                <label class="admin-game-font-field">
+                                    Fonte da aba
+                                    <select name="font_family">
+                                        @foreach($gameFontOptions as $fontKey => $fontLabel)
+                                            <option value="{{ $fontKey }}" @selected(old('font_family', $game->font_family ?? 'default') === $fontKey)>
+                                                {{ $fontLabel }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <span>Altera a fonte do título, textos e cards desta página.</span>
+                                </label>
+                            </div>
+
+                            <div class="admin-game-upload-panel">
+                                <label>
+                                    Imagem do card
+                                    <span class="admin-game-current-banner">
+                                        @if($cardImageUrl)
+                                            <img src="{{ $cardImageUrl }}" alt="{{ $game->nome }}">
+                                        @else
+                                            <i>{{ strtoupper(substr($game->nome, 0, 1)) }}</i>
+                                        @endif
+                                        Card atual
+                                    </span>
+                                    <input type="file" name="banner" accept="image/*" data-admin-game-banner-input>
+                                    <span>Imagem usada na lista de jogos.</span>
+                                </label>
+
+                                <label>
+                                    Imagem grande da página
+                                    <span class="admin-game-current-banner admin-game-current-hero">
+                                        @if($heroImageUrl)
+                                            <img src="{{ $heroImageUrl }}" alt="{{ $game->nome }}">
+                                        @else
+                                            <i>{{ strtoupper(substr($game->nome, 0, 1)) }}</i>
+                                        @endif
+                                        Topo atual
+                                    </span>
+                                    <input type="file" name="hero_banner" accept="image/*" data-admin-game-hero-input>
+                                    <span>Imagem grande do topo da página do jogo.</span>
+                                </label>
+
+                                <label>
+                                    Ícone dos cards
+                                    <span class="admin-game-current-icon">
+                                        @if($iconUrl)
+                                            <img src="{{ $iconUrl }}" alt="{{ $game->nome }}">
+                                        @else
+                                            <i>{{ strtoupper(substr($game->nome, 0, 1)) }}</i>
+                                        @endif
+                                        Ícone atual
+                                    </span>
+                                    <input type="file" name="icon" accept="image/*" data-admin-game-icon-input>
+                                    <span>Imagem pequena usada nos cards de planos.</span>
+                                </label>
+                            </div>
+
+                            <div class="admin-game-actions">
+                                <label class="admin-active-switch">
+                                    <input type="checkbox" name="ativo" value="1" @checked($game->ativo)>
+                                    <span class="admin-active-track" aria-hidden="true"></span>
+                                    <span class="admin-active-copy">
+                                        <strong>Ativo para clientes</strong>
+                                        <small>{{ $game->ativo ? 'Aparece para clientes' : 'Oculto para clientes' }}</small>
+                                    </span>
+                                </label>
+
+                                <label class="admin-active-switch">
+                                    <input type="checkbox" name="ativo_admin" value="1" @checked($game->ativo_admin)>
+                                    <span class="admin-active-track" aria-hidden="true"></span>
+                                    <span class="admin-active-copy">
+                                        <strong>Ativo para admins</strong>
+                                        <small>{{ $game->ativo_admin ? 'Aparece para admins' : 'Oculto para admins' }}</small>
+                                    </span>
+                                </label>
+
+                                <button class="btn btn-primary btn-sm" type="submit">Salvar jogo</button>
+                            </div>
                         </form>
-                    </article>
+                    </details>
                 @endforeach
+            </div>
+        </section>
+
+        <section class="admin-block admin-tab-panel" id="clientes" data-admin-panel="clientes" hidden>
+            <div class="admin-block-head">
+                <div>
+                    <h2>Clientes</h2>
+                    <p>Aplique timeout temporario para impedir acesso a servicos, carrinho, checkout e painel.</p>
+                </div>
+                <div class="admin-client-tools">
+                    <label>
+                        <span>Pesquisar</span>
+                        <input type="search" data-admin-user-search placeholder="Nome ou email" autocomplete="off">
+                    </label>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Status</th>
+                            <th>Timeout</th>
+                            <th>Acoes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($users as $user)
+                            <tr data-admin-user-row data-user-search="{{ \Illuminate\Support\Str::lower($user->nome . ' ' . $user->email) }}">
+                                <td>
+                                    <strong>{{ $user->nome }}</strong>
+                                    <span class="admin-table-muted">{{ $user->email }}</span>
+                                </td>
+                                <td>
+                                    <span class="admin-status {{ $user->tipo_usuario === 'root' ? 'is-answered' : 'is-open' }}">
+                                        {{ $user->tipo_usuario === 'root' ? 'Admin' : 'Cliente' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($user->isTimedOut())
+                                        <strong>{{ $user->timeoutLabel() }}</strong>
+                                        @if($user->timeout_reason)
+                                            <span class="admin-table-muted">{{ $user->timeout_reason }}</span>
+                                        @endif
+                                    @else
+                                        <span class="admin-table-muted">Sem timeout</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($user->tipo_usuario !== 'root')
+                                        <div class="admin-timeout-actions">
+                                            <form method="POST" action="{{ route('admin.users.timeout', $user) }}" class="admin-timeout-form" data-admin-async>
+                                                @csrf
+                                                @method('PATCH')
+                                                <select name="duration_mode" aria-label="Tipo de timeout" data-timeout-mode>
+                                                    <option value="preset">Opções</option>
+                                                    <option value="custom">Eu escolho</option>
+                                                    <option value="unlimited">Ilimitado</option>
+                                                </select>
+                                                <select name="duration_minutes" aria-label="Duracao do timeout" data-timeout-preset>
+                                                    <option value="15">15 min</option>
+                                                    <option value="30">30 min</option>
+                                                    <option value="60">1 hora</option>
+                                                    <option value="360">6 horas</option>
+                                                    <option value="1440">1 dia</option>
+                                                    <option value="10080">7 dias</option>
+                                                </select>
+                                                <input type="number" name="custom_duration_minutes" min="1" max="525600" placeholder="Minutos" data-timeout-custom hidden disabled>
+                                                <input type="text" name="timeout_reason" placeholder="Motivo opcional">
+                                                <button class="btn btn-primary btn-sm" type="submit">Aplicar</button>
+                                            </form>
+
+                                            @if($user->isTimedOut())
+                                                <form method="POST" action="{{ route('admin.users.timeout.clear', $user) }}" data-admin-async>
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-ghost btn-sm" type="submit">Remover</button>
+                                                </form>
+                                            @endif
+
+                                            <form method="POST" action="{{ route('admin.users.root.promote', $user) }}" data-admin-async data-admin-confirm="Promover este usuario para root? Ele tera acesso administrativo completo.">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button class="btn btn-ghost btn-sm" type="submit">Tornar root</button>
+                                            </form>
+                                        </div>
+                                    @else
+                                        @if((int) $user->id === (int) auth()->id() || $user->email === 'root@vortex.local')
+                                            <span class="admin-table-muted">Protegido</span>
+                                        @else
+                                            <form method="POST" action="{{ route('admin.users.root.demote', $user) }}" data-admin-async data-admin-confirm="Remover root deste usuario? Ele perdera acesso administrativo.">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-ghost btn-sm" type="submit">Remover root</button>
+                                            </form>
+                                        @endif
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4">Nenhum usuario cadastrado.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </section>
 
@@ -589,6 +804,8 @@
         const couponPanels = document.querySelectorAll('[data-coupon-panel]');
         const productTabs = document.querySelectorAll('[data-product-tab]');
         const productPanels = document.querySelectorAll('[data-product-panel]');
+        const adminToast = document.querySelector('[data-admin-toast]');
+        let toastTimer = null;
 
         const syncCouponValueField = (form) => {
             const type = form.querySelector('[data-coupon-type]')?.value;
@@ -615,14 +832,40 @@
             form.querySelector('[data-coupon-type]')?.addEventListener('change', () => syncCouponValueField(form));
         });
 
+        const filterAdminUsers = () => {
+            const input = document.querySelector('[data-admin-user-search]');
+            const query = (input?.value || '').trim().toLowerCase();
+
+            document.querySelectorAll('[data-admin-user-row]').forEach((row) => {
+                row.hidden = query !== '' && !row.dataset.userSearch.includes(query);
+            });
+        };
+
+        const syncTimeoutForm = (form) => {
+            const mode = form?.querySelector('[data-timeout-mode]')?.value;
+            const preset = form?.querySelector('[data-timeout-preset]');
+            const custom = form?.querySelector('[data-timeout-custom]');
+
+            if (!preset || !custom) {
+                return;
+            }
+
+            preset.hidden = mode !== 'preset';
+            preset.disabled = mode !== 'preset';
+            custom.hidden = mode !== 'custom';
+            custom.disabled = mode !== 'custom';
+        };
+
+        document.querySelectorAll('.admin-timeout-form').forEach(syncTimeoutForm);
+
         const activateCouponTab = (target) => {
-            couponTabs.forEach((tab) => {
+            document.querySelectorAll('[data-coupon-tab]').forEach((tab) => {
                 const isActive = tab.dataset.couponTab === target;
                 tab.classList.toggle('is-active', isActive);
                 tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
 
-            couponPanels.forEach((panel) => {
+            document.querySelectorAll('[data-coupon-panel]').forEach((panel) => {
                 panel.hidden = panel.dataset.couponPanel !== target;
             });
         };
@@ -632,13 +875,13 @@
         });
 
         const activateProductTab = (target) => {
-            productTabs.forEach((tab) => {
+            document.querySelectorAll('[data-product-tab]').forEach((tab) => {
                 const isActive = tab.dataset.productTab === target;
                 tab.classList.toggle('is-active', isActive);
                 tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
 
-            productPanels.forEach((panel) => {
+            document.querySelectorAll('[data-product-panel]').forEach((panel) => {
                 panel.hidden = panel.dataset.productPanel !== target;
             });
         };
@@ -654,7 +897,7 @@
                 tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
 
-            panels.forEach((panel) => {
+            document.querySelectorAll('[data-admin-panel]').forEach((panel) => {
                 const isActive = panel.dataset.adminPanel === target;
                 panel.classList.toggle('is-active', isActive);
                 panel.hidden = !isActive;
@@ -679,43 +922,294 @@
             activateTab(initialTab);
         }
 
-        const saveAllGamesButton = document.getElementById('save-all-games-button');
-        const gameSection = document.querySelector('[data-admin-panel="jogos"]');
-        const gameForms = gameSection?.querySelectorAll('.admin-form-stack');
+        const currentAdminPanel = () => (
+            document.querySelector('[data-admin-panel].is-active')?.dataset.adminPanel
+            || window.location.hash.replace('#', '')
+            || 'suporte'
+        );
 
-        if (saveAllGamesButton && gameForms?.length) {
-            saveAllGamesButton.addEventListener('click', async () => {
-                saveAllGamesButton.disabled = true;
-                saveAllGamesButton.textContent = 'Salvando...';
+        const showAdminToast = (message, type = 'success') => {
+            if (!adminToast) {
+                return;
+            }
 
-                for (const form of gameForms) {
-                    if (!form.checkValidity()) {
-                        form.reportValidity();
-                        saveAllGamesButton.disabled = false;
-                        saveAllGamesButton.textContent = 'Salvar todos';
-                        return;
-                    }
+            window.clearTimeout(toastTimer);
+            adminToast.textContent = message;
+            adminToast.dataset.type = type;
+            adminToast.hidden = false;
+            adminToast.classList.add('is-visible');
 
-                    const formData = new FormData(form);
-                    const response = await fetch(form.action, {
-                        method: 'POST',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                        },
-                        body: formData,
-                    });
+            toastTimer = window.setTimeout(() => {
+                adminToast.classList.remove('is-visible');
+                adminToast.hidden = true;
+            }, 3200);
+        };
 
-                    if (!response.ok) {
-                        saveAllGamesButton.disabled = false;
-                        saveAllGamesButton.textContent = 'Salvar todos';
-                        window.alert('Falha ao salvar alguns jogos. Verifique a página e tente novamente.');
-                        return;
-                    }
+        const refreshAdminPanel = async (target = currentAdminPanel()) => {
+            const activeCouponTab = document.querySelector('[data-coupon-tab].is-active')?.dataset.couponTab;
+            const activeProductTab = document.querySelector('[data-product-tab].is-active')?.dataset.productTab;
+            const response = await fetch(window.location.pathname + window.location.search, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            });
+
+            if (!response.ok) {
+                return;
+            }
+
+            const html = await response.text();
+            const nextDocument = new DOMParser().parseFromString(html, 'text/html');
+            const nextStats = nextDocument.querySelector('.admin-stats');
+            const currentStats = document.querySelector('.admin-stats');
+            const nextPanel = nextDocument.querySelector(`[data-admin-panel="${target}"]`);
+            const currentPanel = document.querySelector(`[data-admin-panel="${target}"]`);
+
+            if (nextStats && currentStats) {
+                currentStats.replaceWith(nextStats);
+            }
+
+            if (nextPanel && currentPanel) {
+                nextPanel.classList.add('is-active');
+                nextPanel.hidden = false;
+                currentPanel.replaceWith(nextPanel);
+                activateTab(target);
+
+                if (target === 'cupons' && activeCouponTab) {
+                    activateCouponTab(activeCouponTab);
                 }
 
-                window.location.reload();
+                if (target === 'produtos' && activeProductTab && document.querySelector(`[data-product-tab="${activeProductTab}"]`)) {
+                    activateProductTab(activeProductTab);
+                }
+
+                document.querySelectorAll('[data-coupon-form]').forEach(syncCouponValueField);
+                document.querySelectorAll('.admin-timeout-form').forEach(syncTimeoutForm);
+                filterAdminUsers();
+            }
+        };
+
+        const sendAdminForm = async (form) => {
+            const formData = new FormData(form);
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalText = submitButton?.textContent;
+
+            submitButton?.setAttribute('disabled', 'disabled');
+            if (submitButton) {
+                submitButton.textContent = 'Salvando...';
+            }
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: formData,
+                });
+                const payload = await response.json().catch(() => ({}));
+
+                if (!response.ok) {
+                    const errors = payload.errors ? Object.values(payload.errors).flat() : [];
+                    throw new Error(errors[0] || payload.message || 'Não foi possível salvar agora.');
+                }
+
+                showAdminToast(payload.message || 'Alteração salva.');
+                await refreshAdminPanel(currentAdminPanel());
+            } catch (error) {
+                showAdminToast(error.message || 'Não foi possível salvar agora.', 'error');
+            } finally {
+                submitButton?.removeAttribute('disabled');
+                if (submitButton && originalText) {
+                    submitButton.textContent = originalText;
+                }
+            }
+        };
+
+        document.addEventListener('submit', async (event) => {
+            const form = event.target.closest('form[data-admin-async]');
+
+            if (!form) {
+                return;
+            }
+
+            event.preventDefault();
+
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const confirmation = form.dataset.adminConfirm;
+
+            if (confirmation && !window.confirm(confirmation)) {
+                return;
+            }
+
+            await sendAdminForm(form);
+        });
+
+        document.addEventListener('click', async (event) => {
+            const saveAllGamesButton = event.target.closest('#save-all-games-button');
+
+            if (!saveAllGamesButton) {
+                return;
+            }
+
+            const gameForms = document.querySelectorAll('[data-admin-panel="jogos"] .admin-form-stack');
+
+            saveAllGamesButton.disabled = true;
+            saveAllGamesButton.textContent = 'Salvando...';
+
+            for (const form of gameForms) {
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    saveAllGamesButton.disabled = false;
+                    saveAllGamesButton.textContent = 'Salvar todos';
+                    return;
+                }
+
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: new FormData(form),
+                });
+
+                if (!response.ok) {
+                    showAdminToast('Falha ao salvar alguns jogos.', 'error');
+                    saveAllGamesButton.disabled = false;
+                    saveAllGamesButton.textContent = 'Salvar todos';
+                    return;
+                }
+            }
+
+            showAdminToast('Jogos salvos com sucesso.');
+            await refreshAdminPanel('jogos');
+            saveAllGamesButton.disabled = false;
+            saveAllGamesButton.textContent = 'Salvar todos';
+        });
+
+        const previewImageFile = (input, targets) => {
+            const file = input.files?.[0];
+
+            if (!file || !file.type.startsWith('image/')) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                targets.forEach((target) => {
+                    if (!target) {
+                        return;
+                    }
+
+                    let image = target.querySelector('img');
+
+                    if (!image) {
+                        target.textContent = '';
+                        image = document.createElement('img');
+                        image.alt = 'Previa';
+                        target.prepend(image);
+                    }
+
+                    image.src = reader.result;
+                });
+            };
+            reader.readAsDataURL(file);
+        };
+
+        document.addEventListener('click', (event) => {
+            const couponTab = event.target.closest('[data-coupon-tab]');
+            const productTab = event.target.closest('[data-product-tab]');
+
+            if (couponTab) {
+                activateCouponTab(couponTab.dataset.couponTab);
+            }
+
+            if (productTab) {
+                activateProductTab(productTab.dataset.productTab);
+            }
+        });
+
+        document.addEventListener('change', (event) => {
+            const couponType = event.target.closest('[data-coupon-type]');
+            const timeoutMode = event.target.closest('[data-timeout-mode]');
+            const iconInput = event.target.closest('[data-admin-game-icon-input]');
+            const bannerInput = event.target.closest('[data-admin-game-banner-input]');
+            const heroInput = event.target.closest('[data-admin-game-hero-input]');
+
+            if (couponType) {
+                syncCouponValueField(couponType.closest('[data-coupon-form]'));
+            }
+
+            if (timeoutMode) {
+                syncTimeoutForm(timeoutMode.closest('.admin-timeout-form'));
+            }
+
+            if (iconInput) {
+                const card = iconInput.closest('.admin-game-card');
+                previewImageFile(iconInput, [
+                    card?.querySelector('.admin-game-card-icon'),
+                    card?.querySelector('.admin-game-icon-preview'),
+                    card?.querySelector('.admin-game-current-icon'),
+                ]);
+            }
+
+            if (bannerInput) {
+                const card = bannerInput.closest('.admin-game-card');
+                previewImageFile(bannerInput, [
+                    card?.querySelector('.admin-game-current-banner:not(.admin-game-current-hero)'),
+                ]);
+            }
+
+            if (heroInput) {
+                const card = heroInput.closest('.admin-game-card');
+                previewImageFile(heroInput, [
+                    card?.querySelector('.admin-game-preview'),
+                    card?.querySelector('.admin-game-current-hero'),
+                ]);
+            }
+        });
+
+        document.addEventListener('input', (event) => {
+            if (event.target.closest('[data-admin-user-search]')) {
+                filterAdminUsers();
+            }
+        });
+
+        document.querySelectorAll('[data-admin-game-icon-input]').forEach((input) => {
+            input.addEventListener('change', () => {
+                const card = input.closest('.admin-game-card');
+                previewImageFile(input, [
+                    card?.querySelector('.admin-game-card-icon'),
+                    card?.querySelector('.admin-game-icon-preview'),
+                    card?.querySelector('.admin-game-current-icon'),
+                ]);
             });
-        }
+        });
+
+        document.querySelectorAll('[data-admin-game-banner-input]').forEach((input) => {
+            input.addEventListener('change', () => {
+                const card = input.closest('.admin-game-card');
+                previewImageFile(input, [
+                    card?.querySelector('.admin-game-current-banner:not(.admin-game-current-hero)'),
+                ]);
+            });
+        });
+
+        document.querySelectorAll('[data-admin-game-hero-input]').forEach((input) => {
+            input.addEventListener('change', () => {
+                const card = input.closest('.admin-game-card');
+                previewImageFile(input, [
+                    card?.querySelector('.admin-game-preview'),
+                    card?.querySelector('.admin-game-current-hero'),
+                ]);
+            });
+        });
 
         if (!supportBlock) {
             return;

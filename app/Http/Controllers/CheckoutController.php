@@ -39,6 +39,7 @@ class CheckoutController extends Controller
             'discount' => $totals['discount'],
             'finalTotal' => $totals['final_total'],
             'coupon' => $totals['coupon'],
+            'adminExempt' => $totals['admin_exempt'],
         ]);
     }
 
@@ -72,8 +73,14 @@ class CheckoutController extends Controller
             ->with('success', 'Cupom removido.');
     }
 
-    public function pay(Request $request, MercadoPagoService $mercadoPago, ProvisioningService $provisioning)
-    {
+    public function pay(
+        Request $request,
+        MercadoPagoService $mercadoPago,
+        ProvisioningService $provisioning,
+        RenewalBillingService $billing
+    ) {
+        $billing->purgeExpiredInitialPendingOrders();
+
         $cartItems = CartItem::with('product.categoria')
             ->where('user_id', Auth::id())
             ->get();
@@ -87,7 +94,7 @@ class CheckoutController extends Controller
         $order = DB::transaction(function () use ($cartItems, $requestedUsernames) {
             $totals = $this->cartTotals($cartItems, true);
 
-            if (session('checkout_coupon_code') && ! $totals['coupon']) {
+            if (! $totals['admin_exempt'] && session('checkout_coupon_code') && ! $totals['coupon']) {
                 session()->forget('checkout_coupon_code');
 
                 throw ValidationException::withMessages([
@@ -95,10 +102,14 @@ class CheckoutController extends Controller
                 ]);
             }
 
+            if ($totals['admin_exempt']) {
+                session()->forget('checkout_coupon_code');
+            }
+
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'total' => $totals['final_total'],
-                'coupon_code' => $totals['coupon']?->code,
+                'coupon_code' => $totals['admin_exempt'] ? null : $totals['coupon']?->code,
                 'discount_amount' => $totals['discount'],
                 'status' => $totals['final_total'] <= 0 ? 'pago' : 'pendente',
             ]);
@@ -113,7 +124,23 @@ class CheckoutController extends Controller
                 ]);
             }
 
-            if ($totals['coupon']) {
+            if (! $totals['admin_exempt'] && $totals['coupon']) {
+                if ($totals['coupon']->isSingleUsePerUser()) {
+                    $redeemed = DB::table('coupon_redemptions')->insertOrIgnore([
+                        'coupon_id' => $totals['coupon']->id,
+                        'user_id' => Auth::id(),
+                        'order_id' => $order->id,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+
+                    if (! $redeemed) {
+                        throw ValidationException::withMessages([
+                            'coupon_code' => 'Você já usou este cupom.',
+                        ]);
+                    }
+                }
+
                 $totals['coupon']->increment('used_count');
             }
 
@@ -126,13 +153,17 @@ class CheckoutController extends Controller
         $order->load('items.product');
 
         if ((float) $order->total <= 0) {
+            $adminExempt = $this->isAdminExempt();
+
             $order->payments()->create([
-                'provider' => 'coupon',
+                'provider' => $adminExempt ? 'admin_grant' : 'coupon',
                 'amount' => 0,
                 'status' => 'approved',
                 'raw_payload' => [
-                    'coupon_code' => $order->coupon_code,
+                    'approved_by_user_id' => $adminExempt ? Auth::id() : null,
+                    'coupon_code' => $adminExempt ? null : $order->coupon_code,
                     'discount_amount' => $order->discount_amount,
+                    'reason' => $adminExempt ? 'root_admin_checkout_exemption' : 'coupon_checkout',
                 ],
             ]);
 
@@ -141,7 +172,10 @@ class CheckoutController extends Controller
 
             return redirect()
                 ->route('dashboard.index')
-                ->with('success', 'Cupom aplicado. Pedido aprovado sem pagamento.');
+                ->with('success', $adminExempt
+                    ? 'Pedido administrativo aprovado sem pagamento.'
+                    : 'Cupom aplicado. Pedido aprovado sem pagamento.'
+                );
         }
 
         return $this->redirectToPayment($order, $mercadoPago);
@@ -150,6 +184,14 @@ class CheckoutController extends Controller
     public function payOrder(Order $order, MercadoPagoService $mercadoPago, RenewalBillingService $billing)
     {
         abort_if((int) $order->user_id !== (int) Auth::id(), 403);
+
+        if ($this->isExpiredInitialPendingOrder($order)) {
+            $billing->purgeExpiredInitialPendingOrder($order);
+
+            return redirect()
+                ->route('dashboard.index')
+                ->with('error', 'Esta compra passou do prazo de 24 horas sem pagamento e foi removida. Faça uma nova compra para continuar.');
+        }
 
         if ($this->isExpiredPendingOrder($order)) {
             $terminated = $billing->terminateOverdueOrder($order);
@@ -191,6 +233,14 @@ class CheckoutController extends Controller
             && $order->billing_type === 'renewal'
             && $order->due_at
             && $order->due_at->isPast();
+    }
+
+    private function isExpiredInitialPendingOrder(Order $order): bool
+    {
+        return $order->status === 'pendente'
+            && $order->billing_type !== 'renewal'
+            && $order->criado_em
+            && $order->criado_em->lte(now()->subDay());
     }
 
     private function redirectToPayment(Order $order, MercadoPagoService $mercadoPago)
@@ -248,15 +298,22 @@ class CheckoutController extends Controller
     private function cartTotals($items, bool $lockCoupon = false): array
     {
         $subtotal = round((float) $items->sum(fn ($item) => $item->product->preco * $item->quantidade), 2);
-        $coupon = $this->activeSessionCoupon($lockCoupon);
-        $discount = $coupon?->discountFor($subtotal) ?? 0;
+        $adminExempt = $this->isAdminExempt();
+        $coupon = $adminExempt ? null : $this->activeSessionCoupon($lockCoupon);
+        $discount = $adminExempt ? $subtotal : ($coupon?->discountFor($subtotal) ?? 0);
 
         return [
             'subtotal' => $subtotal,
             'coupon' => $coupon,
             'discount' => $discount,
             'final_total' => round(max(0, $subtotal - $discount), 2),
+            'admin_exempt' => $adminExempt,
         ];
+    }
+
+    private function isAdminExempt(): bool
+    {
+        return Auth::check() && Auth::user()->tipo_usuario === 'root';
     }
 
     private function validatedRequestedUsernames(Request $request, $cartItems): array
@@ -331,20 +388,27 @@ class CheckoutController extends Controller
     {
         $code = trim($code);
 
-        $query = Coupon::query()
-            ->where('active', true)
-            ->where(function ($query) {
-                $query
-                    ->whereNull('usage_limit')
-                    ->orWhereColumn('used_count', '<', 'usage_limit');
-            });
+        $query = Coupon::query()->where('active', true);
 
         if ($lock) {
             $query->lockForUpdate();
         }
 
         return $query->get()
-            ->first(fn (Coupon $coupon) => trim($coupon->code) === $code);
+            ->first(function (Coupon $coupon) use ($code) {
+                if (trim($coupon->code) !== $code || ! $coupon->isAvailable()) {
+                    return false;
+                }
+
+                if (! $coupon->isSingleUsePerUser()) {
+                    return true;
+                }
+
+                return ! DB::table('coupon_redemptions')
+                    ->where('coupon_id', $coupon->id)
+                    ->where('user_id', Auth::id())
+                    ->exists();
+            });
     }
 
     public function success(Request $request, MercadoPagoService $mercadoPago)

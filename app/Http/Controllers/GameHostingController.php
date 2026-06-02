@@ -4,14 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\JogoProd;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class GameHostingController extends Controller
 {
     public function index()
     {
         try {
+            $isAdmin = $this->isAdmin();
+
             $jogos = JogoProd::query()
-                ->where('ativo', true)
+                ->when($isAdmin, fn ($query) => $query->where('ativo_admin', true))
+                ->when(! $isAdmin, fn ($query) => $query->where('ativo', true))
                 ->orderBy('id', 'asc')
                 ->get();
 
@@ -27,7 +31,7 @@ class GameHostingController extends Controller
 
     public function show(JogoProd $jogo)
     {
-        abort_if(! $jogo->ativo, 404);
+        abort_if(! $this->canViewGame($jogo), 404);
 
         $plans = $jogo->plans()
             ->orderBy('plan', 'asc')
@@ -64,5 +68,17 @@ class GameHostingController extends Controller
                 'ativo' => true,
             ],
         ]);
+    }
+
+    private function canViewGame(JogoProd $jogo): bool
+    {
+        return $this->isAdmin()
+            ? (bool) $jogo->ativo_admin
+            : (bool) $jogo->ativo;
+    }
+
+    private function isAdmin(): bool
+    {
+        return Auth::check() && Auth::user()->tipo_usuario === 'root';
     }
 }

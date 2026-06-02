@@ -178,8 +178,6 @@ table {
     section              { padding-block: 3rem; }
     .hero                { min-height: 80vh; padding: 3rem 0 4rem; }
     .plans-grid          { grid-template-columns: 1fr; }
-    .nav-links           { display: none; }        /* menu oculto → hamburger */
-    .hamburger           { display: flex; }
     .footer-grid         { grid-template-columns: 1fr; gap: 2rem; }
     .footer-bottom       { flex-direction: column; text-align: center; }
     .account-grid        { grid-template-columns: 1fr; }

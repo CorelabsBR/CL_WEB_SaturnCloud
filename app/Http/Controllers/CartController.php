@@ -16,9 +16,11 @@ class CartController extends Controller
             ->where('user_id', Auth::id())
             ->get();
 
-        $total = $items->sum(fn ($item) => $item->product->preco * $item->quantidade);
+        $subtotal = $items->sum(fn ($item) => $item->product->preco * $item->quantidade);
+        $adminExempt = $this->isAdminExempt();
+        $total = $adminExempt ? 0 : $subtotal;
 
-        return view('cart.index', compact('items', 'total'));
+        return view('cart.index', compact('items', 'total', 'subtotal', 'adminExempt'));
     }
 
     public function addPlan($plan)
@@ -115,5 +117,10 @@ class CartController extends Controller
         CartItem::where('user_id', Auth::id())->delete();
 
         return redirect()->route('cart.index');
+    }
+
+    private function isAdminExempt(): bool
+    {
+        return Auth::check() && Auth::user()->tipo_usuario === 'root';
     }
 }

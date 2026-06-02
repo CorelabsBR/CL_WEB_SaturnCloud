@@ -25,24 +25,32 @@ Artisan::command('auth:purge-unverified', function () {
     return self::SUCCESS;
 })->purpose('Remove contas que não verificaram o e-mail em até 1 dia.');
 
-Artisan::command('pterodactyl:check', function (PterodactylService $pterodactyl) {
+Artisan::command('pterodactyl:check {server_id? : ID numérico de um servidor Pterodactyl para testar permissões de databases}', function (PterodactylService $pterodactyl) {
     try {
-        $result = $pterodactyl->healthCheck();
+        $serverId = $this->argument('server_id') ? (int) $this->argument('server_id') : null;
+        $result = $pterodactyl->healthCheck($serverId);
     } catch (\Throwable $e) {
         $this->error('Pterodactyl falhou antes de responder: ' . $e->getMessage());
         return self::FAILURE;
     }
 
     if ($result['ok']) {
-        $this->info('Pterodactyl OK: chave Application API aceita.');
+        $this->info('Pterodactyl OK: chave Application API aceita nas permissões testadas.');
         return self::SUCCESS;
     }
 
-    $this->error('Pterodactyl falhou com HTTP ' . $result['status']);
-    $this->line(json_encode($result['body'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    foreach ($result['checks'] as $name => $check) {
+        if ($check['ok']) {
+            $this->info("{$name}: OK");
+            continue;
+        }
+
+        $this->error("{$name}: falhou com HTTP {$check['status']}");
+        $this->line(json_encode($check['body'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    }
 
     return self::FAILURE;
-})->purpose('Testa se a chave Application API do Pterodactyl tem permissão de leitura.');
+})->purpose('Testa se a chave Application API do Pterodactyl tem as permissões necessárias.');
 
 Artisan::command('pterodactyl:sync-eggs', function (PterodactylService $pterodactyl) {
     $synced = $pterodactyl->syncEggMetadata();
@@ -119,11 +127,12 @@ Artisan::command('billing:process-renewals {--user_id= : Processa apenas um clie
     $userId = $this->option('user_id') ? (int) $this->option('user_id') : null;
     $result = $billing->process($userId);
 
+    $this->info("Compras iniciais pendentes removidas: {$result['expired_initial_orders']}");
     $this->info("Faturas mensais criadas: {$result['generated']}");
     $this->info("Serviços vencidos apagados: {$result['terminated']}");
 
     return self::SUCCESS;
-})->purpose('Cria faturas mensais e apaga serviços com fatura vencida há 5 dias.');
+})->purpose('Remove compras iniciais vencidas, cria faturas mensais e apaga serviços vencidos.');
 
 Schedule::command('hestia:process-queue')
     ->everyMinute();

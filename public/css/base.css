@@ -204,3 +204,15 @@ ul, ol  { list-style:none; }
 .text-dim     { color: var(--dim); }
 .text-center  { text-align: center; }
 .mt-auto      { margin-top: auto; }
+
+.timeout-notice {
+    width:min(1120px, calc(100% - 2rem));
+    margin:1rem auto 0;
+    padding:.85rem 1rem;
+    border:1px solid rgba(255,208,91,.28);
+    border-radius:10px;
+    background:rgba(255,208,91,.09);
+    color:#ffe8a8;
+    font-weight:800;
+    text-align:center;
+}

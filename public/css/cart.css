@@ -198,6 +198,18 @@
     font-size: 1.3rem;
 }
 
+.cart-admin-note {
+    margin:.35rem 0 1rem;
+    padding:.75rem .85rem;
+    border:1px solid rgba(61,255,160,.22);
+    border-radius:var(--r-sm);
+    background:rgba(61,255,160,.08);
+    color:#caffdf;
+    font-size:.82rem;
+    font-weight:800;
+    line-height:1.35;
+}
+
 .cart-summary form {
     margin-top: .8rem;
 }

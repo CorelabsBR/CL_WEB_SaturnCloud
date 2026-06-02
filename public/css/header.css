@@ -111,7 +111,7 @@
     border: 1px solid var(--border-s);
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.025);
-    color: var(--text);
+    color: var(--text, #ffffff);
     font-size: 0.82rem;
     font-weight: 750;
     line-height: 1;
@@ -119,8 +119,12 @@
 }
 
 .nav-cart svg {
-    width: 19px;
-    height: 19px;
+    width: 19px !important;
+    height: 19px !important;
+    min-width: 19px !important;
+    max-width: 19px !important;
+    min-height: 19px !important;
+    max-height: 19px !important;
     flex-shrink: 0;
     fill: none;
     stroke: currentColor;
@@ -276,14 +280,18 @@
     border: 1px solid var(--border-s);
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.025);
-    color: var(--text);
+    color: var(--text, #ffffff);
     cursor: pointer;
     transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .profile-btn svg {
-    width: 22px;
-    height: 22px;
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    max-width: 22px !important;
+    min-height: 22px !important;
+    max-height: 22px !important;
     flex-shrink: 0;
     fill: currentColor;
 }
@@ -328,13 +336,15 @@
     align-items: center;
     gap: 12px;
     padding: 12px 16px;
-    color: var(--text);
+    color: var(--text, #ffffff);
     text-decoration: none;
     border: none;
     background: none;
     cursor: pointer;
     font-size: 0.95rem;
     font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
     transition: all 0.2s ease;
     width: 100%;
     text-align: left;
@@ -349,9 +359,13 @@
 }
 
 .profile-menu-item svg {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    max-width: 18px !important;
+    min-height: 18px !important;
+    max-height: 18px !important;
+    flex: 0 0 18px !important;
     fill: currentColor;
     opacity: 0.7;
 }
@@ -415,5 +429,368 @@
     
     .site-header .container {
         padding-inline: 20px; /* Reduz espaçamento lateral no mobile */
+    }
+}
+
+/* Header em banners de jogos */
+.minecraftjava-header .site-header,
+.gta5-hero .site-header,
+.sa-hero .site-header,
+.terraria-header .site-header,
+.game-header .site-header {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 999 !important;
+    background: transparent !important;
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    overflow: visible !important;
+}
+
+.minecraftjava-header .site-header *,
+.gta5-hero .site-header *,
+.sa-hero .site-header *,
+.terraria-header .site-header *,
+.game-header .site-header * {
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+    letter-spacing: 0 !important;
+    text-shadow: none !important;
+    text-transform: none !important;
+}
+
+.minecraftjava-header #logo_img,
+.gta5-hero #logo_img,
+.sa-hero #logo_img,
+.terraria-header #logo_img,
+.game-header #logo_img {
+    width: 60px !important;
+    height: 60px !important;
+    object-fit: contain !important;
+    filter: none !important;
+}
+
+.minecraftjava-header .site-header .container,
+.gta5-hero .site-header .container,
+.sa-hero .site-header .container,
+.terraria-header .site-header .container,
+.game-header .site-header .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-inline: 50px !important;
+}
+
+.minecraftjava-header .nav-inner,
+.gta5-hero .nav-inner,
+.sa-hero .nav-inner,
+.terraria-header .nav-inner,
+.game-header .nav-inner {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    min-height: auto !important;
+    gap: 0 !important;
+    position: relative !important;
+}
+
+.minecraftjava-header .nav-links,
+.gta5-hero .nav-links,
+.sa-hero .nav-links,
+.terraria-header .nav-links,
+.game-header .nav-links {
+    display: flex !important;
+    align-items: center !important;
+    gap: 40px !important;
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+.minecraftjava-header .nav-links a,
+.gta5-hero .nav-links a,
+.sa-hero .nav-links a,
+.terraria-header .nav-links a,
+.game-header .nav-links a {
+    padding: 8px 12px !important;
+    border: 0 !important;
+    border-radius: 4px !important;
+    color: var(--White-title, #fff) !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+    text-decoration: none !important;
+}
+
+.minecraftjava-header .nav-links a:hover,
+.gta5-hero .nav-links a:hover,
+.sa-hero .nav-links a:hover,
+.terraria-header .nav-links a:hover,
+.game-header .nav-links a:hover {
+    color: var(--text, #fff) !important;
+    background: rgba(255,255,255,.04) !important;
+}
+
+.minecraftjava-header .nav-actions,
+.gta5-hero .nav-actions,
+.sa-hero .nav-actions,
+.terraria-header .nav-actions,
+.game-header .nav-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 20px !important;
+    position: relative !important;
+    z-index: 1002 !important;
+    overflow: visible !important;
+}
+
+.minecraftjava-header .profile-dropdown,
+.gta5-hero .profile-dropdown,
+.sa-hero .profile-dropdown,
+.terraria-header .profile-dropdown,
+.game-header .profile-dropdown {
+    position: relative !important;
+    z-index: 1003 !important;
+    overflow: visible !important;
+}
+
+.minecraftjava-header .nav-cart,
+.gta5-hero .nav-cart,
+.sa-hero .nav-cart,
+.terraria-header .nav-cart,
+.game-header .nav-cart,
+.minecraftjava-header .profile-btn,
+.gta5-hero .profile-btn,
+.sa-hero .profile-btn,
+.terraria-header .profile-btn,
+.game-header .profile-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 40px !important;
+    border: 1px solid var(--border-s, rgba(255,255,255,.1)) !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,.025) !important;
+    color: var(--text, #fff) !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.minecraftjava-header .nav-cart,
+.gta5-hero .nav-cart,
+.sa-hero .nav-cart,
+.terraria-header .nav-cart,
+.game-header .nav-cart {
+    gap: .45rem !important;
+    padding: .55rem .85rem !important;
+    font-size: .82rem !important;
+    font-weight: 750 !important;
+    line-height: 1 !important;
+}
+
+.minecraftjava-header .profile-btn,
+.gta5-hero .profile-btn,
+.sa-hero .profile-btn,
+.terraria-header .profile-btn,
+.game-header .profile-btn {
+    padding: .55rem !important;
+}
+
+.minecraftjava-header .nav-cart:hover,
+.gta5-hero .nav-cart:hover,
+.sa-hero .nav-cart:hover,
+.terraria-header .nav-cart:hover,
+.game-header .nav-cart:hover,
+.minecraftjava-header .profile-btn:hover,
+.gta5-hero .profile-btn:hover,
+.sa-hero .profile-btn:hover,
+.terraria-header .profile-btn:hover,
+.game-header .profile-btn:hover {
+    border-color: var(--accent, #3dffa0) !important;
+    background: var(--accent-d, rgba(61,255,160,.08)) !important;
+    color: var(--accent, #3dffa0) !important;
+    transform: translateY(-1px) !important;
+}
+
+.minecraftjava-header .nav-cart svg,
+.gta5-hero .nav-cart svg,
+.sa-hero .nav-cart svg,
+.terraria-header .nav-cart svg,
+.game-header .nav-cart svg {
+    width: 19px !important;
+    height: 19px !important;
+    stroke-width: 1.9 !important;
+}
+
+.minecraftjava-header .profile-btn svg,
+.gta5-hero .profile-btn svg,
+.sa-hero .profile-btn svg,
+.terraria-header .profile-btn svg,
+.game-header .profile-btn svg {
+    width: 22px !important;
+    height: 22px !important;
+}
+
+.minecraftjava-header .profile-menu,
+.gta5-hero .profile-menu,
+.sa-hero .profile-menu,
+.terraria-header .profile-menu,
+.game-header .profile-menu {
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    right: 0 !important;
+    min-width: 200px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 1px solid var(--border-s, rgba(255,255,255,.1)) !important;
+    border-radius: 8px !important;
+    background: var(--bg-dark, #0a0e0c) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,.4) !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(-10px) !important;
+    z-index: 1004 !important;
+    pointer-events: none !important;
+}
+
+.minecraftjava-header .profile-menu.active,
+.gta5-hero .profile-menu.active,
+.sa-hero .profile-menu.active,
+.terraria-header .profile-menu.active,
+.game-header .profile-menu.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+}
+
+.minecraftjava-header .profile-menu-item,
+.gta5-hero .profile-menu-item,
+.sa-hero .profile-menu-item,
+.terraria-header .profile-menu-item,
+.game-header .profile-menu-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    padding: 12px 16px !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: var(--text, #fff) !important;
+    font-size: .95rem !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+}
+
+.minecraftjava-header .profile-menu-item svg,
+.gta5-hero .profile-menu-item svg,
+.sa-hero .profile-menu-item svg,
+.terraria-header .profile-menu-item svg,
+.game-header .profile-menu-item svg {
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    max-width: 18px !important;
+    min-height: 18px !important;
+    max-height: 18px !important;
+    flex: 0 0 18px !important;
+    fill: currentColor !important;
+    opacity: .75 !important;
+}
+
+.minecraftjava-header .profile-menu form,
+.gta5-hero .profile-menu form,
+.sa-hero .profile-menu form,
+.terraria-header .profile-menu form,
+.game-header .profile-menu form {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+.minecraftjava-header .profile-menu-item:hover,
+.gta5-hero .profile-menu-item:hover,
+.sa-hero .profile-menu-item:hover,
+.terraria-header .profile-menu-item:hover,
+.game-header .profile-menu-item:hover {
+    color: var(--accent, #3dffa0) !important;
+    background: rgba(255,255,255,.05) !important;
+}
+
+.minecraftjava-header .profile-menu-item.logout-btn,
+.gta5-hero .profile-menu-item.logout-btn,
+.sa-hero .profile-menu-item.logout-btn,
+.terraria-header .profile-menu-item.logout-btn,
+.game-header .profile-menu-item.logout-btn {
+    color: #ff4757 !important;
+    border-top: 1px solid var(--border-s, rgba(255,255,255,.1)) !important;
+}
+
+.minecraftjava-header .hamburger,
+.gta5-hero .hamburger,
+.sa-hero .hamburger,
+.terraria-header .hamburger,
+.game-header .hamburger {
+    background: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+@media (max-width: 992px) {
+    .minecraftjava-header .site-header .container,
+    .gta5-hero .site-header .container,
+    .sa-hero .site-header .container,
+    .terraria-header .site-header .container,
+    .game-header .site-header .container {
+        padding-inline: 20px !important;
+    }
+
+    .minecraftjava-header .nav-links,
+    .gta5-hero .nav-links,
+    .sa-hero .nav-links,
+    .terraria-header .nav-links,
+    .game-header .nav-links {
+        display: none !important;
+    }
+
+    .minecraftjava-header .hamburger,
+    .gta5-hero .hamburger,
+    .sa-hero .hamburger,
+    .terraria-header .hamburger,
+    .game-header .hamburger {
+        display: flex !important;
+    }
+
+    .minecraftjava-header .nav-cart-label,
+    .gta5-hero .nav-cart-label,
+    .sa-hero .nav-cart-label,
+    .terraria-header .nav-cart-label,
+    .game-header .nav-cart-label {
+        display: none !important;
+    }
+
+    .minecraftjava-header .nav-cart,
+    .gta5-hero .nav-cart,
+    .sa-hero .nav-cart,
+    .terraria-header .nav-cart,
+    .game-header .nav-cart {
+        width: 42px !important;
+        padding-inline: 0 !important;
     }
 }

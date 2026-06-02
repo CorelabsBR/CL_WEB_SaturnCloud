@@ -19,10 +19,12 @@ class CustomerService extends Model
         'domain',
         'provision_identifier',
         'expires_at',
+        'cancellation_requested_at',
     ];
 
     protected $casts = [
         'expires_at' => 'datetime',
+        'cancellation_requested_at' => 'datetime',
     ];
 
     public function order()

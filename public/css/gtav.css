@@ -36,51 +36,6 @@ html, body {
    BOTÃO HEADER
    ========================================= */
 
-/* Alinhamento do container */
-.nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 2px; /* Deixando os botões colados ou bem próximos, como nas linhas do menu */
-}
-
-/* Texto "Cliente?" estilo cabeçalho/categoria inativa do jogo */
-.nav-area-note {
-    color: #888888; /* Cinza discreto */
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 1px;
-    margin-right: 15px;
-}
-
-/* Resetando os botões para o padrão quadradão e seco */
-.nav-actions .btn {
-    font-size: 0.95rem;
-    color: #ffffff;
-    background-color: transparent;
-    padding: 10px 20px;
-    border-radius: 0 !important; /* MATA qualquer borda arredondada que seu tema tenha */
-    border: 1px solid transparent; 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Linha divisória bem fina embaixo, comum nos menus */
-    text-decoration: none;
-    transition: none !important; /* O SEGREDO: Sem animação, corte instantâneo! */
-    text-transform: none; /* Apenas a primeira letra maiúscula, como "Movimento", "Combate" */
-}
-
-/* Botão "Criar conta" (Primary) - Vamos deixar ele com um fundo um pouco mais visível, mas ainda no tema */
-.nav-actions .btn-primary {
-    background-color: rgba(0, 0, 0, 0.5); /* Fundo um pouco mais escuro pra destacar que é a ação principal */
-    border-left: 1px solid rgba(255, 255, 255, 0.1); /* Linha separando os dois botões */
-}
-
-/* O HOVER MÁGICO (Fundo branco absoluto, texto preto) */
-.nav-actions .btn:hover {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-    font-weight: 400;
-    border-color: #ffffff !important; 
-    box-shadow: none !important; /* Remove sombras de hover que frameworks costumam colocar */
-}
-
 /* =========================================
    ESTRUTURA GERAL
    ========================================= */
@@ -102,8 +57,10 @@ body {
 
 .gta5-section {
     position: relative;
-    padding: 80px 0;
+    padding: 0 0 80px;
+    margin: 0;
     min-height: 100vh;
+    background: var(--gta-pure-black);
 }
 
 /* Removendo ou deixando os efeitos bem sutis para manter o fundo preto da imagem */
@@ -119,9 +76,31 @@ body {
    HERO SECTION (Replicando a Tela de Alerta)
    ========================================= */
 .gta5-hero {
+    width: 100%;
     text-align: center;
-    margin-bottom: 80px;
-    padding-top: 50px;
+    margin: 0 0 4rem;
+    padding: 8rem 2rem 8rem;
+    background:
+        linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,.32)),
+        url('../img/games/gta-v-banner.webp') center / cover no-repeat;
+    border: 0;
+    box-shadow: none;
+}
+
+.gta5-section > .gta5-hero {
+    min-height: 560px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: none;
+    margin-right: 0;
+    margin-left: 0;
+    padding-top: 8rem;
+}
+
+.gta5-hero-info {
+    width: min(100%, 820px);
 }
 
 .gta5-badge {
@@ -151,14 +130,14 @@ body {
 .gta5-sub {
     font-size: 1.1rem;
     color: var(--gta-white);
-    max-width: 800px;
+    max-width: 760px;
     margin: 0 auto;
-    padding: 20px 0;
-    border-top: 2px solid var(--gta-white);
-    border-bottom: 2px solid var(--gta-white);
+    padding: 0;
+    border: 0;
     line-height: 1.5;
-    text-transform: uppercase; /* GTA style */
-    letter-spacing: 1px;
+    text-transform: none;
+    letter-spacing: 0;
+    text-shadow: 2px 2px 0 #000;
 }
 
 .gta5-meta {

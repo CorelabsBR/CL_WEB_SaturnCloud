@@ -36,15 +36,15 @@ class VortexSeeder extends Seeder
         ]);
 
         DB::table('jogos_prod')->insert([
-            ['id' => 1, 'nome' => 'Minecraft Java', 'slug' => 'minecraft-java', 'banner' => 'images.jpeg', 'icon' => 'minecraftjava.png', 'ativo' => true],
-            ['id' => 2, 'nome' => 'Minecraft Bedrock', 'slug' => 'minecraft-bedrock', 'banner' => 'download.jpeg', 'icon' => 'minecraftbedrock.png', 'ativo' => true],
-            ['id' => 3, 'nome' => 'Terraria', 'slug' => 'terraria', 'banner' => 'terraria.jpeg', 'icon' => 'terraria.png', 'ativo' => true],
-            ['id' => 4, 'nome' => 'GTA V', 'slug' => 'gta-v', 'banner' => 'gta-v-banner.webp', 'icon' => null, 'ativo' => true],
-            ['id' => 5, 'nome' => 'GTA SA', 'slug' => 'gta-sa', 'banner' => '80601.jpg', 'icon' => 'gtasa.png', 'ativo' => true],
-            ['id' => 6, 'nome' => 'BeamNG Drive', 'slug' => 'beamng-drive', 'banner' => 'rtx-beamng-steam-banner-v0-38ms0dl77yrb1.png', 'icon' => null, 'ativo' => true],
-            ['id' => 7, 'nome' => 'RDR2', 'slug' => 'rdr2', 'banner' => 'red-dead-redemption-2-desktop-6l9sm1fd0wc2ibs0.jpg', 'icon' => null, 'ativo' => true],
-            ['id' => 8, 'nome' => 'Hogwarts Legacy', 'slug' => 'hogwarts-legacy', 'banner' => 'share.jpg', 'icon' => null, 'ativo' => true],
-            ['id' => 9, 'nome' => 'ARMA 3', 'slug' => 'arma-3', 'banner' => 'ff297d0b3712aa48ec0f7e3c0e48e1dc.jpg', 'icon' => 'arma3.png', 'ativo' => true],
+            ['id' => 1, 'nome' => 'Minecraft Java', 'slug' => 'minecraft-java', 'banner' => 'images.jpeg', 'icon' => 'minecraftjava.png', 'font_family' => 'minecraft', 'ativo' => true],
+            ['id' => 2, 'nome' => 'Minecraft Bedrock', 'slug' => 'minecraft-bedrock', 'banner' => 'download.jpeg', 'icon' => 'minecraftbedrock.png', 'font_family' => 'minecraft', 'ativo' => true],
+            ['id' => 3, 'nome' => 'Terraria', 'slug' => 'terraria', 'banner' => 'terraria.jpeg', 'icon' => 'terraria.png', 'font_family' => 'terraria', 'ativo' => true],
+            ['id' => 4, 'nome' => 'GTA V', 'slug' => 'gta-v', 'banner' => 'gta-v-banner.webp', 'icon' => null, 'font_family' => 'gta', 'ativo' => true],
+            ['id' => 5, 'nome' => 'GTA SA', 'slug' => 'gta-sa', 'banner' => '80601.jpg', 'icon' => 'gtasa.png', 'font_family' => 'gta', 'ativo' => true],
+            ['id' => 6, 'nome' => 'BeamNG Drive', 'slug' => 'beamng-drive', 'banner' => 'rtx-beamng-steam-banner-v0-38ms0dl77yrb1.png', 'icon' => null, 'font_family' => null, 'ativo' => true],
+            ['id' => 7, 'nome' => 'RDR2', 'slug' => 'rdr2', 'banner' => 'red-dead-redemption-2-desktop-6l9sm1fd0wc2ibs0.jpg', 'icon' => null, 'font_family' => null, 'ativo' => true],
+            ['id' => 8, 'nome' => 'Hogwarts Legacy', 'slug' => 'hogwarts-legacy', 'banner' => 'share.jpg', 'icon' => null, 'font_family' => null, 'ativo' => true],
+            ['id' => 9, 'nome' => 'ARMA 3', 'slug' => 'arma-3', 'banner' => 'ff297d0b3712aa48ec0f7e3c0e48e1dc.jpg', 'icon' => 'arma3.png', 'font_family' => null, 'ativo' => true],
         ]);
 
         DB::table('pterodactyl_location')->insert([

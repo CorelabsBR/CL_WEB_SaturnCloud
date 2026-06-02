@@ -8,7 +8,6 @@
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
 
     <link rel="stylesheet" href="{{ asset('css/base.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/index.css') }}?v={{ filemtime(public_path('css/index.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
@@ -21,6 +20,7 @@
     <link rel="stylesheet" href="{{ asset('css/checkout.css') }}?v={{ filemtime(public_path('css/checkout.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}?v={{ filemtime(public_path('css/responsive.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/notifications.css') }}?v={{ filemtime(public_path('css/notifications.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
 
 
     @stack('styles')
@@ -30,6 +30,12 @@
 
 @if (!View::hasSection('hide_header'))
     @include('partials.header')
+@endif
+
+@if(session('timeout_notice') || (auth()->check() && auth()->user()->isTimedOut()))
+    <div class="timeout-notice">
+        {{ session('timeout_notice') ?: 'Sua conta esta em timeout temporario: ' . auth()->user()->timeoutLabel() . '.' }}
+    </div>
 @endif
 
 <main class="@yield('main_class')">

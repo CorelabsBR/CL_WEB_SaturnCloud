@@ -8,16 +8,16 @@
     <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
     <link rel="stylesheet" href="{{ asset('css/minecraft_bed.css') }}?v={{ filemtime(public_path('css/minecraft_bed.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/game-standard.css') }}?v={{ filemtime(public_path('css/game-standard.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
 </head>
 
 <body>
 
 <main class="minecraftjava-section">
     
-    <section class="minecraftjava-header">
+    <section class="minecraftjava-header" style="--game-hero-bg: url('{{ $jogo->heroImageUrl() }}'); --game-font-family: {{ $jogo->fontFamilyCss() }};">
         @include('partials.header')
         <div class="minecraftjava-header-info">
             <h1 class="minecraftjava-title">
@@ -41,9 +41,9 @@
                 <article class="minecraftjava-card">
 
                     <div class="minecraftjava-icon-fallback">
-                        @if ($jogo->icon)
+                        @if ($jogo->iconUrl())
                             <img
-                                src="{{ asset('img/games/icons/' . $jogo->icon) }}"
+                                src="{{ $jogo->iconUrl() }}"
                                 alt="{{ $jogo->nome }}"
                                 class="minecraftjava-icon-img"
                             >
@@ -114,6 +114,5 @@
 @include('partials.footer')
 @include('partials.support-widget')
 
-<script src="{{ asset('js/header.js') }}"></script>
 </body>
 </html>

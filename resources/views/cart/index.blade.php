@@ -106,12 +106,20 @@
                 </div>
 
                 <div class="summary-row total">
-                    <span>Total</span>
+                    <span>{{ $adminExempt ? 'Total administrativo' : 'Total' }}</span>
                     <strong>R$ {{ number_format($total, 2, ',', '.') }}</strong>
                 </div>
 
+                @if($adminExempt)
+                    <div class="summary-row">
+                        <span>Valor original</span>
+                        <strong>R$ {{ number_format($subtotal, 2, ',', '.') }}</strong>
+                    </div>
+                    <p class="cart-admin-note">Root/admin não paga para finalizar compras.</p>
+                @endif
+
                 <a href="{{ route('checkout.index') }}" class="btn btn-primary btn-full">
-                    Finalizar compra
+                    {{ $adminExempt ? 'Finalizar como admin' : 'Finalizar compra' }}
                 </a>
 
                 <form method="POST" action="{{ route('cart.clear') }}">

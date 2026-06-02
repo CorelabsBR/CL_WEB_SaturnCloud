@@ -28,8 +28,17 @@ class Coupon extends Model
             return false;
         }
 
+        if ($this->isSingleUsePerUser()) {
+            return true;
+        }
+
         return $this->usage_limit === null
             || $this->used_count < $this->usage_limit;
+    }
+
+    public function isSingleUsePerUser(): bool
+    {
+        return (int) $this->usage_limit === 1;
     }
 
     public function discountFor(float $subtotal): float

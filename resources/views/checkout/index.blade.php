@@ -115,7 +115,7 @@
 
                     <div class="summary-row">
                         <span>Forma de pagamento</span>
-                        <strong>{{ $finalTotal <= 0 ? 'Cupom' : 'Mercado Pago' }}</strong>
+                        <strong>{{ $adminExempt ? 'Cortesia admin' : ($finalTotal <= 0 ? 'Cupom' : 'Mercado Pago') }}</strong>
                     </div>
 
                     <div class="summary-total">
@@ -127,11 +127,16 @@
                         @csrf
 
                         <button type="submit" class="btn btn-primary btn-full">
-                            {{ $finalTotal <= 0 ? 'Finalizar pedido' : 'Pagar com Mercado Pago' }}
+                            {{ $adminExempt ? 'Finalizar cortesia administrativa' : ($finalTotal <= 0 ? 'Finalizar pedido' : 'Pagar com Mercado Pago') }}
                         </button>
                     </form>
 
-                    <p>{{ $finalTotal <= 0 ? 'Seu pedido será aprovado usando o cupom aplicado.' : 'Você será redirecionado para concluir o pagamento com segurança.' }}</p>
+                    <p>
+                        {{ $adminExempt
+                            ? 'Seu usuário root aprova este pedido sem cobrança.'
+                            : ($finalTotal <= 0 ? 'Seu pedido será aprovado usando o cupom aplicado.' : 'Você será redirecionado para concluir o pagamento com segurança.')
+                        }}
+                    </p>
                 </div>
             </aside>
         </div>

@@ -18,16 +18,22 @@
         <div class="games-picker-grid">
 
             @forelse ($jogos as $jogo)
+                @php
+                    $cardImageUrl = method_exists($jogo, 'cardImageUrl')
+                        ? $jogo->cardImageUrl()
+                        : ($jogo->banner ? asset('img/games/' . $jogo->banner) : null);
+                    $isVisibleForUsers = (bool) data_get($jogo, 'ativo', true);
+                @endphp
                 <a
                     href="{{ route('games.show', ['jogo' => $jogo->slug]) }}"
                     class="game-choice-card game-choice-{{ $jogo->slug }} {{ $loop->first ? 'is-featured' : '' }}"
                     aria-label="Ver planos para {{ $jogo->nome }}"
                 >
                     <div class="game-choice-media">
-                        @if ($jogo->banner)
+                        @if ($cardImageUrl)
                             <img
                                 class="game-choice-image"
-                                src="{{ asset('img/games/' . $jogo->banner) }}"
+                                src="{{ $cardImageUrl }}"
                                 alt="{{ $jogo->nome }}"
                             >
                         @else
@@ -39,7 +45,9 @@
 
                     <div class="game-choice-content">
                         <div class="game-choice-topline">
-                            <span class="game-choice-status">Pronto para ativar</span>
+                            <span class="game-choice-status {{ $isVisibleForUsers ? '' : 'is-maintenance' }}">
+                                {{ $isVisibleForUsers ? 'Pronto para ativar' : 'Em manutenção' }}
+                            </span>
                             @if ($loop->first)
                                 <span class="game-choice-featured">Destaque</span>
                             @endif

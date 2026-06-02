@@ -36,6 +36,10 @@ class AdminController extends Controller
                 ->get(),
             'categories' => CategoriaProd::orderBy('nome')->get(),
             'games' => JogoProd::orderBy('nome')->get(),
+            'gameFontOptions' => JogoProd::FONT_OPTIONS,
+            'users' => User::orderByRaw("tipo_usuario = 'root' desc")
+                ->orderBy('nome')
+                ->get(),
             'tickets' => SupportTicket::with(['user', 'messages.user'])
                 ->latest('atualizado_em')
                 ->get(),
@@ -54,7 +58,7 @@ class AdminController extends Controller
 
         Coupon::create($this->validateCoupon($request));
 
-        return back()->with('admin_success', 'Cupom criado com sucesso.');
+        return $this->adminMutationResponse($request, 'Cupom criado com sucesso.');
     }
 
     public function destroyCoupon(Coupon $coupon)
@@ -63,7 +67,7 @@ class AdminController extends Controller
 
         $coupon->delete();
 
-        return back()->with('admin_success', 'Cupom removido com sucesso.');
+        return $this->adminMutationResponse(request(), 'Cupom removido com sucesso.');
     }
 
     public function storeProduct(Request $request)
@@ -77,7 +81,7 @@ class AdminController extends Controller
 
         Product::create($data);
 
-        return back()->with('admin_success', 'Produto cadastrado com sucesso.');
+        return $this->adminMutationResponse($request, 'Produto cadastrado com sucesso.');
     }
 
     public function updateProduct(Request $request, Product $product)
@@ -94,7 +98,7 @@ class AdminController extends Controller
 
         $product->update($data);
 
-        return back()->with('admin_success', 'Produto atualizado com sucesso.');
+        return $this->adminMutationResponse($request, 'Produto atualizado com sucesso.');
     }
 
     public function destroyProduct(Product $product)
@@ -103,7 +107,7 @@ class AdminController extends Controller
 
         $product->delete();
 
-        return back()->with('admin_success', 'Produto removido com sucesso.');
+        return $this->adminMutationResponse(request(), 'Produto removido com sucesso.');
     }
 
     public function updateGame(Request $request, JogoProd $game)
@@ -113,24 +117,105 @@ class AdminController extends Controller
         $data = $request->validate([
             'nome' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:jogos_prod,slug,' . $game->id],
+            'font_family' => ['nullable', 'string', 'in:default,minecraft,terraria,gta'],
             'banner' => ['nullable', 'image', 'max:4096'],
+            'hero_banner' => ['nullable', 'image', 'max:4096'],
             'icon' => ['nullable', 'image', 'max:2048'],
             'ativo' => ['nullable', 'boolean'],
+            'ativo_admin' => ['nullable', 'boolean'],
         ]);
 
         $data['ativo'] = $request->boolean('ativo');
+        $data['ativo_admin'] = $request->boolean('ativo_admin');
+        $data['font_family'] = $data['font_family'] === 'default' ? null : $data['font_family'];
 
         if ($banner = $this->upload($request, 'banner', 'img/games', true)) {
             $data['banner'] = $banner;
         }
 
-        if ($icon = $this->upload($request, 'icon', 'img/games', true)) {
+        if ($heroBanner = $this->upload($request, 'hero_banner', 'img/games', true)) {
+            $data['hero_banner'] = $heroBanner;
+        }
+
+        if ($icon = $this->upload($request, 'icon', 'img/games/icons', true)) {
             $data['icon'] = $icon;
         }
 
         $game->update($data);
 
-        return back()->with('admin_success', 'Jogo atualizado com sucesso.');
+        return $this->adminMutationResponse($request, 'Jogo atualizado com sucesso.');
+    }
+
+    public function timeoutUser(Request $request, User $user)
+    {
+        $this->ensureAdmin();
+        abort_if($user->tipo_usuario === 'root', 403);
+
+        $data = $request->validate([
+            'duration_mode' => ['required', 'in:preset,custom,unlimited'],
+            'duration_minutes' => ['nullable', 'required_if:duration_mode,preset', 'integer', 'min:1', 'max:43200'],
+            'custom_duration_minutes' => ['nullable', 'required_if:duration_mode,custom', 'integer', 'min:1', 'max:525600'],
+            'timeout_reason' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $timeoutUntil = $data['duration_mode'] === 'unlimited'
+            ? now()->addYears(100)
+            : now()->addMinutes((int) ($data['duration_mode'] === 'custom'
+                ? $data['custom_duration_minutes']
+                : $data['duration_minutes']));
+
+        $user->update([
+            'timeout_until' => $timeoutUntil,
+            'timeout_reason' => $data['timeout_reason'] ?? null,
+        ]);
+
+        return $this->adminMutationResponse($request, 'Timeout aplicado ao usuario.');
+    }
+
+    public function clearUserTimeout(User $user)
+    {
+        $this->ensureAdmin();
+
+        $user->update([
+            'timeout_until' => null,
+            'timeout_reason' => null,
+        ]);
+
+        return $this->adminMutationResponse(request(), 'Timeout removido do usuario.');
+    }
+
+    public function promoteUserToRoot(Request $request, User $user)
+    {
+        $this->ensureAdmin();
+
+        if ($user->tipo_usuario === 'root') {
+            return $this->adminMutationResponse($request, 'Usuario ja e root.');
+        }
+
+        $user->update([
+            'tipo_usuario' => 'root',
+            'timeout_until' => null,
+            'timeout_reason' => null,
+        ]);
+
+        return $this->adminMutationResponse($request, 'Usuario promovido para root.');
+    }
+
+    public function demoteRootUser(Request $request, User $user)
+    {
+        $this->ensureAdmin();
+        abort_if((int) $user->id === (int) Auth::id(), 403);
+        abort_if($user->email === 'root@vortex.local', 403);
+
+        if ($user->tipo_usuario !== 'root') {
+            return $this->adminMutationResponse($request, 'Usuario ja e cliente.');
+        }
+
+        $user->update([
+            'tipo_usuario' => 'cliente',
+        ]);
+
+        return $this->adminMutationResponse($request, 'Root removido do usuario.');
     }
 
     public function replyTicket(Request $request, SupportTicket $ticket)
@@ -190,6 +275,18 @@ class AdminController extends Controller
         $this->ensureAdmin();
 
         return response()->json($this->supportPayload());
+    }
+
+    private function adminMutationResponse(Request $request, string $message)
+    {
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'ok' => true,
+                'message' => $message,
+            ]);
+        }
+
+        return back()->with('admin_success', $message);
     }
 
     private function supportPayload(): array
@@ -294,6 +391,10 @@ class AdminController extends Controller
         }
 
         $file = $request->file($field);
+        if (! is_dir(public_path($directory))) {
+            mkdir(public_path($directory), 0755, true);
+        }
+
         $name = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
         $filename = $name . '-' . uniqid() . '.' . $file->getClientOriginalExtension();
         $file->move(public_path($directory), $filename);

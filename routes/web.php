@@ -89,6 +89,8 @@ Route::middleware(['auth', 'profile.complete'])->group(function () {
     Route::get('/painel', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/painel/renovacoes/processar', [DashboardController::class, 'processRenewals'])
         ->name('dashboard.renewals.process');
+    Route::post('/servicos/{service}/cancelar', [DashboardController::class, 'cancelService'])
+        ->name('services.cancel');
     Route::get('/dashboard', fn () => redirect()->route('dashboard.index'));
 });
 
@@ -100,6 +102,10 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::post('/cupons', [AdminController::class, 'storeCoupon'])->name('coupons.store');
     Route::delete('/cupons/{coupon}', [AdminController::class, 'destroyCoupon'])->name('coupons.destroy');
     Route::patch('/jogos/{game}', [AdminController::class, 'updateGame'])->name('games.update');
+    Route::patch('/usuarios/{user}/timeout', [AdminController::class, 'timeoutUser'])->name('users.timeout');
+    Route::delete('/usuarios/{user}/timeout', [AdminController::class, 'clearUserTimeout'])->name('users.timeout.clear');
+    Route::patch('/usuarios/{user}/root', [AdminController::class, 'promoteUserToRoot'])->name('users.root.promote');
+    Route::delete('/usuarios/{user}/root', [AdminController::class, 'demoteRootUser'])->name('users.root.demote');
     Route::get('/suporte/pulse', [AdminController::class, 'supportPulse'])->name('tickets.pulse');
     Route::patch('/suporte/{ticket}', [AdminController::class, 'updateTicket'])->name('tickets.update');
     Route::post('/suporte/{ticket}/responder', [AdminController::class, 'replyTicket'])->name('tickets.reply');
