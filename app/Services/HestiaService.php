@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
@@ -110,6 +111,7 @@ class HestiaService
     {
         $processed = [];
         $failed = [];
+        $skipped = [];
 
         foreach (array_slice($this->queuedFiles($orderId), 0, $limit) as $file) {
             $payload = json_decode((string) file_get_contents($file), true);
@@ -121,7 +123,26 @@ class HestiaService
 
             try {
                 $service = CustomerService::with('product')->find($payload['service_id']);
-                $package = $service ? $this->packageFor($service) : $payload['package'];
+
+                if (! $service) {
+                    File::delete($file);
+
+                    $skipped[] = [
+                        'service_id' => $payload['service_id'] ?? null,
+                        'reason' => 'Serviço não existe mais no banco.',
+                    ];
+
+                    Log::warning('Fila Hestia órfã descartada', [
+                        'service_id' => $payload['service_id'] ?? null,
+                        'order_id' => $payload['order_id'] ?? null,
+                        'order_item_id' => $payload['order_item_id'] ?? null,
+                        'hestia_user' => $payload['hestia_user'] ?? null,
+                    ]);
+
+                    continue;
+                }
+
+                $package = $this->packageFor($service);
 
                 $result = $this->command('v-add-user', [
                     $payload['hestia_user'],
@@ -178,6 +199,7 @@ class HestiaService
         return [
             'processed' => $processed,
             'failed' => $failed,
+            'skipped' => $skipped,
         ];
     }
 

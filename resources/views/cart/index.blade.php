@@ -25,7 +25,7 @@
             <h2>Seu carrinho está vazio.</h2>
             <p>Escolha um plano para continuar.</p>
 
-            <a href="{{ route('games.index') }}" class="btn btn-primary">
+            <a href="{{ route('web') }}" class="btn btn-primary">
                 Ver planos
             </a>
         </div>
@@ -91,7 +91,7 @@
                 @endforeach
 
                 <div class="cart-list-footer">
-                    <a href="{{ route('games.index') }}" class="btn btn-ghost cart-continue-btn">
+                    <a href="{{ route('web') }}" class="btn btn-ghost cart-continue-btn">
                         Voltar a comprar
                     </a>
                 </div>

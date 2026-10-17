@@ -7,13 +7,24 @@ use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_home_presents_the_available_catalog_without_unverified_claims(): void
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response
+            ->assertOk()
+            ->assertSee('Hospedagem de sites')
+            ->assertSee('VPS Brasil')
+            ->assertSee('Infraestrutura sem caixa-preta')
+            ->assertDontSee('99.9%')
+            ->assertDontSee('24/7')
+            ->assertDontSee('Sistemas online');
+    }
+
+    public function test_public_institutional_routes_are_available(): void
+    {
+        foreach (['/vps', '/vps/linux', '/vps/windows', '/ajuda', '/ajuda/o-que-e-hospedagem-de-sites', '/revenda', '/dominios', '/infraestrutura', '/sobre', '/faq', '/contato', '/sla', '/termos', '/politica-privacidade', '/reembolso'] as $uri) {
+            $this->get($uri)->assertOk();
+        }
     }
 }

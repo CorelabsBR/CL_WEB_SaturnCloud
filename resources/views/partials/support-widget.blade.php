@@ -1,5 +1,6 @@
 @php
-    $hideSupportWidget = auth()->user()?->tipo_usuario === 'root'
+    $hideSupportWidget = ! auth()->check()
+        || auth()->user()?->tipo_usuario === 'root'
         || request()->routeIs('login', 'registro', 'cadastro.completar')
         || request()->is('login', 'registro', 'completar-cadastro');
 
@@ -66,52 +67,44 @@
             </div>
         </div>
 
-        @auth
-            <form class="support-chat-form" method="POST" action="{{ route('ticket.store') }}" enctype="multipart/form-data" data-support-form>
-                @csrf
-                <input type="hidden" name="subject" value="Atendimento pelo chat">
-                <input type="hidden" name="category" value="Suporte geral">
-                <input type="hidden" name="priority" value="normal">
+        <form class="support-chat-form" method="POST" action="{{ route('ticket.store') }}" enctype="multipart/form-data" data-support-form>
+            @csrf
+            <input type="hidden" name="subject" value="Atendimento pelo chat">
+            <input type="hidden" name="category" value="Suporte geral">
+            <input type="hidden" name="priority" value="normal">
 
-                <div class="support-quick-questions" aria-label="Perguntas rápidas">
-                    <button type="button" data-support-question="Como acompanho meu pedido?">Como acompanho meu pedido?</button>
-                    <button type="button" data-support-question="Meu servidor ainda não foi criado.">Servidor não criado</button>
-                    <button type="button" data-support-question="Preciso de ajuda para configurar meu servidor.">Configurar servidor</button>
-                    <button type="button" data-support-question="Quero tirar uma dúvida sobre pagamento.">Pagamento</button>
-                </div>
-
-                <textarea name="message" rows="3" placeholder="Digite sua mensagem...">{{ old('message') }}</textarea>
-                <div class="support-chat-tools">
-                    <label class="support-image-button" title="Adicionar imagem">
-                        <input type="file" name="image" accept="image/*" data-support-image>
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M4 17l4.5-4.5a2 2 0 0 1 2.8 0L16 17" />
-                            <path d="M14 15l1.5-1.5a2 2 0 0 1 2.8 0L20 15" />
-                            <path d="M5 5h14v14H5z" />
-                            <path d="M15 8h.01" />
-                        </svg>
-                    </label>
-                    <small data-support-image-name hidden></small>
-                    <button class="support-image-clear" type="button" data-support-image-clear hidden aria-label="Remover imagem anexada" title="Remover imagem">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M18 6 6 18" />
-                            <path d="m6 6 12 12" />
-                        </svg>
-                    </button>
-                </div>
-                @error('message')
-                    <small>{{ $message }}</small>
-                @enderror
-
-                <button type="submit" class="btn btn-primary btn-full">Enviar</button>
-            </form>
-        @else
-            <div class="support-chat-form">
-                <p class="support-login-note">Entre na sua conta para abrir um atendimento.</p>
-                <a href="{{ url('/login') }}" class="btn btn-primary btn-full">Entrar</a>
-                <a href="{{ url('/registro') }}" class="support-register-link">Criar conta</a>
+            <div class="support-quick-questions" aria-label="Perguntas rápidas">
+                <button type="button" data-support-question="Como acompanho meu pedido?">Como acompanho meu pedido?</button>
+                <button type="button" data-support-question="Meu servidor ainda não foi criado.">Servidor não criado</button>
+                <button type="button" data-support-question="Preciso de ajuda para configurar meu servidor.">Configurar servidor</button>
+                <button type="button" data-support-question="Quero tirar uma dúvida sobre pagamento.">Pagamento</button>
             </div>
-        @endauth
+
+            <textarea name="message" rows="3" placeholder="Digite sua mensagem...">{{ old('message') }}</textarea>
+            <div class="support-chat-tools">
+                <label class="support-image-button" title="Adicionar imagem">
+                    <input type="file" name="image" accept="image/*" data-support-image>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 17l4.5-4.5a2 2 0 0 1 2.8 0L16 17" />
+                        <path d="M14 15l1.5-1.5a2 2 0 0 1 2.8 0L20 15" />
+                        <path d="M5 5h14v14H5z" />
+                        <path d="M15 8h.01" />
+                    </svg>
+                </label>
+                <small data-support-image-name hidden></small>
+                <button class="support-image-clear" type="button" data-support-image-clear hidden aria-label="Remover imagem anexada" title="Remover imagem">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M18 6 6 18" />
+                        <path d="m6 6 12 12" />
+                    </svg>
+                </button>
+            </div>
+            @error('message')
+                <small>{{ $message }}</small>
+            @enderror
+
+            <button type="submit" class="btn btn-primary btn-full">Enviar</button>
+        </form>
     </section>
 </div>
 

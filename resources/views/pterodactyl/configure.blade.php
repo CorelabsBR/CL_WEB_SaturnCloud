@@ -3,7 +3,7 @@
 @section('title', 'Configurar servidor')
 
 @section('content')
-<main class="client-page">
+<div class="client-page">
     <section class="client-content">
         <div class="container">
             @if (session('error'))
@@ -51,5 +51,5 @@
             </div>
         </div>
     </section>
-</main>
+</div>
 @endsection

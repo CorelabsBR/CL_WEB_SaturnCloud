@@ -11,10 +11,12 @@ use App\Models\PterodactylEggVariable;
 use App\Models\PterodactylServer;
 use App\Models\ServiceProvisioningConfiguration;
 use App\Models\User;
+use App\Models\PterodactylUser;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
 class PterodactylService
@@ -383,66 +385,101 @@ class PterodactylService
     }
 
     private function findOrCreateUser(User $user): array
-    {
-        $externalId = 'vortex-user-' . $user->id;
+        {
+            $local = PterodactylUser::where('user_id', $user->id)->first();
 
-        $response = $this->client()->get("/api/application/users/external/{$externalId}");
+            if ($local) {
+                return [
+                    'id' => $local->pterodactyl_user_id,
+                    'email' => $local->email,
+                    'username' => $local->username,
+                ];
+            }
 
-        if ($response->successful()) {
-            return data_get($response->json(), 'attributes', []);
-        }
+            $externalId = 'vortex-user-' . $user->id;
 
-        if ($response->status() !== 404) {
-            throw new \RuntimeException(
-                "Pterodactyl user lookup HTTP {$response->status()}: {$response->body()}"
-            );
-        }
+            $response = $this->client()->get("/api/application/users/external/{$externalId}");
 
-        $search = $this->client()->get('/api/application/users', [
-            'filter[email]' => $user->email,
-        ]);
+            if ($response->successful()) {
+                $existing = data_get($response->json(), 'attributes', []);
 
-        if ($search->successful()) {
-            $data = data_get($search->json(), 'data', []);
-
-            if (! empty($data)) {
-                $existing = $data[0]['attributes'];
-
-                Log::info('Usuário já existe no Pterodactyl pelo email', [
-                    'email' => $user->email,
-                    'ptero_user_id' => $existing['id'],
+                PterodactylUser::create([
+                    'user_id' => $user->id,
+                    'pterodactyl_user_id' => $existing['id'],
+                    'email' => $existing['email'] ?? $user->email,
+                    'username' => $existing['username'] ?? $this->username($user),
+                    'encrypted_password' => null,
                 ]);
 
                 return $existing;
             }
-        }
 
-        $names = Str::of($user->nome)->trim()->explode(' ')->filter()->values();
+            if ($response->status() !== 404) {
+                throw new \RuntimeException(
+                    "Pterodactyl user lookup HTTP {$response->status()}: {$response->body()}"
+                );
+            }
 
-        $create = $this->client()->post('/api/application/users', [
-            'external_id' => $externalId,
-            'email' => $user->email,
-            'username' => $this->username($user),
-            'first_name' => $names->first() ?: 'Cliente',
-            'last_name' => $names->count() > 1 ? $names->slice(1)->join(' ') : 'VortexHost',
-            'language' => config('services.pterodactyl.user_language', 'pt-br'),
-            'root_admin' => false,
-        ]);
-
-        if (! $create->successful()) {
-            Log::error('Pterodactyl recusou criação de usuário', [
-                'user_id' => $user->id,
-                'status' => $create->status(),
-                'body' => $create->json() ?: $create->body(),
+            $search = $this->client()->get('/api/application/users', [
+                'filter[email]' => $user->email,
             ]);
 
-            throw new \RuntimeException(
-                "Pterodactyl create user HTTP {$create->status()}: {$create->body()}"
-            );
-        }
+            if ($search->successful()) {
+                $data = data_get($search->json(), 'data', []);
 
-        return data_get($create->json(), 'attributes', []);
-    }
+                if (! empty($data)) {
+                    $existing = $data[0]['attributes'];
+
+                    PterodactylUser::create([
+                        'user_id' => $user->id,
+                        'pterodactyl_user_id' => $existing['id'],
+                        'email' => $existing['email'] ?? $user->email,
+                        'username' => $existing['username'] ?? $this->username($user),
+                        'encrypted_password' => null,
+                    ]);
+
+                    return $existing;
+                }
+            }
+
+            $password = Str::random(14);
+            $names = Str::of($user->nome)->trim()->explode(' ')->filter()->values();
+
+            $create = $this->client()->post('/api/application/users', [
+                'external_id' => $externalId,
+                'email' => $user->email,
+                'username' => $this->username($user),
+                'first_name' => $names->first() ?: 'Cliente',
+                'last_name' => $names->count() > 1 ? $names->slice(1)->join(' ') : 'VortexHost',
+                'password' => $password,
+                'language' => config('services.pterodactyl.user_language', 'en'),
+                'root_admin' => false,
+            ]);
+
+            if (! $create->successful()) {
+                Log::error('Pterodactyl recusou criação de usuário', [
+                    'user_id' => $user->id,
+                    'status' => $create->status(),
+                    'body' => $create->json() ?: $create->body(),
+                ]);
+
+                throw new \RuntimeException(
+                    "Pterodactyl create user HTTP {$create->status()}: {$create->body()}"
+                );
+            }
+
+            $created = data_get($create->json(), 'attributes', []);
+
+            PterodactylUser::create([
+                'user_id' => $user->id,
+                'pterodactyl_user_id' => $created['id'],
+                'email' => $created['email'] ?? $user->email,
+                'username' => $created['username'] ?? $this->username($user),
+                'encrypted_password' => Crypt::encryptString($password),
+            ]);
+
+            return $created;
+        }
 
     private function serverPayload(
         CustomerService $service,

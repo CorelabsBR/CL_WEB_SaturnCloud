@@ -227,6 +227,40 @@ class CheckoutController extends Controller
         return $this->redirectToPayment($order, $mercadoPago);
     }
 
+    public function pix(Order $order, MercadoPagoService $mercadoPago)
+    {
+        abort_if((int) $order->user_id !== (int) Auth::id(), 403);
+
+        try {
+            $payment = $mercadoPago->ensurePixPayment($order);
+            $transaction = data_get($payment->raw_payload, 'point_of_interaction.transaction_data', []);
+        } catch (\Throwable $e) {
+            Log::warning('Erro ao gerar QR Code Pix da fatura', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'message' => 'Não foi possível gerar o QR Code agora. Tente novamente em instantes.',
+            ], 422);
+        }
+
+        return response()->json([
+            'qr_code' => data_get($transaction, 'qr_code'),
+            'qr_code_base64' => data_get($transaction, 'qr_code_base64'),
+            'ticket_url' => data_get($transaction, 'ticket_url'),
+        ]);
+    }
+
+    public function orderStatus(Order $order)
+    {
+        abort_if((int) $order->user_id !== (int) Auth::id(), 403);
+
+        return response()->json([
+            'status' => $order->fresh()->status,
+        ]);
+    }
+
     private function isExpiredPendingOrder(Order $order): bool
     {
         return $order->status === 'pendente'

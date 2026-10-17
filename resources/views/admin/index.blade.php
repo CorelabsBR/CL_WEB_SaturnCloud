@@ -70,6 +70,9 @@
         @if(session('admin_success'))
             <div class="admin-alert admin-alert-success">{{ session('admin_success') }}</div>
         @endif
+        @if(session('marketing_success'))
+            <div class="admin-alert admin-alert-success">{{ session('marketing_success') }}</div>
+        @endif
 
         @if($errors->any())
             <div class="admin-alert admin-alert-error">
@@ -120,6 +123,9 @@
             </button>
             <button type="button" data-admin-tab="pedidos" role="tab" aria-selected="false">
                 Pedidos
+            </button>
+            <button type="button" data-admin-tab="marketing" role="tab" aria-selected="false">
+                Marketing
             </button>
         </div>
 
@@ -726,7 +732,7 @@
             <div class="admin-block-head">
                 <div>
                     <h2>Pedidos e renovações</h2>
-                    <p>Acompanhe compras e renovações de VPS com métodos de pagamento.</p>
+                    <p>Acompanhe todos os pedidos e renovações com métodos de pagamento.</p>
                 </div>
             </div>
 
@@ -789,6 +795,8 @@
                 </table>
             </div>
         </section>
+
+        @include('admin.partials.marketing')
     </div>
 </section>
 @endsection
@@ -914,6 +922,13 @@
 
         tabs.forEach((tab) => {
             tab.addEventListener('click', () => activateTab(tab.dataset.adminTab));
+        });
+
+        document.querySelectorAll('[data-admin-jump]').forEach((link) => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                activateTab(link.dataset.adminJump);
+            });
         });
 
         const initialTab = window.location.hash.replace('#', '');

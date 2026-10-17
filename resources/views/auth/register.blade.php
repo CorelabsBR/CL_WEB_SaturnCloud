@@ -19,7 +19,7 @@
 <section class="register-split">
     <aside class="register-panel">
         <div class="register-panel-inner">
-            <img src="{{ asset('img/logo_vtxhost.png') }}" alt="VortexHost" class="register-logo">
+            <img src="{{ asset('img/vortexhost-logo-full.png') }}" alt="VortexHost" class="register-logo">
 
             <h2 class="register-panel-title">Comece com estrutura de verdade.</h2>
 
@@ -29,16 +29,16 @@
 
             <div class="register-stats">
                 <div>
-                    <strong>99.9%</strong>
-                    <span>Uptime</span>
+                    <strong>01</strong>
+                    <span>Cadastro</span>
                 </div>
                 <div>
-                    <strong>24/7</strong>
-                    <span>Suporte</span>
+                    <strong>02</strong>
+                    <span>Validação</span>
                 </div>
                 <div>
-                    <strong>10Gbps</strong>
-                    <span>Anti-DDoS</span>
+                    <strong>03</strong>
+                    <span>Contratação</span>
                 </div>
             </div>
         </div>
@@ -80,9 +80,7 @@
                         <div class="register-password-wrapper">
                             <input class="register-input" type="password" id="password" name="password"
                                    required placeholder="Mínimo 8 caracteres">
-                            <button type="button" class="register-password-toggle" onclick="toggleRegisterPassword('password')">
-                                👁
-                            </button>
+                            <button type="button" class="register-password-toggle" onclick="toggleRegisterPassword('password')" aria-label="Mostrar ou ocultar senha">Mostrar</button>
                         </div>
 
                         @error('password')
@@ -95,9 +93,7 @@
                         <div class="register-password-wrapper">
                             <input class="register-input" type="password" id="password_confirmation"
                                    name="password_confirmation" required placeholder="Repita a senha">
-                            <button type="button" class="register-password-toggle" onclick="toggleRegisterPassword('password_confirmation')">
-                                👁
-                            </button>
+                            <button type="button" class="register-password-toggle" onclick="toggleRegisterPassword('password_confirmation')" aria-label="Mostrar ou ocultar confirmação da senha">Mostrar</button>
                         </div>
                     </div>
                 </div>

@@ -1,147 +1,113 @@
 @extends('layouts.app')
 
-@section('title', 'Login - VortexHost')
-@section('body_class', 'auth-body')
+@section('title', 'Entrar na área do cliente | VortexHost')
+@section('meta_description', 'Acesse sua conta VortexHost para acompanhar pedidos, serviços, pagamentos e chamados de suporte.')
+@section('body_class', 'auth-body login-body')
+@section('main_class', 'auth-main login-main')
 @section('hide_header', true)
 @section('hide_footer', true)
-@push('styles')
-@endpush
 
 @section('content')
-@section('main_class', 'auth-main')
-<!-- VOLTAR -->
-<a href="{{ url('/') }}" class="auth-back" title="Voltar">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-         fill="none" stroke="currentColor" stroke-width="2.5"
-         stroke-linecap="round" stroke-linejoin="round">
-        <path d="M19 12H5"/>
-        <path d="M12 19l-7-7 7-7"/>
-    </svg>
-    Voltar
-</a>
+<div class="login-shell">
+    <aside class="login-aside" aria-labelledby="login-context-title">
+        <a href="{{ route('home') }}" class="login-brand" aria-label="Voltar para a página inicial da VortexHost">
+            <img src="{{ asset('img/vortex-logo-mark.png') }}" alt="" width="42" height="42">
+            <span>Vortex<strong>Host</strong></span>
+        </a>
 
-<div class="auth-split">
+        <div class="login-context">
+            <p class="login-eyebrow">Área do cliente</p>
+            <h2 id="login-context-title">Sua operação,<br>em um só lugar.</h2>
+            <p>Acompanhe o que realmente importa depois da contratação.</p>
 
-    <!-- ESQUERDA -->
-    <div class="auth-panel">
-        <div class="auth-panel-inner">
-            <img src="{{ asset('img/logo_vtxhost.png') }}" alt="VortexHost" class="auth-logo">
-
-            <h2 class="auth-panel-title">Bem-vindo de volta.</h2>
-
-            <p class="auth-panel-sub">
-                Infraestrutura de alto desempenho,<br>
-                anti-DDoS incluso e suporte que resolve.
-            </p>
-
-            <div class="auth-stats">
-                <div class="auth-stat">
-                    <span class="auth-stat-value">99.9%</span>
-                    <span class="auth-stat-label">Uptime</span>
-                </div>
-                <div class="auth-stat-divider"></div>
-                <div class="auth-stat">
-                    <span class="auth-stat-value">24/7</span>
-                    <span class="auth-stat-label">Suporte</span>
-                </div>
-                <div class="auth-stat-divider"></div>
-                <div class="auth-stat">
-                    <span class="auth-stat-value">10Gbps</span>
-                    <span class="auth-stat-label">Anti-DDoS</span>
-                </div>
-            </div>
+            <ul class="login-capabilities">
+                <li><span>01</span><div><strong>Pedidos e pagamentos</strong><small>Consulte cobranças e o andamento dos pedidos.</small></div></li>
+                <li><span>02</span><div><strong>Serviços contratados</strong><small>Acesse os recursos disponíveis para cada serviço.</small></div></li>
+                <li><span>03</span><div><strong>Suporte registrado</strong><small>Mantenha seus chamados e respostas organizados.</small></div></li>
+            </ul>
         </div>
 
-        <div class="auth-panel-grid"></div>
-    </div>
+        <p class="login-aside-note">Ambiente restrito a clientes e administradores VortexHost.</p>
+    </aside>
 
-    <!-- DIREITA -->
-            <!-- PAINEL DIREITO (formulário) -->
-        <div class="auth-form-side">
-            <div class="auth-card">
+    <section class="login-form-panel" aria-labelledby="login-title">
+        <a href="{{ route('home') }}" class="login-back">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+            Voltar ao site
+        </a>
 
-                <h1 class="auth-title">Entrar</h1>
-                <p class="auth-subtitle">Acesse sua área do cliente.</p>
-                @if ($errors->any())
-    <div class="auth-error-box">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>⚠ {{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+        <div class="login-card">
+            <header class="login-card-head">
+                <p class="login-eyebrow">Acesso seguro</p>
+                <h1 id="login-title">Entrar</h1>
+                <p>Use o e-mail cadastrado para acessar sua conta.</p>
+            </header>
 
-@if (session('success'))
-    <div class="auth-success-box">
-        ✔ {{ session('success') }}
-    </div>
-@endif
+            @if ($errors->any())
+                <div class="login-alert login-alert-error" role="alert" aria-live="polite">
+                    <strong>Não foi possível entrar.</strong>
+                    <ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+                </div>
+            @endif
 
-                <form method="POST" action="{{ route('login.post') }}" novalidate>
-    @csrf
+            @if (session('success'))
+                <div class="login-alert login-alert-success" role="status">{{ session('success') }}</div>
+            @endif
 
-    <div class="form-group">
-        <label class="form-label" for="email">E-MAIL</label>
-        <input class="form-input" type="email" id="email" name="email"
-               required autocomplete="email" placeholder="seu@email.com">
-    </div>
+            <form method="POST" action="{{ route('login.post') }}" class="login-form">
+                @csrf
 
-    <div class="form-group">
-        <label class="form-label" for="password">SENHA</label>
-        <input class="form-input" type="password" id="password" name="password"
-               required autocomplete="current-password" placeholder="••••••••">
-    </div>
+                <label class="login-field" for="email">
+                    <span>E-mail</span>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email" inputmode="email" placeholder="voce@exemplo.com" @error('email') aria-invalid="true" aria-describedby="login-errors" @enderror>
+                </label>
 
-    <button class="btn btn-primary btn-full" type="submit">Entrar</button>
-</form>
+                <label class="login-field" for="password">
+                    <span>Senha</span>
+                    <span class="login-password-control">
+                        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Digite sua senha" @error('password') aria-invalid="true" aria-describedby="login-errors" @enderror>
+                        <button type="button" class="login-password-toggle" aria-label="Mostrar senha" aria-pressed="false" data-password-toggle>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></svg>
+                        </button>
+                    </span>
+                </label>
 
-                <div class="auth-divider" style="margin-top: 2rem;">
-                    <span>ou entre com</span>
+                <div class="login-form-options">
+                    <label class="login-remember"><input type="checkbox" name="remember" value="1" {{ old('remember') ? 'checked' : '' }}><span>Lembrar meu acesso</span></label>
+                    <a href="{{ route('password.request') }}">Esqueci minha senha</a>
                 </div>
 
-                <!-- SOCIAL LOGIN -->
-                <div class="social-login">
-                    <button type="button"     onclick="window.location.href='{{ route('social.redirect', 'google') }}'"
-    class="btn-social btn-google">
-                        
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
-                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-                        </svg>
-                        Entrar com Google
-                    </button>
-<button type="button"
-    onclick="window.location.href='{{ route('social.redirect', 'discord') }}'"
-    class="btn-social btn-discord">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.04.036.05a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-                        </svg>
-                        Entrar com Discord
-                    </button>
-                </div>
+                <button class="btn btn-primary login-submit" type="submit">Acessar minha conta <span aria-hidden="true">→</span></button>
+            </form>
 
-                <p class="auth-note">
-                    Não tem uma conta?
-                    <a href="/registro">Criar conta grátis</a>
-                </p>
+            <div class="login-divider"><span>ou continue com</span></div>
 
+            <div class="login-social">
+                <a href="{{ route('social.redirect', 'google') }}" class="login-social-button">
+                    <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24s.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                    Google
+                </a>
+                <a href="{{ route('social.redirect', 'discord') }}" class="login-social-button">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 2.9l-.6 1.2a18.3 18.3 0 0 0-5.5 0l-.6-1.2a19.7 19.7 0 0 0-4.9 1.5C.5 9-.3 13.6.1 18.1a20 20 0 0 0 6 3l1.2-2a13 13 0 0 1-1.9-.9l.4-.3c3.9 1.8 8.2 1.8 12.1 0l.4.3c-.6.3-1.2.6-1.9.9l1.2 2a20 20 0 0 0 6-3c.5-5.2-.8-9.7-3.5-13.7ZM8 15.3c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm8 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z"/></svg>
+                    Discord
+                </a>
             </div>
+
+            <p class="login-register">Ainda não possui conta? <a href="{{ route('registro') }}">Criar conta</a></p>
         </div>
-
-    </div>
-
+    </section>
 </div>
-
 @endsection
 
 @push('scripts')
 <script>
-function togglePassword() {
+document.querySelector('[data-password-toggle]')?.addEventListener('click', (event) => {
+    const button = event.currentTarget;
     const input = document.getElementById('password');
-    input.type = input.type === 'password' ? 'text' : 'password';
-}
+    const showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    button.setAttribute('aria-pressed', showing ? 'false' : 'true');
+    button.setAttribute('aria-label', showing ? 'Mostrar senha' : 'Ocultar senha');
+});
 </script>
 @endpush

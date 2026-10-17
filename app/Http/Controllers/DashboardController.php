@@ -259,6 +259,8 @@ class DashboardController extends Controller
             ->where('user_id', $userId)
             ->where('status', 'pendente')
             ->where('billing_type', 'renewal')
+            ->whereNotNull('service_id')
+            ->whereHas('renewalService')
             ->where(function ($query) {
                 $query
                     ->whereNull('due_at')
@@ -282,6 +284,9 @@ class DashboardController extends Controller
                     'display_id' => $this->displayId('VTX', $order->id),
                     'status' => $order->status,
                     'billing_type' => $order->billing_type,
+                    'renewal_label' => $order->renewalService?->type === 'web'
+                        ? 'Renovação anual'
+                        : 'Renovação mensal',
                     'description' => $description ?: ($isRenewal ? 'Renovação de mensalidade' : 'Compra inicial'),
                     'amount' => $order->total,
                     'created_at' => $createdAt?->format('d/m/Y H:i') ?? 'Sem data',
@@ -304,9 +309,7 @@ class DashboardController extends Controller
 
             return [
                 'label' => 'Painel do jogo',
-                'url' => $service->pterodactyl_identifier
-                    ? "{$baseUrl}/server/{$service->pterodactyl_identifier}"
-                    : $baseUrl,
+                'url' => route('ptero.panel', $service->id),
             ];
         }
 

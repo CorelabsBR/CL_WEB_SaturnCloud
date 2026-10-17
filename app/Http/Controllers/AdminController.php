@@ -13,19 +13,20 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Services\MarketingDashboardService;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index(MarketingDashboardService $marketing)
     {
         $this->ensureAdmin();
 
-        return view('admin.index', [
+        return view('admin.index', array_merge([
             'stats' => [
                 'users' => User::where('tipo_usuario', 'cliente')->count(),
                 'products' => Product::count(),
                 'openTickets' => SupportTicket::whereIn('status', ['aberto', 'respondido'])->count(),
-                'orders' => $this->vpsOrdersQuery()->count(),
+                'orders' => Order::where('total', '>', 0)->count(),
                 'coupons' => Coupon::count(),
             ],
             'products' => Product::with(['categoria', 'jogo'])
@@ -43,13 +44,12 @@ class AdminController extends Controller
             'tickets' => SupportTicket::with(['user', 'messages.user'])
                 ->latest('atualizado_em')
                 ->get(),
-            'orders' => $this->vpsOrdersQuery()
-                ->with(['user', 'payments', 'renewalService.product'])
+            'orders' => Order::with(['items.product', 'user', 'payments', 'renewalService.product'])
+                ->where('total', '>', 0)
                 ->latest('criado_em')
-                ->limit(24)
                 ->get(),
             'coupons' => Coupon::latest('created_at')->get(),
-        ]);
+        ], $marketing->data()));
     }
 
     public function storeCoupon(Request $request)
@@ -372,16 +372,6 @@ class AdminController extends Controller
         }
 
         return $data;
-    }
-
-    private function vpsOrdersQuery()
-    {
-        return Order::query()
-            ->where(function ($query) {
-                $query
-                    ->whereHas('items.product.categoria', fn ($category) => $category->where('nome', 'like', '%VPS%'))
-                    ->orWhereHas('renewalService.product.categoria', fn ($category) => $category->where('nome', 'like', '%VPS%'));
-            });
     }
 
     private function upload(Request $request, string $field, string $directory, bool $basenameOnly = false): ?string

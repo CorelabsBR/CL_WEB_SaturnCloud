@@ -19,7 +19,7 @@
 <section class="register-split">
     <aside class="register-panel">
         <div class="register-panel-inner">
-            <img src="{{ asset('img/logo_vtxhost.png') }}" alt="VortexHost" class="register-logo">
+            <img src="{{ asset('img/vortexhost-logo-full.png') }}" alt="VortexHost" class="register-logo">
 
             <h2 class="register-panel-title">Confirme seu e-mail.</h2>
 

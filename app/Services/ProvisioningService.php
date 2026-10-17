@@ -93,15 +93,17 @@ class ProvisioningService
                 return $existing;
             }
 
+            $type = $this->typeFor($item);
+
             $service = CustomerService::create([
                 'user_id' => $order->user_id,
                 'order_id' => $order->id,
                 'order_item_id' => $item->id,
                 'product_id' => $item->product_id,
-                'type' => $this->typeFor($item),
+                'type' => $type,
                 'status' => 'pending',
                 'name' => $this->serviceName($item, $copy),
-                'expires_at' => now()->addMonth(),
+                'expires_at' => $type === 'web' ? now()->addYear() : now()->addMonth(),
             ]);
 
             $service->update([

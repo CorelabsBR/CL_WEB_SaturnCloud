@@ -1,6 +1,8 @@
 <?php
 
 return [
+    // [SUBSTITUIR POR DADO REAL] Defina WHATSAPP_NUMBER para exibir o botão público.
+    'whatsapp' => ['number' => env('WHATSAPP_NUMBER')],
 
     /*
     |--------------------------------------------------------------------------

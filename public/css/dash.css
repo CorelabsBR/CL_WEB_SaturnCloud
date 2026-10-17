@@ -1097,6 +1097,311 @@
     font-weight: 900;
 }
 
+/* ── Renewal invoices / boleto-style slip ────────────────────── */
+
+.invoice-list {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+.invoice-slip {
+    overflow: hidden;
+    border: 1px solid rgba(61, 255, 160, 0.16);
+    border-radius: 16px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018)),
+        #07100b;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+}
+
+.invoice-slip-head,
+.invoice-slip-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.15rem;
+}
+
+.invoice-slip-head {
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.invoice-slip-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.invoice-slip-logo {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(61, 255, 160, 0.28);
+    border-radius: 12px;
+    background: rgba(61, 255, 160, 0.12);
+    color: var(--accent);
+    font-size: 1.15rem;
+    font-weight: 950;
+}
+
+.invoice-slip-brand strong,
+.invoice-slip-brand small,
+.invoice-slip-status small {
+    display: block;
+}
+
+.invoice-slip-brand strong {
+    color: var(--White-title);
+    font-size: 1rem;
+    font-weight: 950;
+}
+
+.invoice-slip-brand small,
+.invoice-slip-status small {
+    margin-top: 0.15rem;
+    color: var(--muted);
+    font-size: 0.72rem;
+}
+
+.invoice-slip-status {
+    text-align: right;
+}
+
+.invoice-slip-number {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 1.15rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(0, 0, 0, 0.16);
+}
+
+.invoice-slip-number span,
+.invoice-slip-fields span {
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 850;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+}
+
+.invoice-slip-number strong {
+    color: var(--White-title);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+}
+
+.invoice-slip-fields {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.invoice-slip-fields > div {
+    min-width: 0;
+    padding: 0.9rem 1.15rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.invoice-slip-fields > div:nth-child(3n) {
+    border-right: 0;
+}
+
+.invoice-slip-fields strong {
+    display: block;
+    margin-top: 0.3rem;
+    color: var(--White-title);
+    font-size: 0.86rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.invoice-slip-fields .invoice-slip-amount {
+    background: rgba(61, 255, 160, 0.045);
+}
+
+.invoice-slip-fields .invoice-slip-amount strong {
+    color: var(--accent);
+    font-size: 1rem;
+}
+
+.invoice-pix {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 1.15rem;
+    align-items: center;
+    margin: 1rem 1.15rem;
+    padding: 1rem;
+    border: 1px solid rgba(61, 255, 160, 0.2);
+    border-radius: 14px;
+    background:
+        radial-gradient(circle at left, rgba(61, 255, 160, 0.1), transparent 46%),
+        rgba(0, 0, 0, 0.18);
+}
+
+.invoice-pix-qr {
+    display: grid;
+    place-items: center;
+    min-height: 170px;
+    padding: 0.65rem;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.invoice-pix-qr img {
+    display: block;
+    width: 100%;
+    max-width: 160px;
+    height: auto;
+}
+
+.invoice-pix-loader {
+    color: #163525;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-align: center;
+}
+
+.invoice-pix-content {
+    display: grid;
+    gap: 0.55rem;
+    min-width: 0;
+}
+
+.invoice-pix-label {
+    color: var(--accent);
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+}
+
+.invoice-pix-content > strong {
+    color: var(--White-title);
+    font-size: 1rem;
+}
+
+.invoice-pix-content textarea {
+    width: 100%;
+    min-height: 72px;
+    resize: none;
+    padding: 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 9px;
+    outline: none;
+    background: rgba(0, 0, 0, 0.26);
+    color: var(--muted);
+    font: 0.7rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    overflow-wrap: anywhere;
+}
+
+.invoice-pix-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.invoice-pix-actions button,
+.invoice-pix-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid rgba(61, 255, 160, 0.25);
+    border-radius: 9px;
+    background: rgba(61, 255, 160, 0.1);
+    color: var(--accent);
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.invoice-pix-content small {
+    color: var(--muted);
+    font-size: 0.72rem;
+}
+
+.invoice-slip-footer {
+    align-items: flex-end;
+}
+
+.invoice-slip-payment {
+    display: grid;
+    gap: 0.35rem;
+    justify-items: end;
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 0.7rem;
+    text-align: right;
+}
+
+.invoice-slip-payment .invoice-timer {
+    margin-top: 0;
+}
+
+@media (max-width: 760px) {
+    .invoice-slip-fields {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .invoice-slip-fields > div:nth-child(3n) {
+        border-right: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .invoice-slip-fields > div:nth-child(2n) {
+        border-right: 0;
+    }
+
+    .invoice-slip-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .invoice-pix {
+        grid-template-columns: 150px minmax(0, 1fr);
+    }
+
+    .invoice-slip-payment {
+        justify-items: start;
+        margin-left: 0;
+        text-align: left;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .invoice-slip-head {
+        align-items: flex-start;
+    }
+
+    .invoice-slip-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .invoice-slip-fields > div,
+    .invoice-slip-fields > div:nth-child(2n),
+    .invoice-slip-fields > div:nth-child(3n) {
+        border-right: 0;
+    }
+
+    .invoice-pix {
+        grid-template-columns: 1fr;
+    }
+
+    .invoice-pix-qr {
+        width: min(100%, 190px);
+        margin-inline: auto;
+    }
+}
+
 .service-card .resource-metrics {
     margin-top: 0.9rem;
 }

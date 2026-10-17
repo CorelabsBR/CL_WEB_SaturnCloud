@@ -71,4 +71,107 @@
             window.setTimeout(() => applyMask(input));
         });
     });
+
+    const cepInput = document.querySelector('#cep[data-mask="cep"]');
+
+    if (!cepInput) {
+        return;
+    }
+
+    const fields = {
+        rua: document.getElementById('rua'),
+        bairro: document.getElementById('bairro'),
+        cidade: document.getElementById('cidade'),
+        estado: document.getElementById('estado'),
+        pais: document.getElementById('pais'),
+        numero: document.getElementById('numero'),
+    };
+    const status = document.getElementById('cep-status');
+    let timer;
+    let controller;
+    let lastCep = '';
+
+    const setStatus = (message, state = '') => {
+        if (!status) return;
+        status.textContent = message;
+        status.dataset.state = state;
+    };
+
+    const fillAddress = (address) => {
+        const values = {
+            rua: address.logradouro,
+            bairro: address.bairro,
+            cidade: address.localidade,
+            estado: address.uf,
+            pais: 'Brasil',
+        };
+
+        Object.entries(values).forEach(([name, value]) => {
+            if (fields[name] && value) {
+                fields[name].value = value;
+            }
+        });
+    };
+
+    const lookupCep = async (focusNumber = false) => {
+        const cep = onlyDigits(cepInput.value, 8);
+
+        if (cep.length !== 8) {
+            lastCep = '';
+            setStatus(cep.length ? 'Complete os 8 números do CEP.' : 'Informe os 8 números do CEP.');
+            return;
+        }
+
+        if (cep === lastCep) {
+            return;
+        }
+
+        controller?.abort();
+        const requestController = new AbortController();
+        controller = requestController;
+        cepInput.classList.add('is-loading');
+        cepInput.setAttribute('aria-busy', 'true');
+        setStatus('Buscando endereço…', 'loading');
+
+        try {
+            const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`, {
+                signal: requestController.signal,
+                headers: { Accept: 'application/json' },
+            });
+
+            if (!response.ok) throw new Error('request_failed');
+
+            const address = await response.json();
+            if (address.erro) {
+                lastCep = '';
+                setStatus('CEP não encontrado. Confira ou preencha o endereço manualmente.', 'error');
+                return;
+            }
+
+            fillAddress(address);
+            lastCep = cep;
+            setStatus('Endereço encontrado e preenchido.', 'success');
+            if (focusNumber) fields.numero?.focus();
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                lastCep = '';
+                setStatus('Não foi possível consultar agora. Preencha o endereço manualmente.', 'error');
+            }
+        } finally {
+            if (controller === requestController) {
+                cepInput.classList.remove('is-loading');
+                cepInput.removeAttribute('aria-busy');
+            }
+        }
+    };
+
+    cepInput.addEventListener('input', () => {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => lookupCep(false), 450);
+    });
+
+    cepInput.addEventListener('blur', () => {
+        window.clearTimeout(timer);
+        lookupCep(true);
+    });
 })();

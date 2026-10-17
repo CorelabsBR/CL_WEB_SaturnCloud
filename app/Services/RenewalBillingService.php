@@ -331,26 +331,26 @@ private function monthlyInvoiceEmailBody(Order $order, User $user): string
     $firstName = trim(explode(' ', (string) $user->nome)[0] ?? '')
         ?: 'Cliente';
 
-    return <<<HTML
+return <<<HTML
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <title>Fatura pendente - VortexHost</title>
 </head>
-<body style="margin:0;padding:0;background-color:#0f172a;font-family:Arial,sans-serif;color:#e2e8f0;">
+<body style="margin:0;padding:0;background-color:#050c08;font-family:Arial,sans-serif;color:#f0fdf6;">
     <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px;">
         <tr>
             <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" style="background:#111827;border-radius:12px;overflow:hidden;border:1px solid #1f2937;">
+                <table width="600" cellpadding="0" cellspacing="0" style="background:#071009;border-radius:12px;overflow:hidden;border:1px solid rgba(61,255,140,0.28);">
 
                     <tr>
-                        <td style="background:#2563eb;padding:28px 32px;text-align:center;">
-                            <h1 style="margin:0;font-size:28px;color:#ffffff;">
+                        <td style="background:linear-gradient(135deg,#0d2e1a 0%,#0a2416 100%);padding:28px 32px;text-align:center;border-bottom:1px solid rgba(61,255,140,0.28);">
+                            <h1 style="margin:0;font-size:28px;color:#3dffa0;">
                                 VortexHost
                             </h1>
 
-                            <p style="margin:8px 0 0 0;color:#dbeafe;font-size:14px;">
+                            <p style="margin:8px 0 0 0;color:#87b89d;font-size:14px;">
                                 Notificação de cobrança
                             </p>
                         </td>
@@ -363,44 +363,44 @@ private function monthlyInvoiceEmailBody(Order $order, User $user): string
                                 Olá, <strong>{$firstName}</strong>.
                             </p>
 
-                            <p style="margin:0 0 24px 0;font-size:15px;line-height:1.7;color:#cbd5e1;">
+                            <p style="margin:0 0 24px 0;font-size:15px;line-height:1.7;color:#87b89d;">
                                 Identificamos uma fatura pendente vinculada ao serviço abaixo.
                                 Para evitar suspensão ou remoção automática, recomendamos que o pagamento seja realizado dentro do prazo informado.
                             </p>
 
-                            <table width="100%" cellpadding="0" cellspacing="0" style="background:#0b1220;border:1px solid #1e293b;border-radius:10px;padding:20px;">
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background:#0c1a11;border:1px solid rgba(61,255,140,0.28);border-radius:10px;padding:20px;">
                                 <tr>
-                                    <td style="padding:10px 0;color:#94a3b8;font-size:14px;">
+                                    <td style="padding:10px 0;color:#87b89d;font-size:14px;">
                                         Serviço
                                     </td>
 
-                                    <td align="right" style="padding:10px 0;color:#ffffff;font-size:14px;font-weight:bold;">
+                                    <td align="right" style="padding:10px 0;color:#f0fdf6;font-size:14px;font-weight:bold;">
                                         {$serviceName}
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td style="padding:10px 0;color:#94a3b8;font-size:14px;">
+                                    <td style="padding:10px 0;color:#87b89d;font-size:14px;">
                                         Fatura
                                     </td>
 
-                                    <td align="right" style="padding:10px 0;color:#ffffff;font-size:14px;font-weight:bold;">
+                                    <td align="right" style="padding:10px 0;color:#f0fdf6;font-size:14px;font-weight:bold;">
                                         #{$order->id}
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td style="padding:10px 0;color:#94a3b8;font-size:14px;">
+                                    <td style="padding:10px 0;color:#87b89d;font-size:14px;">
                                         Valor
                                     </td>
 
-                                    <td align="right" style="padding:10px 0;color:#22c55e;font-size:16px;font-weight:bold;">
+                                    <td align="right" style="padding:10px 0;color:#3dffa0;font-size:16px;font-weight:bold;">
                                         {$amount}
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td style="padding:10px 0;color:#94a3b8;font-size:14px;">
+                                    <td style="padding:10px 0;color:#87b89d;font-size:14px;">
                                         Prazo limite
                                     </td>
 
@@ -412,17 +412,17 @@ private function monthlyInvoiceEmailBody(Order $order, User $user): string
 
                             <div style="margin:32px 0;text-align:center;">
                                 <a href="{$panelUrl}"
-                                   style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;padding:14px 28px;border-radius:8px;font-size:15px;font-weight:bold;">
+                                    style="display:inline-block;background:linear-gradient(135deg,#33d987 0%,#18a854 100%);color:#050c08;text-decoration:none;padding:14px 28px;border-radius:8px;font-size:15px;font-weight:bold;">
                                     Acessar área do cliente
                                 </a>
                             </div>
 
-                            <p style="margin:0 0 18px 0;font-size:14px;line-height:1.7;color:#cbd5e1;">
+                            <p style="margin:0 0 18px 0;font-size:14px;line-height:1.7;color:#87b89d;">
                                 O não pagamento desta fatura dentro do período de tolerância poderá resultar na
                                 suspensão e posterior remoção automática do serviço vinculado.
                             </p>
 
-                            <p style="margin:0;font-size:14px;line-height:1.7;color:#64748b;">
+                            <p style="margin:0;font-size:14px;line-height:1.7;color:#4c6d5c;">
                                 Caso o pagamento já tenha sido realizado, desconsidere esta mensagem.
                             </p>
 
@@ -430,8 +430,8 @@ private function monthlyInvoiceEmailBody(Order $order, User $user): string
                     </tr>
 
                     <tr>
-                        <td style="padding:24px 32px;background:#0b1120;border-top:1px solid #1e293b;">
-                            <p style="margin:0;font-size:13px;color:#64748b;text-align:center;">
+                        <td style="padding:24px 32px;background:#050c08;border-top:1px solid rgba(61,255,140,0.1);">
+                            <p style="margin:0;font-size:13px;color:#4c6d5c;text-align:center;">
                                 © VortexHost — Infraestrutura de alta performance.
                             </p>
                         </td>

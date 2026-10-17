@@ -23,7 +23,7 @@
     ];
 @endphp
 
-<main class="client-page support-page">
+<div class="client-page support-page">
     <div class="ticket-container">
         <section class="support-hero" aria-labelledby="support-title">
             <div>
@@ -210,6 +210,6 @@
             </div>
         </section>
     </div>
-</main>
+</div>
 
 @endsection

@@ -21,6 +21,32 @@
     background: transparent;
     padding-block: 25px;
 }
+.promo-bar {
+    width: 100%;
+    background: linear-gradient(90deg, #00c853, #00e676);
+    color: #ffffff;
+    text-align: center;
+    padding: 9px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .2px;
+    line-height: 1.3;
+    position: relative;
+    z-index: 1002;
+    box-shadow: 0 2px 14px rgba(0, 200, 83, .35);
+}
+
+.promo-bar strong {
+    color: #ffffff;
+    font-weight: 900;
+}
+
+@media (max-width: 768px) {
+    .promo-bar {
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+}
 
 /* Container configurado para ocupar a largura total com respiro lateral */
 .site-header .container {
@@ -67,7 +93,7 @@
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: clamp(12px, 2.2vw, 32px);
     list-style: none;
     margin: 0;
     padding: 0;
@@ -304,10 +330,11 @@
 }
 
 .profile-menu {
-    position: absolute;
-    top: calc(100% + 8px);
+    position: fixed;
+    top: 0;
     right: 0;
-    min-width: 200px;
+    width: min(280px, calc(100vw - 24px));
+    min-width: 240px;
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -318,18 +345,19 @@
     border: 1px solid var(--border-s);
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
-    z-index: 1001;
-}
-
-.profile-menu.active {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: none;
+    z-index: 10050;
 }
+
+.profile-menu[hidden] { display: none !important; }
+.profile-menu.is-open { animation: profile-menu-in .15s ease-out both; }
+@keyframes profile-menu-in { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
+.profile-menu-head { display:grid; gap:.15rem; padding:.9rem 1rem; border-bottom:1px solid var(--border); }
+.profile-menu-head span { color:var(--text); font-size:.82rem; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.profile-menu-head small { color:var(--muted); font-size:.7rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.profile-menu-form { display:block; width:100%; margin:0; }
 
 .profile-menu-item {
     display: flex;
@@ -645,10 +673,8 @@
 .sa-hero .profile-menu,
 .terraria-header .profile-menu,
 .game-header .profile-menu {
-    position: absolute !important;
-    top: calc(100% + 8px) !important;
-    right: 0 !important;
-    min-width: 200px !important;
+    position: fixed !important;
+    min-width: 240px !important;
     display: flex !important;
     flex-direction: column !important;
     gap: 0 !important;
@@ -658,22 +684,30 @@
     border-radius: 8px !important;
     background: var(--bg-dark, #0a0e0c) !important;
     box-shadow: 0 4px 20px rgba(0,0,0,.4) !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transform: translateY(-10px) !important;
-    z-index: 1004 !important;
-    pointer-events: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    z-index: 10050 !important;
+    pointer-events: auto !important;
 }
 
-.minecraftjava-header .profile-menu.active,
-.gta5-hero .profile-menu.active,
-.sa-hero .profile-menu.active,
-.terraria-header .profile-menu.active,
-.game-header .profile-menu.active {
+.minecraftjava-header .profile-menu.is-open,
+.gta5-hero .profile-menu.is-open,
+.sa-hero .profile-menu.is-open,
+.terraria-header .profile-menu.is-open,
+.game-header .profile-menu.is-open {
     opacity: 1 !important;
     visibility: visible !important;
     transform: translateY(0) !important;
     pointer-events: auto !important;
+}
+
+.minecraftjava-header .profile-menu[hidden],
+.gta5-hero .profile-menu[hidden],
+.sa-hero .profile-menu[hidden],
+.terraria-header .profile-menu[hidden],
+.game-header .profile-menu[hidden] {
+    display: none !important;
 }
 
 .minecraftjava-header .profile-menu-item,

@@ -82,7 +82,7 @@ body {
     padding: 8rem 2rem 8rem;
     background:
         linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,.32)),
-        url('../img/games/gta-v-banner.webp') center / cover no-repeat;
+        url('../img/games/game-gta-v-card-banner.webp') center / cover no-repeat;
     border: 0;
     box-shadow: none;
 }

@@ -1,13 +1,22 @@
 .register-body {
     margin: 0;
     min-height: 100vh;
-    background: #000;
+    background: #020202;
+    background-image: none;
     color: #fff;
     overflow: auto;
 }
 
 .register-main {
     min-height: 100vh;
+    background: #020202;
+}
+
+.complete-profile-body,
+.complete-profile-body .register-main {
+    background:
+        radial-gradient(circle at 50% -20%, rgba(61, 255, 160, .075), transparent 38%),
+        #050806;
 }
 
 .register-back {
@@ -116,6 +125,210 @@
 .register-card {
     width: 100%;
     max-width: 620px;
+    /* Evita que o tema global desenhe um segundo fundo sob o formulario. */
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.complete-profile-shell {
+    width: min(1120px, calc(100% - 3rem));
+    margin: 0 auto;
+    padding: 2rem 0 5rem;
+}
+
+.complete-profile-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem 0 2rem;
+}
+
+.complete-profile-brand {
+    display: grid;
+    width: 58px;
+    height: 58px;
+    place-items: center;
+    border: 1px solid rgba(61, 255, 160, .18);
+    border-radius: 14px;
+    background: #0b130f;
+}
+
+.complete-profile-logo {
+    width: 38px;
+    filter: drop-shadow(0 0 14px rgba(61, 255, 160, .22));
+}
+
+.complete-profile-eyebrow {
+    display: block;
+    margin-bottom: .55rem;
+    color: #3dffa0;
+    font-size: .7rem;
+    font-weight: 850;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+.complete-profile-header .register-title {
+    font-size: clamp(1.8rem, 4vw, 2.65rem);
+    line-height: 1.05;
+}
+
+.complete-profile-header .register-subtitle {
+    max-width: 600px;
+    margin: .55rem 0 0;
+    line-height: 1.55;
+}
+
+.complete-profile-progress {
+    padding: .6rem .8rem;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .025);
+    color: #71877a;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.complete-profile-progress strong {
+    margin-left: .35rem;
+    color: #89efb3;
+}
+
+.complete-profile-content {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.profile-section {
+    min-width: 0;
+    margin: 0 0 1.35rem;
+    padding: 1.75rem 1.75rem .7rem;
+    border: 1px solid rgba(255, 255, 255, .075);
+    border-top-color: rgba(61, 255, 160, .28);
+    border-radius: 12px;
+    background: #090e0c;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .2);
+}
+
+.profile-section legend {
+    display: flex;
+    align-items: baseline;
+    gap: .65rem;
+    padding: 0 .2rem;
+    color: #f0fdf6;
+}
+
+.profile-section legend strong {
+    font-size: 1.12rem;
+    line-height: 1.3;
+}
+
+.profile-section legend small {
+    color: #87b89d;
+    font-size: .76rem;
+    font-weight: 500;
+}
+
+.profile-personal-grid,
+.profile-address-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 1rem;
+}
+
+.profile-field-name { grid-column: span 12; }
+.profile-field-document,
+.profile-field-phone,
+.profile-field-birth { grid-column: span 4; }
+
+.profile-cep-group {
+    grid-column: span 3;
+    max-width: none;
+}
+
+.profile-field-street { grid-column: span 9; }
+.profile-field-district { grid-column: span 5; }
+.profile-field-number { grid-column: span 3; }
+.profile-field-complement { grid-column: span 4; }
+.profile-field-city { grid-column: span 6; }
+.profile-field-state { grid-column: span 2; }
+.profile-field-country { grid-column: span 4; }
+
+.complete-profile-body .register-label {
+    font-size: .69rem;
+    letter-spacing: .08em;
+}
+
+.complete-profile-body .register-input {
+    min-height: 50px;
+    padding: .8rem .9rem;
+    border-color: rgba(255, 255, 255, .09) !important;
+    border-radius: 7px !important;
+    background-color: #0e1512 !important;
+}
+
+.complete-profile-body .register-input:hover {
+    border-color: rgba(61, 255, 160, .2) !important;
+    background-color: #111b16 !important;
+}
+
+.complete-profile-body .register-input:focus {
+    border-color: #3dffa0 !important;
+    background-color: #111b16 !important;
+}
+
+.cep-status {
+    min-height: 1.25em;
+    color: #71877a;
+    font-size: .76rem;
+    line-height: 1.4;
+}
+
+.cep-status[data-state="loading"] { color: #b7c8bd; }
+.cep-status[data-state="success"] { color: #75e9a4; }
+.cep-status[data-state="error"] { color: #ff9b9b; }
+
+.register-input.is-loading {
+    padding-right: 2.75rem;
+    background-image: linear-gradient(90deg, transparent, rgba(61, 255, 160, .08), transparent) !important;
+    background-size: 200% 100% !important;
+    animation: cep-loading 1.15s linear infinite;
+}
+
+@keyframes cep-loading {
+    to { background-position: -200% 0; }
+}
+
+.profile-submit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-top: .35rem;
+}
+
+.profile-submit-row p {
+    max-width: 480px;
+    color: #71877a;
+    font-size: .78rem;
+    line-height: 1.55;
+}
+
+.profile-submit-row .register-submit {
+    width: auto;
+    min-width: 220px;
+    margin: 0;
+    border-radius: 8px;
+    padding: .95rem 1.35rem;
+}
+
+.profile-submit-row .register-submit span {
+    margin-left: .45rem;
+    font-size: 1.1em;
 }
 
 .register-title {
@@ -285,6 +498,62 @@
     .register-stats {
         flex-direction: column;
     }
+
+    .complete-profile-shell {
+        width: min(100% - 2rem, 920px);
+        padding: 1.5rem 0 3rem;
+    }
+
+    .complete-profile-header {
+        grid-template-columns: auto 1fr;
+        gap: .9rem;
+    }
+
+    .complete-profile-brand {
+        width: 50px;
+        height: 50px;
+    }
+
+    .complete-profile-logo { width: 34px; }
+
+    .complete-profile-progress {
+        display: none;
+    }
+
+    .profile-section {
+        padding: 1.25rem 1rem .3rem;
+    }
+
+    .profile-section legend {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: .15rem;
+    }
+
+    .profile-personal-grid,
+    .profile-address-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-personal-grid > .register-group,
+    .profile-address-grid > .register-group {
+        grid-column: 1 / -1;
+    }
+
+    .profile-submit-row {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .profile-submit-row .register-submit {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .register-input.is-loading { animation: none; }
 }
 .register-alert {
     margin-bottom: 1.5rem;

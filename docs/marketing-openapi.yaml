@@ -1,0 +1,40 @@
+openapi: 3.0.3
+info:
+  title: Vortex Marketing Administrative API
+  version: 1.0.0
+  description: API interna protegida pela sessão administrativa, CSRF e rate limiting. Não publica em serviços externos.
+servers:
+  - url: /admin/marketing
+paths:
+  /api/campaigns:
+    get:
+      summary: Lista campanhas paginadas
+      responses:
+        '200': {description: Lista autorizada}
+        '403': {description: Usuário sem permissão root}
+  /api/contents:
+    get:
+      summary: Lista conteúdos paginados
+      responses:
+        '200': {description: Lista autorizada}
+        '403': {description: Usuário sem permissão root}
+  /campaigns:
+    post:
+      summary: Cria uma campanha em estado persistente
+      responses:
+        '201': {description: Campanha criada}
+        '422': {description: Dados inválidos}
+  /contents:
+    post:
+      summary: Cria conteúdo e sua primeira revisão
+      responses:
+        '201': {description: Conteúdo criado}
+        '422': {description: Dados inválidos}
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: vortex_session
+security:
+  - sessionCookie: []

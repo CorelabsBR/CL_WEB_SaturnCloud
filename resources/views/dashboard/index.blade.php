@@ -23,7 +23,7 @@
     $accountAgeDays = (int) floor((float) data_get($stats ?? [], 'account_age_days', 0));
 @endphp
 
-<main class="client-page">
+<div class="client-page">
     <section class="client-hero" aria-labelledby="hero-welcome">
         <div class="container">
             <div class="client-hero-grid">
@@ -38,7 +38,7 @@
                     </p>
 
                     <div class="client-actions">
-                        <a href="/games" class="btn btn-primary">
+                        <a href="/web" class="btn btn-primary">
                             Contratar serviço
                         </a>
                     </div>
@@ -70,8 +70,8 @@
                                 <span>{{ $lastPayment ? 'Último gasto' : 'Último pagamento' }}</span>
                             </div>
                             <div>
-                                <strong>99.9%</strong>
-                                <span>Uptime global</span>
+                                <strong>{{ $user->email_verified_at ? 'Verificado' : 'Pendente' }}</strong>
+                                <span>Status do e-mail</span>
                             </div>
                         </div>
                     </div>
@@ -231,7 +231,7 @@
                                     <h2>Meus serviços</h2>
                                     <p>Servidores de jogos, VPS e hospedagens vinculados à sua conta.</p>
                                 </div>
-                                <a href="/games" class="btn btn-sm btn-primary">
+                                <a href="/web" class="btn btn-sm btn-primary">
                                     Novo serviço
                                 </a>
                             </div>
@@ -363,18 +363,14 @@
                             <div class="panel-head">
                                 <div>
                                     <h2>Faturas</h2>
-                                    <p>Status financeiro dos pedidos e renovações mensais.</p>
+                                    <p>Cobranças de renovação disponíveis para pagamento via Pix.</p>
                                 </div>
-                                <a href="/checkout" class="btn btn-sm btn-primary">
-                                    Ver checkout
-                                </a>
                             </div>
 
-                            <div class="service-list">
+                            <div class="invoice-list">
                                 @forelse ($invoices as $invoice)
                                     @php
                                         $invoiceStatus = data_get($invoice, 'status', 'pendente');
-                                        $isRenewalInvoice = data_get($invoice, 'billing_type') === 'renewal';
                                         $invoiceStatusClass = match ($invoiceStatus) {
                                             'pago' => 'status-pago',
                                             'suspenso', 'cancelado', 'vencido' => 'status-suspenso',
@@ -382,51 +378,96 @@
                                         };
                                     @endphp
 
-                                    <article class="service-row">
-                                        <div class="service-main">
-                                            <div class="service-title">
-                                                <span>Fatura {{ data_get($invoice, 'display_id', 'VTX-000000') }}</span>
+                                    <article class="invoice-slip">
+                                        <header class="invoice-slip-head">
+                                            <div class="invoice-slip-brand">
+                                                <span class="invoice-slip-logo">V</span>
+                                                <div>
+                                                    <strong>VortexHost</strong>
+                                                    <small>Fatura digital de renovação</small>
+                                                </div>
+                                            </div>
+                                            <div class="invoice-slip-status">
                                                 <span class="{{ $invoiceStatusClass }}">{{ ucfirst($invoiceStatus) }}</span>
+                                                <small>{{ data_get($invoice, 'renewal_label', 'Renovação') }}</small>
                                             </div>
-                                            <div class="service-meta">
-                                                <span>{{ data_get($invoice, 'description', 'Serviços VortexHost') }}</span>
-                                                <span>{{ $isRenewalInvoice ? 'Renovação de mensalidade' : 'Compra inicial' }}</span>
-                                                <span>Emitida em {{ data_get($invoice, 'created_at', 'Sem data') }}</span>
+                                        </header>
+
+                                        <div class="invoice-slip-number">
+                                            <span>Número da fatura</span>
+                                            <strong>{{ data_get($invoice, 'display_id', 'VTX-000000') }}</strong>
+                                        </div>
+
+                                        <div class="invoice-slip-fields">
+                                            <div>
+                                                <span>Beneficiário</span>
+                                                <strong>VortexHost</strong>
+                                            </div>
+                                            <div>
+                                                <span>Cliente</span>
+                                                <strong>{{ $userName }}</strong>
+                                            </div>
+                                            <div>
+                                                <span>Serviço</span>
+                                                <strong>{{ data_get($invoice, 'description', 'Serviços VortexHost') }}</strong>
+                                            </div>
+                                            <div>
+                                                <span>Emissão</span>
+                                                <strong>{{ data_get($invoice, 'created_at', 'Sem data') }}</strong>
+                                            </div>
+                                            <div>
+                                                <span>Vencimento</span>
+                                                <strong>{{ data_get($invoice, 'due_at', 'Sem vencimento') }}</strong>
+                                            </div>
+                                            <div class="invoice-slip-amount">
+                                                <span>Valor da cobrança</span>
+                                                <strong>R$ {{ number_format((float) data_get($invoice, 'amount', 0), 2, ',', '.') }}</strong>
                                             </div>
                                         </div>
 
-                                        <div class="service-location">
-                                            <strong>Valor</strong>
-                                            R$ {{ number_format((float) data_get($invoice, 'amount', 0), 2, ',', '.') }}
+                                        <div
+                                            class="invoice-pix"
+                                            data-pix-charge
+                                            data-pix-url="{{ route('checkout.order.pix', data_get($invoice, 'id')) }}"
+                                            data-status-url="{{ route('checkout.order.status', data_get($invoice, 'id')) }}"
+                                            data-csrf="{{ csrf_token() }}"
+                                        >
+                                            <div class="invoice-pix-qr">
+                                                <div class="invoice-pix-loader" data-pix-loader>
+                                                    Gerando QR Code Pix...
+                                                </div>
+                                                <img data-pix-image alt="QR Code Pix para pagamento da fatura" hidden>
+                                            </div>
+                                            <div class="invoice-pix-content">
+                                                <span class="invoice-pix-label">Pague pelo aplicativo do seu banco</span>
+                                                <strong>Escaneie o QR Code ou use o Pix Copia e Cola</strong>
+                                                <textarea data-pix-code readonly aria-label="Código Pix Copia e Cola" hidden></textarea>
+                                                <div class="invoice-pix-actions">
+                                                    <button type="button" data-pix-copy hidden>Copiar código Pix</button>
+                                                    <a data-pix-open target="_blank" rel="noopener noreferrer" hidden>
+                                                        Abrir cobrança
+                                                    </a>
+                                                </div>
+                                                <small data-pix-status>A cobrança é gerada com segurança pelo Mercado Pago.</small>
+                                            </div>
                                         </div>
 
-                                        <div class="service-usage">
-                                            <strong>
-                                                {{ $invoiceStatus === 'pendente' ? 'Expira em' : 'Expirou em' }}
-                                            </strong>
-                                            {{ data_get($invoice, 'due_at', 'Sem vencimento') }}
-                                            @if ($invoiceStatus === 'pendente' && data_get($invoice, 'due_at_iso'))
-                                                <span class="invoice-timer" data-invoice-timer="{{ data_get($invoice, 'due_at_iso') }}">
-                                                    calculando...
-                                                </span>
-                                            @endif
-                                        </div>
-
-                                        <div class="service-actions" aria-label="Ações da fatura">
-                                            @if ($invoiceStatus === 'pendente')
-                                                <form method="POST" action="{{ route('checkout.order.pay', data_get($invoice, 'id')) }}">
-                                                    @csrf
-                                                    <button type="submit">Pagar</button>
-                                                </form>
-                                            @endif
-                                            <a href="#faturas" data-dashboard-link>Detalhes</a>
-                                        </div>
+                                        <footer class="invoice-slip-footer">
+                                            <div class="invoice-slip-payment">
+                                                @if ($invoiceStatus === 'pendente' && data_get($invoice, 'due_at_iso'))
+                                                    <span class="invoice-timer" data-invoice-timer="{{ data_get($invoice, 'due_at_iso') }}">
+                                                        calculando...
+                                                    </span>
+                                                @endif
+                                                <small>Pagamento processado com segurança pelo Mercado Pago</small>
+                                            </div>
+                                        </footer>
                                     </article>
                                 @empty
                                     <div class="empty-state">
-                                        <div class="empty-icon" role="img" aria-label="Ícone de cartão">💳</div>
+                                        <div class="empty-icon" role="img" aria-label="Ícone de fatura">🧾</div>
                                         <h3>Nenhuma fatura pendente</h3>
-                                        <p>Quando houver compra ou renovação mensal, a fatura aparecerá aqui.</p>
+                                        <p>Quando chegar a data de renovação mensal ou anual, a cobrança aparecerá aqui.</p>
                                     </div>
                                 @endforelse
                             </div>
@@ -439,7 +480,7 @@
             </div>
         </div>
     </section>
-</main>
+</div>
 
 <div class="cancel-modal" data-cancel-modal hidden>
     <div class="cancel-modal-backdrop" data-cancel-modal-close></div>
@@ -535,7 +576,7 @@
             }
 
             if (processInvoices && target.dataset.dashboardView === 'faturas') {
-                processRenewals(true);
+                processRenewals();
             }
         };
 
@@ -715,6 +756,7 @@
         let timers = Array.from(document.querySelectorAll('[data-invoice-timer]'));
         let renewalCheckInProgress = false;
         let fragmentRefreshInProgress = false;
+        let paymentStatusCheckInProgress = false;
 
         const collectTimers = () => {
             timers = Array.from(document.querySelectorAll('[data-invoice-timer]'));
@@ -746,7 +788,7 @@
                     '.hero-status-grid',
                     '.dashboard-cards',
                     '[data-service-table]',
-                    '#faturas .service-list',
+                    '#faturas .invoice-list',
                 ];
 
                 selectors.forEach((selector) => {
@@ -760,6 +802,7 @@
                 });
 
                 initServiceTables();
+                initPixCharges();
                 collectTimers();
                 updateTimers();
                 showView(window.location.hash.replace('#', '') || 'dashboard', false, false);
@@ -772,6 +815,130 @@
 
         const currentViewName = () => {
             return window.location.hash.replace('#', '') || 'dashboard';
+        };
+
+        const loadPixCharge = async (container) => {
+            if (container.dataset.pixLoading === '1' || container.dataset.pixLoaded === '1') {
+                return;
+            }
+
+            const loader = container.querySelector('[data-pix-loader]');
+            const image = container.querySelector('[data-pix-image]');
+            const code = container.querySelector('[data-pix-code]');
+            const copy = container.querySelector('[data-pix-copy]');
+            const open = container.querySelector('[data-pix-open]');
+            const status = container.querySelector('[data-pix-status]');
+
+            container.dataset.pixLoading = '1';
+            loader.hidden = false;
+            loader.textContent = 'Gerando QR Code Pix...';
+            status.textContent = 'A cobrança é gerada com segurança pelo Mercado Pago.';
+
+            try {
+                const response = await fetch(container.dataset.pixUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': container.dataset.csrf,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({}),
+                });
+                const result = await response.json();
+
+                if (!response.ok || !result.qr_code || !result.qr_code_base64) {
+                    throw new Error(result.message || 'Não foi possível gerar o QR Code.');
+                }
+
+                image.src = result.qr_code_base64.startsWith('data:image')
+                    ? result.qr_code_base64
+                    : `data:image/png;base64,${result.qr_code_base64}`;
+                image.hidden = false;
+                loader.hidden = true;
+                code.value = result.qr_code;
+                code.hidden = false;
+                copy.hidden = false;
+
+                if (result.ticket_url) {
+                    open.href = result.ticket_url;
+                    open.hidden = false;
+                }
+
+                status.textContent = 'QR Code pronto. Após o pagamento, a confirmação é automática.';
+                container.dataset.pixLoaded = '1';
+            } catch (error) {
+                loader.textContent = 'QR Code indisponível';
+                status.textContent = error.message || 'Não foi possível gerar o QR Code agora.';
+            } finally {
+                container.dataset.pixLoading = '0';
+            }
+        };
+
+        const initPixCharges = () => {
+            document.querySelectorAll('[data-pix-charge]').forEach((container) => {
+                const copy = container.querySelector('[data-pix-copy]');
+
+                if (container.dataset.pixReady !== '1') {
+                    container.dataset.pixReady = '1';
+
+                    copy?.addEventListener('click', async () => {
+                        const code = container.querySelector('[data-pix-code]');
+
+                        try {
+                            await navigator.clipboard.writeText(code.value);
+                            copy.textContent = 'Código copiado';
+                            setTimeout(() => {
+                                copy.textContent = 'Copiar código Pix';
+                            }, 1800);
+                        } catch (error) {
+                            code.focus();
+                            code.select();
+                            document.execCommand('copy');
+                        }
+                    });
+                }
+
+                loadPixCharge(container);
+            });
+        };
+
+        const checkPaymentStatuses = async () => {
+            if (paymentStatusCheckInProgress || document.hidden) {
+                return;
+            }
+
+            const charges = Array.from(document.querySelectorAll('[data-pix-charge][data-status-url]'));
+
+            if (!charges.length) {
+                return;
+            }
+
+            paymentStatusCheckInProgress = true;
+
+            try {
+                const results = await Promise.all(charges.map(async (charge) => {
+                    const response = await fetch(charge.dataset.statusUrl, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        cache: 'no-store',
+                        credentials: 'same-origin',
+                    });
+
+                    return response.ok ? response.json() : null;
+                }));
+
+                if (results.some((result) => result && result.status !== 'pendente')) {
+                    await refreshDashboardFragments();
+                }
+            } catch (error) {
+                console.warn('Falha ao consultar status do pagamento.', error);
+            } finally {
+                paymentStatusCheckInProgress = false;
+            }
         };
 
         const processRenewals = async (refreshWhenUnchanged = false) => {
@@ -818,7 +985,12 @@
 
                 if (remaining <= 0) {
                     timer.textContent = 'expirada';
-                    processRenewals();
+
+                    if (timer.dataset.expirationProcessed !== '1') {
+                        timer.dataset.expirationProcessed = '1';
+                        processRenewals();
+                    }
+
                     return;
                 }
 
@@ -828,10 +1000,11 @@
             });
         };
 
+        initPixCharges();
         showView(window.location.hash.replace('#', '') || 'dashboard', false);
         updateTimers();
         setInterval(updateTimers, 1000);
-        setInterval(() => processRenewals(currentViewName() === 'faturas'), 10000);
+        setInterval(checkPaymentStatuses, 5000);
     })();
 </script>
 @endpush

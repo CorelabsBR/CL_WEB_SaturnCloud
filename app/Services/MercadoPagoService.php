@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Throwable;
 
 class MercadoPagoService
@@ -41,6 +42,7 @@ class MercadoPagoService
                 'excluded_payment_types' => [
                     ['id' => 'credit_card'],
                     ['id' => 'debit_card'],
+                    ['id' => 'ticket'],
                 ],
             ];
         }
@@ -78,6 +80,101 @@ class MercadoPagoService
         }
 
         return $response->json();
+    }
+
+    public function ensurePixPayment(Order $order): Payment
+    {
+        $order->loadMissing(['items.product', 'user', 'renewalService']);
+
+        if ($order->status !== 'pendente' || $order->billing_type !== 'renewal') {
+            throw new \RuntimeException('Esta fatura não está disponível para pagamento via Pix.');
+        }
+
+        if ($order->due_at && $order->due_at->isPast()) {
+            throw new \RuntimeException('Esta fatura está vencida.');
+        }
+
+        $existingPayment = $order->payments()
+            ->where('provider', 'mercadopago')
+            ->where('payment_method_id', 'pix')
+            ->where('status', 'pending')
+            ->latest('id')
+            ->get()
+            ->first(fn (Payment $payment) => filled(data_get($payment->raw_payload, 'point_of_interaction.transaction_data.qr_code')));
+
+        if ($existingPayment) {
+            return $existingPayment;
+        }
+
+        $user = $order->user;
+        $names = preg_split('/\s+/', trim((string) $user?->nome), 2);
+        $document = preg_replace('/\D+/', '', (string) $user?->cpf_cnpj);
+        $payerEmail = trim((string) $user?->email);
+
+        if (! filter_var($payerEmail, FILTER_VALIDATE_EMAIL)) {
+            $configuredEmail = trim((string) config('mail.from.address'));
+            $appHost = parse_url((string) config('app.url'), PHP_URL_HOST) ?: 'vortexhost.com.br';
+
+            $payerEmail = filter_var($configuredEmail, FILTER_VALIDATE_EMAIL)
+                ? $configuredEmail
+                : "cliente-{$user?->id}@{$appHost}";
+        }
+
+        $expiration = $order->due_at && $order->due_at->gt(now()->addMinutes(30))
+            ? $order->due_at->copy()
+            : now()->addMinutes(30);
+
+        $payload = [
+            'transaction_amount' => (float) $order->total,
+            'description' => Str::limit(
+                $order->items->pluck('product.nome')->filter()->join(', ') ?: 'Renovação VortexHost',
+                120,
+                ''
+            ),
+            'payment_method_id' => 'pix',
+            'external_reference' => (string) $order->id,
+            'notification_url' => route('webhooks.mercadopago'),
+            'date_of_expiration' => $expiration->format('Y-m-d\TH:i:s.vP'),
+            'payer' => array_filter([
+                'email' => $payerEmail,
+                'first_name' => $names[0] ?? null,
+                'last_name' => $names[1] ?? null,
+                'identification' => $document ? [
+                    'type' => strlen($document) > 11 ? 'CNPJ' : 'CPF',
+                    'number' => $document,
+                ] : null,
+            ]),
+        ];
+
+        $response = $this->client()
+            ->withHeader('X-Idempotency-Key', "vortex-renewal-pix-{$order->id}")
+            ->post('/v1/payments', $payload);
+
+        if (! $response->successful()) {
+            throw new \RuntimeException($response->body());
+        }
+
+        $payment = $response->json();
+        $providerPaymentId = (string) ($payment['id'] ?? '');
+
+        if ($providerPaymentId === '' || ! data_get($payment, 'point_of_interaction.transaction_data.qr_code')) {
+            throw new \RuntimeException('O Mercado Pago não retornou os dados do QR Code Pix.');
+        }
+
+        return Payment::updateOrCreate(
+            [
+                'provider' => 'mercadopago',
+                'provider_payment_id' => $providerPaymentId,
+            ],
+            [
+                'order_id' => $order->id,
+                'payment_method_id' => 'pix',
+                'payment_type_id' => $payment['payment_type_id'] ?? 'bank_transfer',
+                'amount' => $payment['transaction_amount'] ?? $order->total,
+                'status' => $this->localPaymentStatus((string) ($payment['status'] ?? 'pending')),
+                'raw_payload' => $payment,
+            ]
+        );
     }
 
     public function syncPayment(array $payment): ?Order
@@ -195,7 +292,9 @@ class MercadoPagoService
 
         $service->update([
             'status' => 'active',
-            'expires_at' => $baseDate->copy()->addMonth(),
+            'expires_at' => $service->type === 'web'
+                ? $baseDate->copy()->addYear()
+                : $baseDate->copy()->addMonth(),
         ]);
     }
 

@@ -1,9 +1,11 @@
-<header class="site-header">
+
+    <header class="site-header">
+
     <div class="container">
         <nav class="nav-inner">
 
             <a class="brand" href="{{ url('/') }}">
-                <img src="{{ asset('img/logo_vtxhost.png') }}" alt="logo_vtxhost" id="logo_img">
+                <img src="{{ asset('img/vortex-logo-mark.png') }}" alt="VortexHost" id="logo_img">
             </a>
 
             @php
@@ -12,15 +14,14 @@
                     ? \App\Models\CartItem::where('user_id', auth()->id())->sum('quantidade')
                     : 0;
 
-                function navActive($paths = []) {
+                $navActive = static function (array $paths = []): string {
                     foreach ($paths as $path) {
                         if (request()->is($path)) {
                             return 'active';
                         }
                     }
-
                     return '';
-                }
+                };
             @endphp
 
             <ul class="nav-links">
@@ -32,20 +33,10 @@
                         Início
                     </a>
                 </li>
-
-                <li>
-                    <a
-                        href="{{ url('/games') }}"
-                        class="{{ navActive(['games', 'games/*']) }}"
-                    >
-                        Hospedagem de Jogos
-                    </a>
-                </li>
-
                 <li>
                     <a
                         href="{{ url('/vps') }}"
-                        class="{{ navActive(['vps', 'vps/*']) }}"
+                        class="{{ $navActive(['vps', 'vps/*']) }}"
                     >
                         VPS
                     </a>
@@ -54,17 +45,21 @@
                 <li>
                     <a
                         href="{{ url('/web') }}"
-                        class="{{ navActive(['web', 'web/*']) }}"
+                        class="{{ $navActive(['web', 'web/*']) }}"
                     >
                         Hospedagem Web
                     </a>
+                </li>
+                <li><a href="{{ route('pages.show', 'infraestrutura') }}" class="{{ $navActive(['infraestrutura']) }}">Infraestrutura</a></li>
+                <li>
+                    <a href="{{ route('help.index') }}" class="{{ $navActive(['ajuda', 'ajuda/*']) }}">Ajuda</a>
                 </li>
             </ul>
 
             <div class="nav-actions">
                 @auth
                     <a
-                        class="nav-cart {{ navActive(['carrinho', 'carrinho/*']) }}"
+                        class="nav-cart {{ $navActive(['carrinho', 'carrinho/*']) }}"
                         href="{{ url('/carrinho') }}"
                         aria-label="Ir para o carrinho{{ $cartCount > 0 ? ' com ' . $cartCount . ' ' . ($cartCount === 1 ? 'item' : 'itens') : '' }}"
                         title="Carrinho"
@@ -83,35 +78,36 @@
                     </a>
 
                     <div class="profile-dropdown">
-                        <button class="profile-btn" id="profile-btn" aria-label="Menu do perfil">
+                        <button class="profile-btn" id="profile-btn" type="button" aria-label="Menu do perfil" aria-expanded="false" aria-controls="profile-menu">
                             <svg viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
                             </svg>
                         </button>
-                        <div class="profile-menu" id="profile-menu">
-                            <a href="{{ url('/painel') }}" class="profile-menu-item">
+                        <div class="profile-menu" id="profile-menu" role="menu" aria-labelledby="profile-btn" hidden>
+                            <div class="profile-menu-head"><span>{{ auth()->user()?->nome ?? 'Cliente Vortex' }}</span><small>{{ auth()->user()?->email }}</small></div>
+                            <a href="{{ url('/painel') }}" class="profile-menu-item" role="menuitem">
                                 <svg viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M3 13h2v8H3zm4-8h2v16H7zm4-2h2v18h-2zm4-2h2v20h-2zm4 4h2v16h-2z" />
                                 </svg>
                                 Painel
                             </a>
-                            <a href="{{ route('perfil.edit') }}" class="profile-menu-item">
+                            <a href="{{ route('perfil.edit') }}" class="profile-menu-item" role="menuitem">
                                 <svg viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M12 12c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4zm0 2c-2.7 0-8 1.4-8 4v2h16v-2c0-2.6-5.3-4-8-4z" />
                                 </svg>
                                 Editar perfil
                             </a>
                             @if(auth()->user()?->tipo_usuario === 'root')
-                                <a href="{{ route('admin.index') }}" class="profile-menu-item">
+                                <a href="{{ route('admin.index') }}" class="profile-menu-item" role="menuitem">
                                     <svg viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M12 2l8 4v6c0 5-3.4 9.4-8 10-4.6-.6-8-5-8-10V6l8-4zm0 4.2L7 8.7V12c0 3.2 2 6.1 5 6.8 3-.7 5-3.6 5-6.8V8.7l-5-2.5z" />
                                     </svg>
                                     Admin
                                 </a>
                             @endif
-                            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                            <form action="{{ route('logout') }}" method="POST" class="profile-menu-form">
                                 @csrf
-                                <button type="submit" class="profile-menu-item logout-btn">
+                                <button type="submit" class="profile-menu-item logout-btn" role="menuitem">
                                     <svg viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
                                     </svg>
@@ -131,7 +127,7 @@
                 @endauth
             </div>
 
-            <button class="hamburger" id="hamburger" aria-label="Menu">
+            <button class="hamburger" id="hamburger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-nav">
                 <span></span><span></span><span></span>
             </button>
 
@@ -144,32 +140,26 @@
             >
                 Início
             </a>
-
-            <a
-                href="{{ url('/games') }}"
-                class="{{ navActive(['games', 'games/*']) }}"
-            >
-                Hospedagem de Jogos
-            </a>
-
             <a
                 href="{{ url('/vps') }}"
-                class="{{ navActive(['vps', 'vps/*']) }}"
+                class="{{ $navActive(['vps', 'vps/*']) }}"
             >
                 VPS
             </a>
 
             <a
                 href="{{ url('/web') }}"
-                class="{{ navActive(['web', 'web/*']) }}"
+                class="{{ $navActive(['web', 'web/*']) }}"
             >
                 Hospedagem Web
             </a>
+            <a href="{{ route('pages.show', 'infraestrutura') }}">Infraestrutura</a>
+            <a href="{{ route('help.index') }}" class="{{ $navActive(['ajuda', 'ajuda/*']) }}">Ajuda</a>
 
             @auth
                 <a
                     href="{{ url('/painel') }}"
-                    class="{{ navActive(['painel']) }}"
+                    class="{{ $navActive(['painel']) }}"
                 >
                     Painel
                 </a>
@@ -177,7 +167,7 @@
                 @if(auth()->user()?->tipo_usuario === 'root')
                     <a
                         href="{{ route('admin.index') }}"
-                        class="{{ navActive(['admin', 'admin/*']) }}"
+                        class="{{ $navActive(['admin', 'admin/*']) }}"
                     >
                         Admin
                     </a>
@@ -192,7 +182,7 @@
 
                 <a
                     href="{{ url('/carrinho') }}"
-                    class="mobile-cart {{ navActive(['carrinho', 'carrinho/*']) }}"
+                    class="mobile-cart {{ $navActive(['carrinho', 'carrinho/*']) }}"
                 >
                     Carrinho
                     @if($cartCount > 0)
@@ -214,4 +204,4 @@
     </div>
 </header>
 
-<script src="{{ asset('js/header.js') }}"></script>
+<script src="{{ asset('js/header.js') }}?v={{ filemtime(public_path('js/header.js')) }}" defer></script>

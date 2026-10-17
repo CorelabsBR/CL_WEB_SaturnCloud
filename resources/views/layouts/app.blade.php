@@ -3,30 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0A0B0C">
+    <meta name="description" content="@yield('meta_description', 'Hospedagem web e infraestrutura gerenciada com suporte humano e operação no Brasil.')">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="VortexHost">
+    <meta property="og:title" content="@yield('title', 'VortexHost')">
+    <meta property="og:description" content="@yield('meta_description', 'Hospedagem web e infraestrutura digital com informações comerciais claras.')">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('img/vortexhost-logo-full.png') }}">
+    <link rel="canonical" href="{{ url()->current() }}">
     <title>@yield('title', 'VortexHost')</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('img/vortex-logo-mark.png') }}">
 
-    <link rel="stylesheet" href="{{ asset('css/base.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/base.css') }}?v={{ filemtime(public_path('css/base.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/footer.css') }}?v={{ filemtime(public_path('css/footer.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/index.css') }}?v={{ filemtime(public_path('css/index.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/web.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}?v={{ filemtime(public_path('css/auth.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/web.css') }}?v={{ filemtime(public_path('css/web.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/register.css') }}?v={{ filemtime(public_path('css/register.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/cart.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/vps.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart.css') }}?v={{ filemtime(public_path('css/cart.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/vps.css') }}?v={{ filemtime(public_path('css/vps.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/dash.css') }}?v={{ filemtime(public_path('css/dash.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/checkout.css') }}?v={{ filemtime(public_path('css/checkout.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}?v={{ filemtime(public_path('css/responsive.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/notifications.css') }}?v={{ filemtime(public_path('css/notifications.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/system.css') }}?v={{ filemtime(public_path('css/system.css')) }}">
 
 
     @stack('styles')
+    <script type="application/ld+json">{!! json_encode(['@context' => 'https://schema.org', '@type' => 'Organization', 'name' => 'Vortex', 'url' => url('/'), 'logo' => asset('img/vortexhost-logo-full.png'), 'email' => 'contato@corelabs.dev.br', 'parentOrganization' => ['@type' => 'Organization', 'name' => 'CoreLabs']], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!}</script>
 </head>
 
 <body class="@yield('body_class')">
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
 
 @if (!View::hasSection('hide_header'))
     @include('partials.header')
@@ -38,12 +51,19 @@
     </div>
 @endif
 
-<main class="@yield('main_class')">
+<main id="main-content" class="@yield('main_class')" tabindex="-1">
     @yield('content')
 </main>
 
 @if (!View::hasSection('hide_footer'))
     @include('partials.footer')
+@endif
+
+@if (!View::hasSection('hide_header') && !request()->routeIs('dashboard.*', 'admin.*', 'checkout.*', 'cart.*'))
+    <a class="mobile-buy-bar" href="{{ route('vps.index') }}">Contratar agora</a>
+    @if(config('services.whatsapp.number'))
+        <a class="whatsapp-fab" href="https://wa.me/{{ preg_replace('/\D+/', '', config('services.whatsapp.number')) }}" target="_blank" rel="noopener" aria-label="Falar com a Vortex pelo WhatsApp">WA</a>
+    @endif
 @endif
 
 @include('partials.support-widget')

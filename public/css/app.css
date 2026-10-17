@@ -225,7 +225,7 @@ body {
     min-height:92vh; display:flex; flex-direction:column;
     align-items:center; justify-content:center;
     text-align:center; padding:4rem 0 6rem; position:relative; overflow:hidden;
-    background-image: url('../img/fundo_index.jpg'); 
+    background-image: url('../img/legacy-home-hero-background.jpg');
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat; 

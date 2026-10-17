@@ -9,6 +9,8 @@ use App\Services\HestiaService;
 use App\Services\ProvisioningService;
 use App\Services\PterodactylService;
 use App\Services\RenewalBillingService;
+use App\Models\MarketingCampaign;
+use App\Models\MarketingContent;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -109,11 +111,15 @@ Artisan::command('hestia:process-queue {order_id?} {--limit=50}', function (Hest
         $this->info("Serviço #{$serviceId} criado no Hestia.");
     }
 
+    foreach ($result['skipped'] as $skip) {
+        $this->warn("Serviço #{$skip['service_id']} ignorado: {$skip['reason']}");
+    }
+
     foreach ($result['failed'] as $failure) {
         $this->error("Serviço #{$failure['service_id']} falhou: {$failure['error']}");
     }
 
-    if (empty($result['processed']) && empty($result['failed'])) {
+    if (empty($result['processed']) && empty($result['skipped']) && empty($result['failed'])) {
         $this->info($orderId
             ? "Nenhum pedido Hestia pendente para o pedido #{$orderId}."
             : 'Nenhum pedido Hestia pendente.'
@@ -139,3 +145,12 @@ Schedule::command('hestia:process-queue')
 
 Schedule::command('billing:process-renewals')
     ->everyMinute();
+
+Artisan::command('marketing:process-schedule', function () {
+    $campaigns = MarketingCampaign::where('status', 'scheduled')->whereNotNull('approved_at')->where('starts_at', '<=', now())->update(['status' => 'active']);
+    $contents = MarketingContent::where('status', 'scheduled')->whereNotNull('approved_by')->where('scheduled_at', '<=', now())->update(['status' => 'published', 'published_at' => now()]);
+    $this->info("Campanhas ativadas: {$campaigns}; conteúdos publicados: {$contents}.");
+    return self::SUCCESS;
+})->purpose('Processa apenas campanhas e conteúdos previamente aprovados e agendados.');
+
+Schedule::command('marketing:process-schedule')->everyMinute()->withoutOverlapping();

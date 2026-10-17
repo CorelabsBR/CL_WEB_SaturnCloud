@@ -3,19 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0f14">
     <title>{{ $jogo->nome }} - VortexHost</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('img/logo_vtxhost.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('img/vortex-logo-mark.png') }}">
     <link rel="stylesheet" href="{{ asset('css/minecraft.css') }}?v={{ filemtime(public_path('css/minecraft.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/game-standard.css') }}?v={{ filemtime(public_path('css/game-standard.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/system.css') }}?v={{ filemtime(public_path('css/system.css')) }}">
 </head>
 
 <body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
 
-<main class="minecraftjava-section">
+<main id="main-content" class="minecraftjava-section" tabindex="-1">
     
     <section class="minecraftjava-header" style="--game-hero-bg: url('{{ $jogo->heroImageUrl() }}'); --game-font-family: {{ $jogo->fontFamilyCss() }};">
         @include('partials.header')

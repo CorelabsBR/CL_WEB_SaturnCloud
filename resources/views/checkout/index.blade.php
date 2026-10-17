@@ -127,7 +127,7 @@
                         @csrf
 
                         <button type="submit" class="btn btn-primary btn-full">
-                            {{ $adminExempt ? 'Finalizar cortesia administrativa' : ($finalTotal <= 0 ? 'Finalizar pedido' : 'Pagar com Mercado Pago') }}
+                            {{ $adminExempt ? 'Finalizar cortesia administrativa' : ($finalTotal <= 0 ? 'Finalizar pedido' : 'Continuar com o pagamento') }}
                         </button>
                     </form>
 

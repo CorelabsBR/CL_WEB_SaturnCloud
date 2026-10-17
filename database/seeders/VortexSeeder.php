@@ -36,15 +36,15 @@ class VortexSeeder extends Seeder
         ]);
 
         DB::table('jogos_prod')->insert([
-            ['id' => 1, 'nome' => 'Minecraft Java', 'slug' => 'minecraft-java', 'banner' => 'images.jpeg', 'icon' => 'minecraftjava.png', 'font_family' => 'minecraft', 'ativo' => true],
-            ['id' => 2, 'nome' => 'Minecraft Bedrock', 'slug' => 'minecraft-bedrock', 'banner' => 'download.jpeg', 'icon' => 'minecraftbedrock.png', 'font_family' => 'minecraft', 'ativo' => true],
-            ['id' => 3, 'nome' => 'Terraria', 'slug' => 'terraria', 'banner' => 'terraria.jpeg', 'icon' => 'terraria.png', 'font_family' => 'terraria', 'ativo' => true],
-            ['id' => 4, 'nome' => 'GTA V', 'slug' => 'gta-v', 'banner' => 'gta-v-banner.webp', 'icon' => null, 'font_family' => 'gta', 'ativo' => true],
-            ['id' => 5, 'nome' => 'GTA SA', 'slug' => 'gta-sa', 'banner' => '80601.jpg', 'icon' => 'gtasa.png', 'font_family' => 'gta', 'ativo' => true],
-            ['id' => 6, 'nome' => 'BeamNG Drive', 'slug' => 'beamng-drive', 'banner' => 'rtx-beamng-steam-banner-v0-38ms0dl77yrb1.png', 'icon' => null, 'font_family' => null, 'ativo' => true],
-            ['id' => 7, 'nome' => 'RDR2', 'slug' => 'rdr2', 'banner' => 'red-dead-redemption-2-desktop-6l9sm1fd0wc2ibs0.jpg', 'icon' => null, 'font_family' => null, 'ativo' => true],
-            ['id' => 8, 'nome' => 'Hogwarts Legacy', 'slug' => 'hogwarts-legacy', 'banner' => 'share.jpg', 'icon' => null, 'font_family' => null, 'ativo' => true],
-            ['id' => 9, 'nome' => 'ARMA 3', 'slug' => 'arma-3', 'banner' => 'ff297d0b3712aa48ec0f7e3c0e48e1dc.jpg', 'icon' => 'arma3.png', 'font_family' => null, 'ativo' => true],
+            ['id' => 1, 'nome' => 'Minecraft Java', 'slug' => 'minecraft-java', 'banner' => 'game-minecraft-java-card-banner.jpg', 'hero_banner' => 'game-minecraft-java-hero.jpg', 'icon' => 'icon-minecraft-java.png', 'font_family' => 'minecraft', 'ativo' => true],
+            ['id' => 2, 'nome' => 'Minecraft Bedrock', 'slug' => 'minecraft-bedrock', 'banner' => 'game-minecraft-bedrock-card-banner.jpeg', 'hero_banner' => 'game-minecraft-bedrock-hero.jpg', 'icon' => 'icon-minecraft-bedrock.png', 'font_family' => 'minecraft', 'ativo' => true],
+            ['id' => 3, 'nome' => 'Terraria', 'slug' => 'terraria', 'banner' => 'game-terraria-card-banner.jpeg', 'hero_banner' => 'game-terraria-hero.jpg', 'icon' => 'icon-terraria.png', 'font_family' => 'terraria', 'ativo' => true],
+            ['id' => 4, 'nome' => 'GTA V', 'slug' => 'gta-v', 'banner' => 'game-gta-v-card-banner.webp', 'hero_banner' => 'game-gta-v-hero.jpg', 'icon' => 'icon-gta-v.png', 'font_family' => 'gta', 'ativo' => true],
+            ['id' => 5, 'nome' => 'GTA SA', 'slug' => 'gta-sa', 'banner' => 'game-gta-sa-card-banner.jpg', 'hero_banner' => 'game-gta-sa-hero.jpg', 'icon' => 'icon-gta-sa.png', 'font_family' => 'gta', 'ativo' => true],
+            ['id' => 6, 'nome' => 'BeamNG Drive', 'slug' => 'beamng-drive', 'banner' => 'game-beamng-drive-card-banner.png', 'hero_banner' => null, 'icon' => 'icon-beamng-drive.png', 'font_family' => null, 'ativo' => true],
+            ['id' => 7, 'nome' => 'RDR2', 'slug' => 'rdr2', 'banner' => 'game-rdr2-card-banner.jpg', 'hero_banner' => null, 'icon' => null, 'font_family' => null, 'ativo' => true],
+            ['id' => 8, 'nome' => 'Hogwarts Legacy', 'slug' => 'hogwarts-legacy', 'banner' => 'game-hogwarts-legacy-card-banner.jpg', 'hero_banner' => null, 'icon' => 'icon-hogwarts-legacy.webp', 'font_family' => null, 'ativo' => true],
+            ['id' => 9, 'nome' => 'ARMA 3', 'slug' => 'arma-3', 'banner' => 'game-arma-3-card-banner.jpg', 'hero_banner' => null, 'icon' => null, 'font_family' => null, 'ativo' => true],
         ]);
 
         DB::table('pterodactyl_location')->insert([
@@ -98,9 +98,8 @@ DB::table('plans')->insert([
     // gta sa
     ['plan' => 21, 'name' => 'Tier Grove Street', 'jogo_id' => 5, 'ram' => 2000, 'disk' => 10000, 'egg' => 5, 'cpu' => 2, 'price' => 900, 'location_id' => 1],
     ['plan' => 22, 'name' => 'Tier Ballas', 'jogo_id' => 5, 'ram' => 4000, 'disk' => 20000, 'egg' => 5, 'cpu' => 4, 'price' => 2150, 'location_id' => 1],
-    ['plan' => 23, 'name' => 'Tier Los Santos Vagos', 'jogo_id' => 5, 'ram' => 8000, 'disk' => 90000, 'egg' => 5, 'cpu' => null, 'price' => 2850, 'location_id' => 1],
-    ['plan' => 24, 'name' => 'Tier Vagos', 'jogo_id' => 5, 'ram' => 8000, 'disk' => 90000, 'egg' => 5, 'cpu' => null, 'price' => 2850, 'location_id' => 1],
     ['plan' => 25, 'name' => 'Tier Aztecas', 'jogo_id' => 5, 'ram' => 12000, 'disk' => 0, 'egg' => 5, 'cpu' => null, 'price' => 3450, 'location_id' => 1],
+    ['plan' => 24, 'name' => 'Tier Vagos', 'jogo_id' => 5, 'ram' => 8000, 'disk' => 90000, 'egg' => 5, 'cpu' => null, 'price' => 2850, 'location_id' => 1],
     ['plan' => 26, 'name' => 'Tier San Fierro Rifa', 'jogo_id' => 5, 'ram' => 0, 'disk' => 0, 'egg' => 5, 'cpu' => null, 'price' => 4500, 'location_id' => 1],
 
     // beamng drive

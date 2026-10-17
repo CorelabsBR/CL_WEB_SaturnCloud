@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
 
@@ -303,6 +304,184 @@ class AuthController extends Controller
         return back()->with('success', 'Enviamos um novo código para seu e-mail.');
     }
 
+    public function showForgotPassword()
+    {
+        if (Auth::check()) {
+            return redirect()->route('dashboard.index');
+        }
+
+        return view('auth.forgot-password');
+    }
+
+    public function sendPasswordResetCode(Request $request)
+    {
+        $data = $request->validate([
+            'email' => ['required', 'email', 'max:255'],
+        ], [
+            'email.required' => 'Informe o e-mail da sua conta.',
+            'email.email' => 'Informe um e-mail válido.',
+        ]);
+
+        $email = mb_strtolower($data['email']);
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            throw ValidationException::withMessages([
+                'email' => 'Não encontramos uma conta com este e-mail.',
+            ]);
+        }
+
+        if (blank($user->senha)) {
+            $provider = match (true) {
+                $user->provider === 'google' || filled($user->google_id) => 'Google',
+                $user->provider === 'discord' || filled($user->discord_id) => 'Discord',
+                default => 'login social',
+            };
+
+            throw ValidationException::withMessages([
+                'email' => "Essa conta foi criada pelo {$provider}. Entre usando {$provider}.",
+            ]);
+        }
+
+        $code = $this->generateEmailVerificationCode();
+
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $user->email],
+            [
+                'token' => Hash::make($code),
+                'created_at' => now(),
+            ]
+        );
+
+        $request->session()->put('password_reset_email', $user->email);
+        $request->session()->forget('password_reset_code_verified');
+        $this->sendPasswordResetCodeEmail($user, $code);
+
+        return redirect()
+            ->route('password.code')
+            ->with('success', 'Enviamos um código de 6 números para seu e-mail.');
+    }
+
+    public function showPasswordResetCode(Request $request)
+    {
+        $email = $request->session()->get('password_reset_email');
+
+        if (!$email) {
+            return redirect()->route('password.request');
+        }
+
+        return view('auth.reset-code', [
+            'email' => $email,
+        ]);
+    }
+
+    public function verifyPasswordResetCode(Request $request)
+    {
+        $email = $request->session()->get('password_reset_email');
+
+        if (!$email) {
+            return redirect()->route('password.request');
+        }
+
+        $data = $request->validate([
+            'code' => ['required', 'digits:6'],
+        ], [
+            'code.required' => 'Informe o código enviado para seu e-mail.',
+            'code.digits' => 'O código precisa ter 6 números.',
+        ]);
+
+        $reset = DB::table('password_reset_tokens')
+            ->where('email', $email)
+            ->first();
+
+        if (!$reset || Carbon::parse($reset->created_at)->lt(now()->subMinutes(5))) {
+            DB::table('password_reset_tokens')->where('email', $email)->delete();
+            $request->session()->forget(['password_reset_email', 'password_reset_code_verified']);
+
+            return redirect()
+                ->route('password.request')
+                ->with('error', 'O código expirou. Peça um novo código para trocar sua senha.');
+        }
+
+        if (!Hash::check($data['code'], $reset->token)) {
+            throw ValidationException::withMessages([
+                'code' => 'Código inválido. Confira o e-mail e tente novamente.',
+            ]);
+        }
+
+        $request->session()->put('password_reset_code_verified', true);
+
+        return redirect()
+            ->route('password.reset.form')
+            ->with('success', 'Código confirmado. Agora crie sua nova senha.');
+    }
+
+    public function showResetPasswordForm(Request $request)
+    {
+        if (!$request->session()->get('password_reset_email')) {
+            return redirect()->route('password.request');
+        }
+
+        if (!$request->session()->get('password_reset_code_verified')) {
+            return redirect()->route('password.code');
+        }
+
+        return view('auth.reset-password');
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $email = $request->session()->get('password_reset_email');
+
+        if (!$email) {
+            return redirect()->route('password.request');
+        }
+
+        if (!$request->session()->get('password_reset_code_verified')) {
+            return redirect()->route('password.code');
+        }
+
+        $data = $request->validate([
+            'password' => ['required', 'confirmed', 'min:6'],
+        ], [
+            'password.required' => 'Informe sua nova senha.',
+            'password.confirmed' => 'A confirmação da senha não confere.',
+            'password.min' => 'A senha precisa ter pelo menos 6 caracteres.',
+        ]);
+
+        $reset = DB::table('password_reset_tokens')
+            ->where('email', $email)
+            ->first();
+
+        if (!$reset || Carbon::parse($reset->created_at)->lt(now()->subMinutes(5))) {
+            DB::table('password_reset_tokens')->where('email', $email)->delete();
+            $request->session()->forget(['password_reset_email', 'password_reset_code_verified']);
+
+            return redirect()
+                ->route('password.request')
+                ->with('error', 'O código expirou. Peça um novo código para trocar sua senha.');
+        }
+
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            $request->session()->forget(['password_reset_email', 'password_reset_code_verified']);
+
+            return redirect()->route('password.request');
+        }
+
+        $user->update([
+            'senha' => Hash::make($data['password']),
+        ]);
+
+        DB::table('password_reset_tokens')->where('email', $email)->delete();
+        $request->session()->forget(['password_reset_email', 'password_reset_code_verified']);
+
+        return redirect()
+            ->route('login')
+            ->with('success', 'Senha atualizada com sucesso. Entre com sua nova senha.');
+    }
+
     public function showEditProfile()
     {
         return view('auth.edit-profile', [
@@ -358,9 +537,9 @@ class AuthController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
         ], [
-            'email.required' => 'Mete teu e-mail.',
+            'email.required' => 'Informe seu e-mail.',
             'email.email' => 'E-mail inválido.',
-            'password.required' => 'Mete tua senha.',
+            'password.required' => 'Informe sua senha.',
         ]);
 
         $remember = $request->boolean('remember');
@@ -370,7 +549,7 @@ class AuthController extends Controller
             'password' => $credentials['password'],
         ], $remember)) {
             throw ValidationException::withMessages([
-                'email' => 'Credenciais inválidas, товарищ.',
+                'email' => 'E-mail ou senha incorretos.',
             ]);
         }
 
@@ -463,9 +642,154 @@ class AuthController extends Controller
 
     private function sendEmailVerificationCode(User $user): void
     {
-        Mail::raw("Seu código de verificação da Vortex é: {$user->email_verification_code}", function ($message) use ($user) {
+            $code = $user->email_verification_code;
+            $name = e($user->nome ?: 'cliente');
+
+            $html = <<<HTML
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Código de verificação - VortexHost</title>
+    </head>
+    <body style="margin:0;padding:0;background-color:#050c08;font-family:Arial,sans-serif;color:#f0fdf6;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px;">
+            <tr>
+                <td align="center">
+                    <table width="600" cellpadding="0" cellspacing="0" style="background:#071009;border-radius:12px;overflow:hidden;border:1px solid rgba(61,255,140,0.28);">
+
+                        <tr>
+                            <td style="background:linear-gradient(135deg,#0d2e1a 0%,#0a2416 100%);padding:28px 32px;text-align:center;border-bottom:1px solid rgba(61,255,140,0.28);">
+                                <h1 style="margin:0;font-size:28px;color:#3dffa0;">
+                                    VortexHost
+                                </h1>
+                                <p style="margin:8px 0 0 0;color:#87b89d;font-size:14px;">
+                                    Verificação de e-mail
+                                </p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:32px;">
+
+                                <p style="margin:0 0 20px 0;font-size:16px;line-height:1.6;color:#f0fdf6;">
+                                    Olá, <strong>{$name}</strong>.
+                                </p>
+
+                                <p style="margin:0 0 28px 0;font-size:15px;line-height:1.7;color:#87b89d;">
+                                    Use o código abaixo para verificar seu endereço de e-mail.
+                                    Este código é válido por <strong style="color:#f0fdf6;">15 minutos</strong>.
+                                </p>
+
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td align="center">
+                                            <div style="display:inline-block;background:#0c1a11;border:1px solid rgba(61,255,140,0.28);border-radius:12px;padding:24px 48px;text-align:center;">
+                                                <p style="margin:0 0 8px 0;font-size:12px;color:#87b89d;letter-spacing:2px;text-transform:uppercase;">
+                                                    Seu código
+                                                </p>
+                                                <p style="margin:0;font-size:36px;font-weight:bold;color:#3dffa0;letter-spacing:10px;">
+                                                    {$code}
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <p style="margin:32px 0 0 0;font-size:14px;line-height:1.7;color:#87b89d;">
+                                    Se você não solicitou este código, ignore este e-mail. Sua conta permanece segura.
+                                </p>
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:24px 32px;background:#050c08;border-top:1px solid rgba(61,255,140,0.1);">
+                                <p style="margin:0;font-size:13px;color:#4c6d5c;text-align:center;">
+                                    © VortexHost — Infraestrutura de alta performance.
+                                </p>
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>
+    HTML;
+
+        Mail::html($html, function ($message) use ($user) {
             $message->to($user->email)
-                ->subject('Código de verificação - Vortex');
+                ->subject('Código de verificação - VortexHost');
+        });
+    }
+
+    private function sendPasswordResetCodeEmail(User $user, string $code): void
+    {
+        $name = e($user->nome ?: 'cliente');
+
+        $html = <<<HTML
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Código para trocar senha - VortexHost</title>
+</head>
+<body style="margin:0;padding:0;background-color:#050c08;font-family:Arial,sans-serif;color:#f0fdf6;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background:#071009;border-radius:12px;overflow:hidden;border:1px solid rgba(61,255,140,0.28);">
+                    <tr>
+                        <td style="background:linear-gradient(135deg,#0d2e1a 0%,#0a2416 100%);padding:28px 32px;text-align:center;border-bottom:1px solid rgba(61,255,140,0.28);">
+                            <h1 style="margin:0;font-size:28px;color:#3dffa0;">VortexHost</h1>
+                            <p style="margin:8px 0 0 0;color:#87b89d;font-size:14px;">Recuperação de senha</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:32px;">
+                            <p style="margin:0 0 20px 0;font-size:16px;line-height:1.6;color:#f0fdf6;">
+                                Olá, <strong>{$name}</strong>.
+                            </p>
+
+                            <p style="margin:0 0 28px 0;font-size:15px;line-height:1.7;color:#87b89d;">
+                                Use o código abaixo para continuar a troca da sua senha.
+                                Este código é válido por <strong style="color:#f0fdf6;">5 Minutos </strong>.
+                            </p>
+
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td align="center">
+                                        <div style="display:inline-block;background:#0c1a11;border:1px solid rgba(61,255,140,0.28);border-radius:12px;padding:24px 48px;text-align:center;">
+                                            <p style="margin:0 0 8px 0;font-size:12px;color:#87b89d;letter-spacing:2px;text-transform:uppercase;">Seu código</p>
+                                            <p style="margin:0;font-size:36px;font-weight:bold;color:#3dffa0;letter-spacing:10px;">{$code}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin:32px 0 0 0;font-size:14px;line-height:1.7;color:#87b89d;">
+                                Se você não pediu para trocar a senha, ignore este e-mail.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:24px 32px;background:#050c08;border-top:1px solid rgba(61,255,140,0.1);">
+                            <p style="margin:0;font-size:13px;color:#4c6d5c;text-align:center;">© VortexHost — Infraestrutura de alta performance.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+HTML;
+
+        Mail::html($html, function ($message) use ($user) {
+            $message->to($user->email)
+                ->subject('Código para trocar senha - VortexHost');
         });
     }
 
