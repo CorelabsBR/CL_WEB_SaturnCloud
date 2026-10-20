@@ -15,27 +15,33 @@
     <link rel="canonical" href="{{ url()->current() }}">
     <title>@yield('title', 'Saturn Cloud')</title>
 
-    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('img/saturno_branco_quadrado - Copy.svg') }}">
 
     <link rel="stylesheet" href="{{ asset('css/base.css') }}?v={{ filemtime(public_path('css/base.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}?v={{ filemtime(public_path('css/footer.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/index.css') }}?v={{ filemtime(public_path('css/index.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/auth.css') }}?v={{ filemtime(public_path('css/auth.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/web.css') }}?v={{ filemtime(public_path('css/web.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/register.css') }}?v={{ filemtime(public_path('css/register.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/cart.css') }}?v={{ filemtime(public_path('css/cart.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/vps.css') }}?v={{ filemtime(public_path('css/vps.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/dash.css') }}?v={{ filemtime(public_path('css/dash.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/checkout.css') }}?v={{ filemtime(public_path('css/checkout.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/responsive.css') }}?v={{ filemtime(public_path('css/responsive.css')) }}">
+    @if(request()->routeIs('home'))
+        <link rel="stylesheet" href="{{ asset('css/index.css') }}?v={{ filemtime(public_path('css/index.css')) }}">
+    @elseif(request()->routeIs('vps.index'))
+        <link rel="stylesheet" href="{{ asset('css/vps.css') }}?v={{ filemtime(public_path('css/vps.css')) }}">
+    @else
+        <link rel="stylesheet" href="{{ asset('css/index.css') }}?v={{ filemtime(public_path('css/index.css')) }}">
+        <link rel="stylesheet" href="{{ asset('css/auth.css') }}?v={{ filemtime(public_path('css/auth.css')) }}">
+        <link rel="stylesheet" href="{{ asset('css/web.css') }}?v={{ filemtime(public_path('css/web.css')) }}">
+        <link rel="stylesheet" href="{{ asset('css/register.css') }}?v={{ filemtime(public_path('css/register.css')) }}">
+        <link rel="stylesheet" href="{{ asset('css/cart.css') }}?v={{ filemtime(public_path('css/cart.css')) }}">
+        <link rel="stylesheet" href="{{ asset('css/dash.css') }}?v={{ filemtime(public_path('css/dash.css')) }}">
+        <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
+        <link rel="stylesheet" href="{{ asset('css/checkout.css') }}?v={{ filemtime(public_path('css/checkout.css')) }}">
+        <link rel="stylesheet" href="{{ asset('css/responsive.css') }}?v={{ filemtime(public_path('css/responsive.css')) }}">
+    @endif
     <link rel="stylesheet" href="{{ asset('css/notifications.css') }}?v={{ filemtime(public_path('css/notifications.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/system.css') }}?v={{ filemtime(public_path('css/system.css')) }}">
 
 
     @stack('styles')
-    <script type="application/ld+json">{!! json_encode(['@context' => 'https://schema.org', '@type' => 'Organization', 'name' => 'Saturn Cloud', 'url' => url('/'), 'logo' => asset('img/saturn-cloud-logo-full.svg'), 'email' => 'contato@corelabs.dev.br', 'parentOrganization' => ['@type' => 'Organization', 'name' => 'CoreLabs']], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!}</script>
+    @php($schemaContext = '@context')
+    <script type="application/ld+json">{!! json_encode([$schemaContext => 'https://schema.org', '@type' => 'Organization', 'name' => 'Saturn Cloud', 'url' => url('/'), 'logo' => asset('img/saturno_branco_quadrado - Copy.svg'), 'email' => 'contato@corelabs.dev.br', 'parentOrganization' => ['@type' => 'Organization', 'name' => 'CoreLabs']], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!}</script>
 </head>
 
 <body class="@yield('body_class')">

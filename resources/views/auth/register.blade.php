@@ -19,7 +19,7 @@
 <section class="register-split">
     <aside class="register-panel">
         <div class="register-panel-inner">
-            <img src="{{ asset('img/saturn-cloud-logo-full.svg') }}" alt="Saturn Cloud" class="register-logo">
+            <img src="{{ asset('img/saturno_branco_quadrado.svg') }}" alt="Saturn Cloud" class="register-logo">
 
             <h2 class="register-panel-title">Comece com estrutura de verdade.</h2>
 

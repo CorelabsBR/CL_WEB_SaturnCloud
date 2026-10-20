@@ -4,8 +4,9 @@
     <div class="container">
         <nav class="nav-inner">
 
-            <a class="brand" href="{{ url('/') }}">
-                <img src="{{ asset('img/saturn-cloud-mark.svg') }}" alt="Saturn Cloud" id="logo_img">
+            <a class="brand" href="{{ url('/') }}" aria-label="Saturn Cloud — página inicial">
+                <img src="{{ asset('img/saturno_branco_quadrado.svg') }}" alt="" class="site-logo" width="44" height="44">
+                <span class="site-brand-name">Saturn <strong>Cloud</strong></span>
             </a>
 
             @php
@@ -35,21 +36,13 @@
                 </li>
                 <li>
                     <a
-                        href="{{ url('/vps') }}"
-                        class="{{ $navActive(['vps', 'vps/*']) }}"
-                    >
-                        VPS
-                    </a>
-                </li>
-
-                <li>
-                    <a
                         href="{{ url('/web') }}"
                         class="{{ $navActive(['web', 'web/*']) }}"
                     >
                         Hospedagem Web
                     </a>
                 </li>
+                <li><a href="{{ url('/vps') }}" class="{{ $navActive(['vps', 'vps/*']) }}">Servidores VPS</a></li>
                 <li><a href="{{ route('pages.show', 'infraestrutura') }}" class="{{ $navActive(['infraestrutura']) }}">Infraestrutura</a></li>
                 <li>
                     <a href="{{ route('help.index') }}" class="{{ $navActive(['ajuda', 'ajuda/*']) }}">Ajuda</a>
@@ -122,7 +115,7 @@
                     </a>
 
                     <a class="btn btn-primary btn-sm" href="{{ url('/registro') }}">
-                        Criar conta
+                        Começar agora
                     </a>
                 @endauth
             </div>

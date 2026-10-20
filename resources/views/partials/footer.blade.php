@@ -4,7 +4,8 @@
 
             <div class="footer-brand">
                 <div class="brand">
-                    <img src="{{ asset('img/saturn-cloud-logo-full.svg') }}" alt="Saturn Cloud" id="logo_img">
+                    <img src="{{ asset('img/saturno_branco_quadrado.svg') }}" alt="" class="footer-logo" width="50" height="50">
+                    <span class="footer-brand-name">Saturn <strong>Cloud</strong></span>
                 </div>
 
                 <p>Hospedagem e infraestrutura digital com informações comerciais claras e gestão pela área do cliente.</p>
@@ -53,16 +54,6 @@
             <div class="footer-col">
                 <h4>Empresa</h4>
 
-                <div class="social-icons">
-                    <a href="https://www.instagram.com/vortexhostbr/" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="2" width="20" height="20" rx="5"></rect>
-                            <circle cx="12" cy="12" r="4"></circle>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                        </svg>
-                    </a>
-
-                </div>
                 <ul class="footer-links"><li><a href="{{ route('pages.show', 'sobre') }}">Sobre a Saturn Cloud</a></li><li><a href="{{ route('pages.show', 'infraestrutura') }}">Infraestrutura</a></li></ul>
             </div>
 

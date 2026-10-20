@@ -20,7 +20,7 @@
 <div class="auth-split">
     <div class="auth-panel">
         <div class="auth-panel-inner">
-            <img src="{{ asset('img/saturn-cloud-logo-full.svg') }}" alt="Saturn Cloud" class="auth-logo">
+            <img src="{{ asset('img/saturno_branco_quadrado.svg') }}" alt="Saturn Cloud" class="auth-logo">
 
             <h2 class="auth-panel-title">Recupere o acesso.</h2>
 

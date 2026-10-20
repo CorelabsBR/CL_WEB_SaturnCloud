@@ -1,3 +1,4 @@
+@import url("./brand.css");
 .register-body {
     margin: 0;
     min-height: 100vh;
@@ -15,8 +16,8 @@
 .complete-profile-body,
 .complete-profile-body .register-main {
     background:
-        radial-gradient(circle at 50% -20%, rgba(139, 92, 246, .075), transparent 38%),
-        #050806;
+        radial-gradient(circle at 50% -20%, rgb(var(--brand-rgb) / .075), transparent 38%),
+        var(--bg);
 }
 
 .register-back {
@@ -51,7 +52,7 @@
     justify-content: center;
     padding: 3rem;
     background:
-        radial-gradient(circle at center, rgba(139, 92, 246,.08), transparent 55%),
+        radial-gradient(circle at center, rgb(var(--brand-rgb) / .08), transparent 55%),
         #0d0d0d;
     border-right: 1px solid rgba(255,255,255,.08);
 }
@@ -67,9 +68,9 @@
 
 .register-logo {
     display: block;
-    width: 72px;
+    width: 190px;
     margin: 0 auto 1.5rem;
-    filter: drop-shadow(0 0 18px rgba(139, 92, 246,.3));
+    filter: drop-shadow(0 0 18px rgb(var(--brand-rgb) / .3));
 }
 
 .register-panel-title {
@@ -90,8 +91,8 @@
     display: flex;
     justify-content: center;
     gap: 1rem;
-    background: rgba(139, 92, 246,.04);
-    border: 1px solid rgba(139, 92, 246,.12);
+    background: rgb(var(--brand-rgb) / .04);
+    border: 1px solid rgb(var(--brand-rgb) / .12);
     border-radius: 14px;
     padding: 1rem;
 }
@@ -103,7 +104,7 @@
 }
 
 .register-stats strong {
-    color: #8B5CF6;
+    color: var(--accent);
     font-size: 1rem;
 }
 
@@ -151,20 +152,20 @@
     width: 58px;
     height: 58px;
     place-items: center;
-    border: 1px solid rgba(139, 92, 246, .18);
+    border: 1px solid rgb(var(--brand-rgb) / .18);
     border-radius: 14px;
-    background: #0b130f;
+    background: var(--bg);
 }
 
 .complete-profile-logo {
-    width: 38px;
-    filter: drop-shadow(0 0 14px rgba(139, 92, 246, .22));
+    width: 180px;
+    filter: drop-shadow(0 0 14px rgb(var(--brand-rgb) / .22));
 }
 
 .complete-profile-eyebrow {
     display: block;
     margin-bottom: .55rem;
-    color: #8B5CF6;
+    color: var(--accent);
     font-size: .7rem;
     font-weight: 850;
     letter-spacing: .14em;
@@ -196,7 +197,7 @@
 
 .complete-profile-progress strong {
     margin-left: .35rem;
-    color: #89efb3;
+    color: var(--accent-hover);
 }
 
 .complete-profile-content {
@@ -209,9 +210,9 @@
     margin: 0 0 1.35rem;
     padding: 1.75rem 1.75rem .7rem;
     border: 1px solid rgba(255, 255, 255, .075);
-    border-top-color: rgba(139, 92, 246, .28);
+    border-top-color: rgb(var(--brand-rgb) / .28);
     border-radius: 12px;
-    background: #090e0c;
+    background: var(--bg);
     box-shadow: 0 18px 50px rgba(0, 0, 0, .2);
 }
 
@@ -220,7 +221,7 @@
     align-items: baseline;
     gap: .65rem;
     padding: 0 .2rem;
-    color: #FAFAFA;
+    color: var(--text);
 }
 
 .profile-section legend strong {
@@ -229,7 +230,7 @@
 }
 
 .profile-section legend small {
-    color: #A1A1AA;
+    color: var(--accent);
     font-size: .76rem;
     font-weight: 500;
 }
@@ -268,17 +269,17 @@
     padding: .8rem .9rem;
     border-color: rgba(255, 255, 255, .09) !important;
     border-radius: 7px !important;
-    background-color: #0e1512 !important;
+    background-color: var(--bg) !important;
 }
 
 .complete-profile-body .register-input:hover {
-    border-color: rgba(139, 92, 246, .2) !important;
-    background-color: #111b16 !important;
+    border-color: rgb(var(--brand-rgb) / .2) !important;
+    background-color: var(--bg) !important;
 }
 
 .complete-profile-body .register-input:focus {
-    border-color: #8B5CF6 !important;
-    background-color: #111b16 !important;
+    border-color: var(--accent) !important;
+    background-color: var(--bg) !important;
 }
 
 .cep-status {
@@ -294,7 +295,7 @@
 
 .register-input.is-loading {
     padding-right: 2.75rem;
-    background-image: linear-gradient(90deg, transparent, rgba(139, 92, 246, .08), transparent) !important;
+    background-image: linear-gradient(90deg, transparent, rgb(var(--brand-rgb) / .08), transparent) !important;
     background-size: 200% 100% !important;
     animation: cep-loading 1.15s linear infinite;
 }
@@ -365,7 +366,7 @@
 }
 
 .register-label {
-    color: rgba(240,253,246,.72);
+    color: rgb(var(--brand-rgb) / .72);
     font-size: .72rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -389,8 +390,8 @@
 }
 
 .register-input:focus {
-    border-color: #8B5CF6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246,.12);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgb(var(--brand-rgb) / .12);
 }
 
 .register-input::placeholder {
@@ -423,8 +424,8 @@
     border-radius: 999px;
     padding: 1rem;
     margin-top: .4rem;
-    background: #8B5CF6;
-    color: #fafafa;
+    background: var(--accent);
+    color: var(--bg);
     font-weight: 900;
     cursor: pointer;
     font-size: .95rem;
@@ -442,7 +443,7 @@
 }
 
 .register-note a {
-    color: #8B5CF6;
+    color: var(--accent);
     font-weight: 800;
     text-decoration: none;
 }
@@ -457,7 +458,7 @@
     margin-top: 1rem;
     border: 0;
     background: transparent;
-    color: #8B5CF6;
+    color: var(--accent);
     font-size: .9rem;
     font-weight: 800;
     cursor: pointer;
@@ -514,7 +515,7 @@
         height: 50px;
     }
 
-    .complete-profile-logo { width: 34px; }
+    .complete-profile-logo { width: 160px; }
 
     .complete-profile-progress {
         display: none;
@@ -578,9 +579,9 @@
 }
 
 .register-alert-success {
-    background: rgba(139, 92, 246,.08);
-    border-color: rgba(139, 92, 246,.22);
-    color: #ddd6fe;
+    background: rgba(61,255,160,.08);
+    border-color: rgba(61,255,160,.22);
+    color: #9fffcf;
 }
 
 .register-error {
