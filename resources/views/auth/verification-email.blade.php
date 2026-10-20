@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Verificar E-mail - VortexHost')
+@section('title', 'Verificar E-mail - Saturn Cloud')
 @section('body_class', 'register-body')
 @section('hide_header', true)
 @section('hide_footer', true)
@@ -19,7 +19,7 @@
 <section class="register-split">
     <aside class="register-panel">
         <div class="register-panel-inner">
-            <img src="{{ asset('img/vortexhost-logo-full.png') }}" alt="VortexHost" class="register-logo">
+            <img src="{{ asset('img/saturn-cloud-logo-full.svg') }}" alt="Saturn Cloud" class="register-logo">
 
             <h2 class="register-panel-title">Confirme seu e-mail.</h2>
 

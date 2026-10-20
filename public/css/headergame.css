@@ -99,10 +99,10 @@
     min-width: 22px !important;
     height: 22px !important;
     padding: 0 .4rem !important;
-    border: 1px solid rgba(61, 255, 160, .35) !important;
+    border: 1px solid rgba(139, 92, 246, .35) !important;
     border-radius: 999px !important;
-    background: var(--accent, #3dffa0) !important;
-    color: #031408 !important;
+    background: var(--accent, #8B5CF6) !important;
+    color: #fafafa !important;
     font-family: 'Inter','Segoe UI',system-ui,-apple-system,sans-serif !important;
     font-size: .7rem !important;
     font-weight: 950 !important;
@@ -178,8 +178,8 @@
     height: 24px !important;
     padding: 0 .45rem !important;
     border-radius: 999px !important;
-    background: var(--accent, #3dffa0) !important;
-    color: #031408 !important;
+    background: var(--accent, #8B5CF6) !important;
+    color: #fafafa !important;
     font-family: 'Inter','Segoe UI',system-ui,-apple-system,sans-serif !important;
     font-size: .72rem !important;
     font-weight: 950 !important;

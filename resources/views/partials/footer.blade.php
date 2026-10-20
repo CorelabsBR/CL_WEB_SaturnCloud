@@ -4,7 +4,7 @@
 
             <div class="footer-brand">
                 <div class="brand">
-                    <img src="{{ asset('img/vortexhost-logo-full.png') }}" alt="VortexHost" id="logo_img">
+                    <img src="{{ asset('img/saturn-cloud-logo-full.svg') }}" alt="Saturn Cloud" id="logo_img">
                 </div>
 
                 <p>Hospedagem e infraestrutura digital com informações comerciais claras e gestão pela área do cliente.</p>
@@ -63,14 +63,14 @@
                     </a>
 
                 </div>
-                <ul class="footer-links"><li><a href="{{ route('pages.show', 'sobre') }}">Sobre a Vortex</a></li><li><a href="{{ route('pages.show', 'infraestrutura') }}">Infraestrutura</a></li></ul>
+                <ul class="footer-links"><li><a href="{{ route('pages.show', 'sobre') }}">Sobre a Saturn Cloud</a></li><li><a href="{{ route('pages.show', 'infraestrutura') }}">Infraestrutura</a></li></ul>
             </div>
 
         </div>
 
         <div class="footer-bottom">
             <span class="footer-copy">
-                © {{ date('Y') }} VortexHost. Todos os direitos reservados.
+                © {{ date('Y') }} Saturn Cloud. Todos os direitos reservados.
             </span>
 
             <div class="footer-payments">

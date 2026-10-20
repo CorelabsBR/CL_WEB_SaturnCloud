@@ -301,7 +301,7 @@ private function sendMonthlyInvoiceEmail(Order $order): void
     try {
         Mail::html($this->monthlyInvoiceEmailBody($order, $user), function ($message) use ($order, $user) {
             $message->to($user->email, $user->nome)
-                ->subject('Fatura mensal pendente - VortexHost #' . str_pad((string) $order->id, 6, '0', STR_PAD_LEFT));
+                ->subject('Fatura mensal pendente - Saturn Cloud #' . str_pad((string) $order->id, 6, '0', STR_PAD_LEFT));
         });
     } catch (\Throwable $e) {
         Log::warning('Falha ao enviar email de fatura mensal pendente', [
@@ -319,7 +319,7 @@ private function monthlyInvoiceEmailBody(Order $order, User $user): string
 
     $serviceName = $service?->name
         ?: $order->items->first()?->product?->nome
-        ?: 'Serviço VortexHost';
+        ?: 'Serviço Saturn Cloud';
 
     $amount = 'R$ ' . number_format((float) $order->total, 2, ',', '.');
 
@@ -336,7 +336,7 @@ return <<<HTML
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Fatura pendente - VortexHost</title>
+    <title>Fatura pendente - Saturn Cloud</title>
 </head>
 <body style="margin:0;padding:0;background-color:#050c08;font-family:Arial,sans-serif;color:#f0fdf6;">
     <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px;">
@@ -346,8 +346,8 @@ return <<<HTML
 
                     <tr>
                         <td style="background:linear-gradient(135deg,#0d2e1a 0%,#0a2416 100%);padding:28px 32px;text-align:center;border-bottom:1px solid rgba(61,255,140,0.28);">
-                            <h1 style="margin:0;font-size:28px;color:#3dffa0;">
-                                VortexHost
+                            <h1 style="margin:0;font-size:28px;color:#8B5CF6;">
+                                Saturn Cloud
                             </h1>
 
                             <p style="margin:8px 0 0 0;color:#87b89d;font-size:14px;">
@@ -394,7 +394,7 @@ return <<<HTML
                                         Valor
                                     </td>
 
-                                    <td align="right" style="padding:10px 0;color:#3dffa0;font-size:16px;font-weight:bold;">
+                                    <td align="right" style="padding:10px 0;color:#8B5CF6;font-size:16px;font-weight:bold;">
                                         {$amount}
                                     </td>
                                 </tr>
@@ -422,7 +422,7 @@ return <<<HTML
                                 suspensão e posterior remoção automática do serviço vinculado.
                             </p>
 
-                            <p style="margin:0;font-size:14px;line-height:1.7;color:#4c6d5c;">
+                            <p style="margin:0;font-size:14px;line-height:1.7;color:#A1A1AA;">
                                 Caso o pagamento já tenha sido realizado, desconsidere esta mensagem.
                             </p>
 
@@ -431,8 +431,8 @@ return <<<HTML
 
                     <tr>
                         <td style="padding:24px 32px;background:#050c08;border-top:1px solid rgba(61,255,140,0.1);">
-                            <p style="margin:0;font-size:13px;color:#4c6d5c;text-align:center;">
-                                © VortexHost — Infraestrutura de alta performance.
+                            <p style="margin:0;font-size:13px;color:#A1A1AA;text-align:center;">
+                                © Saturn Cloud — Infraestrutura de alta performance.
                             </p>
                         </td>
                     </tr>

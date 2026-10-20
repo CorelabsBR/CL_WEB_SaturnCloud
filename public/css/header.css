@@ -66,25 +66,25 @@
 }
 
 /* Bloco da Esquerda: Marca/Logo */
-.brand { 
-    display: flex; 
-    align-items: center; 
-    gap: .75rem; 
-    font-weight: 800; 
-    font-size: 1.05rem; 
+.brand {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    font-weight: 800;
+    font-size: 1.05rem;
     z-index: 10; /* Garante que o logo fique acima de outros elementos se necessário */
 }
 
 .brand-icon {
-    width: 2.5rem; 
-    height: 2.5rem; 
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: .625rem;
-    background: var(--btn-grad); 
-    display: grid; 
+    background: var(--btn-grad);
+    display: grid;
     place-items: center;
-    font-size: 1.1rem; 
-    font-weight: 900; 
-    color: #021108; 
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #fafafa;
     flex-shrink: 0;
     box-shadow: 0 0 20px var(--accent-g);
 }
@@ -113,9 +113,9 @@
     border-radius: 4px;
 }
 
-.nav-links a:hover { 
-    color: var(--text); 
-    background: rgba(255,255,255,.04); 
+.nav-links a:hover {
+    color: var(--text);
+    background: rgba(255,255,255,.04);
 }
 
 /* Bloco da Direita: Ações/Botões */
@@ -185,22 +185,22 @@
     min-width: 22px !important;
     height: 22px !important;
     padding: 0 0.4rem !important;
-    border: 1px solid rgba(61, 255, 160, 0.35) !important;
+    border: 1px solid rgba(139, 92, 246, 0.35) !important;
     border-radius: 999px !important;
-    background: var(--accent, #3dffa0) !important;
-    color: #031408 !important;
+    background: var(--accent, #8B5CF6) !important;
+    color: #fafafa !important;
     font-family: 'Inter','Segoe UI',system-ui,-apple-system,sans-serif !important;
     font-size: 0.7rem !important;
     font-weight: 950 !important;
     line-height: 1 !important;
     letter-spacing: 0 !important;
     text-shadow: none !important;
-    box-shadow: 0 8px 18px rgba(61, 255, 160, 0.2) !important;
+    box-shadow: 0 8px 18px rgba(139, 92, 246, 0.2) !important;
 }
 
-.nav-area-note { 
-    font-size: .78rem; 
-    color: var(--white-menos); 
+.nav-area-note {
+    font-size: .78rem;
+    color: var(--white-menos);
 }
 
 /* ============================================================
@@ -208,21 +208,21 @@
 ============================================================ */
 
 .hamburger {
-    display: none; 
-    flex-direction: column; 
+    display: none;
+    flex-direction: column;
     gap: 5px;
-    background: none; 
-    border: none; 
-    cursor: pointer; 
+    background: none;
+    border: none;
+    cursor: pointer;
     padding: .5rem;
 }
 
 .hamburger span {
-    display: block; 
-    width: 22px; 
-    height: 2px; 
+    display: block;
+    width: 22px;
+    height: 2px;
     background: var(--text);
-    border-radius: 2px; 
+    border-radius: 2px;
     transition: transform .3s, opacity .3s;
 }
 
@@ -233,24 +233,24 @@
 
 /* Menu que aparece no Mobile abaixo do Header */
 .mobile-nav {
-    display: none; 
-    flex-direction: column; 
+    display: none;
+    flex-direction: column;
     gap: .2rem;
-    padding: .75rem 0 1rem; 
+    padding: .75rem 0 1rem;
     border-top: 1px solid var(--border);
 }
 
 .mobile-nav a {
-    padding: .75rem 1rem; 
+    padding: .75rem 1rem;
     border-radius: var(--r-sm);
-    color: var(--muted); 
-    font-weight: 500; 
+    color: var(--muted);
+    font-weight: 500;
     transition: all var(--ease);
 }
 
-.mobile-nav a:hover { 
-    color: var(--text); 
-    background: var(--accent-d); 
+.mobile-nav a:hover {
+    color: var(--text);
+    background: var(--accent-d);
 }
 
 .mobile-nav a.active {
@@ -273,8 +273,8 @@
     height: 24px !important;
     padding: 0 0.45rem !important;
     border-radius: 999px !important;
-    background: var(--accent, #3dffa0) !important;
-    color: #031408 !important;
+    background: var(--accent, #8B5CF6) !important;
+    color: #fafafa !important;
     font-family: 'Inter','Segoe UI',system-ui,-apple-system,sans-serif !important;
     font-size: 0.72rem !important;
     font-weight: 950 !important;
@@ -283,8 +283,8 @@
     text-shadow: none !important;
 }
 
-.mobile-nav.open { 
-    display: flex; 
+.mobile-nav.open {
+    display: flex;
 }
 
 /* ============================================================
@@ -441,7 +441,7 @@
     .nav-links {
         display: none;
     }
-    
+
     .hamburger {
         display: flex;
     }
@@ -454,7 +454,7 @@
         width: 42px;
         padding-inline: 0;
     }
-    
+
     .site-header .container {
         padding-inline: 20px; /* Reduz espaçamento lateral no mobile */
     }
@@ -643,9 +643,9 @@
 .sa-hero .profile-btn:hover,
 .terraria-header .profile-btn:hover,
 .game-header .profile-btn:hover {
-    border-color: var(--accent, #3dffa0) !important;
-    background: var(--accent-d, rgba(61,255,160,.08)) !important;
-    color: var(--accent, #3dffa0) !important;
+    border-color: var(--accent, #8B5CF6) !important;
+    background: var(--accent-d, rgba(139, 92, 246,.08)) !important;
+    color: var(--accent, #8B5CF6) !important;
     transform: translateY(-1px) !important;
 }
 
@@ -763,7 +763,7 @@
 .sa-hero .profile-menu-item:hover,
 .terraria-header .profile-menu-item:hover,
 .game-header .profile-menu-item:hover {
-    color: var(--accent, #3dffa0) !important;
+    color: var(--accent, #8B5CF6) !important;
     background: rgba(255,255,255,.05) !important;
 }
 

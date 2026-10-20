@@ -76,7 +76,7 @@ class DashboardController extends Controller
                     default => 'ativo',
                 };
 
-                $name = $service->name ?: $service->product_name ?: 'Serviço Vortex';
+                $name = $service->name ?: $service->product_name ?: 'Serviço Saturn Cloud';
                 $plan = $service->product_name
                     ? $service->product_name
                     : ($service->product_plan ? ucfirst($service->product_plan) : ucfirst($service->type ?: 'Plano'));

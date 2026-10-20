@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Admin - VortexHost')
+@section('title', 'Admin - Saturn Cloud')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}?v={{ filemtime(public_path('css/admin.css')) }}">
@@ -61,7 +61,7 @@
     <div class="container">
         <div class="admin-head">
             <div>
-                <span class="admin-kicker">VortexHost Admin</span>
+                <span class="admin-kicker">Saturn Cloud Admin</span>
                 <h1>Painel administrativo</h1>
                 <p>Gerencie produtos, imagens, pedidos e chamados de suporte em um só lugar.</p>
             </div>

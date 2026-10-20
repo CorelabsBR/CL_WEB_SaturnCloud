@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Checkout - VortexHost')
+@section('title', 'Checkout - Saturn Cloud')
 
 @section('content')
 <section class="checkout-page">

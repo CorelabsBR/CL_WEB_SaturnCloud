@@ -197,7 +197,7 @@
     height: 48px;
     border-radius: 14px;
     background: var(--accent-d);
-    border: 1px solid rgba(61, 255, 160, 0.18);
+    border: 1px solid rgba(139, 92, 246, 0.18);
     color: var(--accent);
     font-size: 1.1rem;
     font-weight: 900;
@@ -297,15 +297,15 @@
 }
 
 .sidebar-nav a:hover {
-    border-color: rgba(61, 255, 160, 0.18);
-    background: rgba(61, 255, 160, 0.075);
+    border-color: rgba(139, 92, 246, 0.18);
+    background: rgba(139, 92, 246, 0.075);
     transform: translateY(-1px);
 }
 
 .sidebar-nav a.active {
-    border-color: rgba(61, 255, 160, 0.34);
+    border-color: rgba(139, 92, 246, 0.34);
     background:
-        linear-gradient(90deg, rgba(61, 255, 160, 0.14), rgba(61, 255, 160, 0.04)),
+        linear-gradient(90deg, rgba(139, 92, 246, 0.14), rgba(139, 92, 246, 0.04)),
         rgba(255, 255, 255, 0.025);
     color: var(--accent);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
@@ -405,8 +405,8 @@
 
 .dashboard-tab-nav a:hover,
 .dashboard-tab-nav a.active {
-    border-color: rgba(61, 255, 160, 0.24);
-    background: rgba(61, 255, 160, 0.075);
+    border-color: rgba(139, 92, 246, 0.24);
+    background: rgba(139, 92, 246, 0.075);
 }
 
 .dashboard-tab-nav a:hover {
@@ -415,7 +415,7 @@
 
 .dashboard-tab-nav a.active {
     background:
-        linear-gradient(180deg, rgba(61, 255, 160, 0.15), rgba(61, 255, 160, 0.065)),
+        linear-gradient(180deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.065)),
         rgba(255, 255, 255, 0.025);
 }
 
@@ -448,7 +448,7 @@
     border: 1px solid var(--border);
     border-radius: var(--r-lg);
     background:
-        radial-gradient(circle at top left, rgba(61, 255, 160, .13), transparent 36%),
+        radial-gradient(circle at top left, rgba(139, 92, 246, .13), transparent 36%),
         linear-gradient(180deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .018)),
         rgba(4, 15, 8, .78);
     box-shadow: var(--shadow-sm);
@@ -475,9 +475,9 @@
     place-items: center;
     width: 64px;
     height: 64px;
-    border: 1px solid rgba(61, 255, 160, .24);
+    border: 1px solid rgba(139, 92, 246, .24);
     border-radius: 18px;
-    background: linear-gradient(135deg, rgba(61, 255, 160, .22), rgba(61, 255, 160, .05));
+    background: linear-gradient(135deg, rgba(139, 92, 246, .22), rgba(139, 92, 246, .05));
     color: var(--accent);
     font-size: 1.45rem;
     font-weight: 950;
@@ -514,9 +514,9 @@
     display: grid;
     gap: .35rem;
     padding: 1rem;
-    border: 1px solid rgba(61, 255, 160, .12);
+    border: 1px solid rgba(139, 92, 246, .12);
     border-radius: var(--r-sm);
-    background: rgba(61, 255, 160, .055);
+    background: rgba(139, 92, 246, .055);
 }
 
 .profile-edit-note strong {
@@ -541,7 +541,7 @@
 .profile-edit-head {
     padding-bottom: 1.25rem;
     margin-bottom: 1.25rem;
-    border-bottom: 1px solid rgba(61, 255, 160, .1);
+    border-bottom: 1px solid rgba(139, 92, 246, .1);
 }
 
 .profile-edit-head h2 {
@@ -579,7 +579,7 @@
     width: 100%;
     min-height: 54px;
     padding: 0 1rem;
-    border: 1px solid rgba(61, 255, 160, .13);
+    border: 1px solid rgba(139, 92, 246, .13);
     border-radius: var(--r-sm);
     outline: none;
     background: rgba(0, 0, 0, .24);
@@ -591,7 +591,7 @@
 .profile-field input:focus {
     border-color: var(--accent);
     background: rgba(0, 0, 0, .32);
-    box-shadow: 0 0 0 4px rgba(61, 255, 160, .08);
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, .08);
 }
 
 .profile-field small {
@@ -677,7 +677,7 @@
     width: 52px;
     height: 52px;
     border-radius: 16px;
-    background: rgba(61, 255, 160, 0.055);
+    background: rgba(139, 92, 246, 0.055);
     pointer-events: none;
 }
 
@@ -700,9 +700,9 @@
     place-items: center;
     width: 34px;
     height: 34px;
-    border: 1px solid rgba(61, 255, 160, 0.18);
+    border: 1px solid rgba(139, 92, 246, 0.18);
     border-radius: 12px;
-    background: rgba(61, 255, 160, 0.1);
+    background: rgba(139, 92, 246, 0.1);
     color: var(--accent);
     opacity: 1;
 }
@@ -714,8 +714,8 @@
 }
 
 .dash-card-service-icon {
-    border-color: rgba(61, 255, 160, 0.2);
-    background: rgba(61, 255, 160, 0.11);
+    border-color: rgba(139, 92, 246, 0.2);
+    background: rgba(139, 92, 246, 0.11);
     color: var(--accent);
 }
 
@@ -750,7 +750,7 @@
 
 .dash-card-account {
     background:
-        radial-gradient(circle at top right, rgba(61, 255, 160, 0.12), transparent 38%),
+        radial-gradient(circle at top right, rgba(139, 92, 246, 0.12), transparent 38%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.014));
 }
 
@@ -904,9 +904,9 @@
     height: 100%;
     border-radius: inherit;
     background: linear-gradient(90deg,
-        rgba(61, 255, 160, 0.55),
+        rgba(139, 92, 246, 0.55),
         var(--accent));
-    box-shadow: 0 0 14px rgba(61, 255, 160, 0.28);
+    box-shadow: 0 0 14px rgba(139, 92, 246, 0.28);
 }
 
 .resource-meter-meta {
@@ -957,7 +957,7 @@
 
 .service-card:hover,
 .service-row:hover {
-    border-color: rgba(61, 255, 160, 0.16);
+    border-color: rgba(139, 92, 246, 0.16);
     background: rgba(255, 255, 255, 0.035);
     transform: translateY(-1px);
 }
@@ -1107,7 +1107,7 @@
 
 .invoice-slip {
     overflow: hidden;
-    border: 1px solid rgba(61, 255, 160, 0.16);
+    border: 1px solid rgba(139, 92, 246, 0.16);
     border-radius: 16px;
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018)),
@@ -1139,9 +1139,9 @@
     place-items: center;
     width: 42px;
     height: 42px;
-    border: 1px solid rgba(61, 255, 160, 0.28);
+    border: 1px solid rgba(139, 92, 246, 0.28);
     border-radius: 12px;
-    background: rgba(61, 255, 160, 0.12);
+    background: rgba(139, 92, 246, 0.12);
     color: var(--accent);
     font-size: 1.15rem;
     font-weight: 950;
@@ -1222,7 +1222,7 @@
 }
 
 .invoice-slip-fields .invoice-slip-amount {
-    background: rgba(61, 255, 160, 0.045);
+    background: rgba(139, 92, 246, 0.045);
 }
 
 .invoice-slip-fields .invoice-slip-amount strong {
@@ -1237,10 +1237,10 @@
     align-items: center;
     margin: 1rem 1.15rem;
     padding: 1rem;
-    border: 1px solid rgba(61, 255, 160, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.2);
     border-radius: 14px;
     background:
-        radial-gradient(circle at left, rgba(61, 255, 160, 0.1), transparent 46%),
+        radial-gradient(circle at left, rgba(139, 92, 246, 0.1), transparent 46%),
         rgba(0, 0, 0, 0.18);
 }
 
@@ -1313,9 +1313,9 @@
     justify-content: center;
     min-height: 36px;
     padding: 0.55rem 0.75rem;
-    border: 1px solid rgba(61, 255, 160, 0.25);
+    border: 1px solid rgba(139, 92, 246, 0.25);
     border-radius: 9px;
-    background: rgba(61, 255, 160, 0.1);
+    background: rgba(139, 92, 246, 0.1);
     color: var(--accent);
     font: inherit;
     font-size: 0.75rem;
@@ -1446,7 +1446,7 @@
 .service-action:hover,
 .service-actions button:hover,
 .service-actions a:hover {
-    border-color: rgba(61, 255, 160, 0.18);
+    border-color: rgba(139, 92, 246, 0.18);
     background: var(--accent-d);
     color: var(--accent);
     transform: translateY(-1px);
@@ -1455,13 +1455,13 @@
 .service-action:focus-visible,
 .service-actions button:focus-visible,
 .service-actions a:focus-visible {
-    outline: 2px solid rgba(61, 255, 160, 0.42);
+    outline: 2px solid rgba(139, 92, 246, 0.42);
     outline-offset: 2px;
 }
 
 .service-action.is-panel {
-    border-color: rgba(61, 255, 160, 0.28);
-    background: rgba(61, 255, 160, 0.12);
+    border-color: rgba(139, 92, 246, 0.28);
+    background: rgba(139, 92, 246, 0.12);
     color: var(--accent);
 }
 
@@ -1487,7 +1487,7 @@
 }
 
 .services-stack .service-row:hover {
-    border-color: rgba(61, 255, 160, 0.2);
+    border-color: rgba(139, 92, 246, 0.2);
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.058), rgba(255, 255, 255, 0.022)),
         rgba(7, 12, 11, 0.74);
@@ -1597,9 +1597,9 @@
 .services-stack .service-usage {
     min-width: 0;
     padding: 0.9rem 1rem;
-    border: 1px solid rgba(61, 255, 160, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.1);
     border-radius: 10px;
-    background: rgba(61, 255, 160, 0.035);
+    background: rgba(139, 92, 246, 0.035);
 }
 
 .service-usage-head {
@@ -1641,8 +1641,8 @@
 }
 
 .services-stack .service-action.is-panel {
-    border-color: rgba(61, 255, 160, 0.32);
-    background: linear-gradient(180deg, rgba(61, 255, 160, 0.2), rgba(61, 255, 160, 0.1));
+    border-color: rgba(139, 92, 246, 0.32);
+    background: linear-gradient(180deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1));
     color: var(--accent);
 }
 
@@ -1659,16 +1659,16 @@
 .dashboard-panel .panel-head .btn-primary {
     min-height: 36px;
     padding: 0.52rem 0.9rem;
-    border: 1px solid rgba(61, 255, 160, 0.28);
+    border: 1px solid rgba(139, 92, 246, 0.28);
     border-radius: 999px;
-    background: linear-gradient(180deg, rgba(61, 255, 160, 0.95), rgba(23, 193, 111, 0.95));
+    background: linear-gradient(180deg, rgba(139, 92, 246, 0.95), rgba(23, 193, 111, 0.95));
     color: #03100a;
     font-weight: 950;
     box-shadow: 0 10px 26px rgba(23, 193, 111, 0.18);
 }
 
 .dashboard-panel .panel-head .btn-primary:hover {
-    border-color: rgba(61, 255, 160, 0.45);
+    border-color: rgba(139, 92, 246, 0.45);
     background: linear-gradient(180deg, rgba(88, 255, 178, 1), rgba(31, 213, 126, 1));
     transform: translateY(-1px);
 }
@@ -1696,9 +1696,9 @@
     align-items: center;
     min-height: 30px;
     padding: 0.28rem 0.58rem;
-    border: 1px solid rgba(61, 255, 160, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.12);
     border-radius: 999px;
-    background: rgba(61, 255, 160, 0.045);
+    background: rgba(139, 92, 246, 0.045);
     color: var(--White-title);
     font-weight: 800;
     line-height: 1.25;
@@ -1782,9 +1782,9 @@
 
 .services-search input:focus,
 .services-table-footer select:focus {
-    border-color: rgba(61, 255, 160, 0.36);
+    border-color: rgba(139, 92, 246, 0.36);
     background: rgba(9, 15, 15, 0.96);
-    box-shadow: 0 0 0 3px rgba(61, 255, 160, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.035);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.035);
     outline: 0;
 }
 
@@ -1884,8 +1884,8 @@
 }
 
 .services-table tbody tr:hover {
-    background: rgba(61, 255, 160, 0.042);
-    box-shadow: inset 3px 0 0 rgba(61, 255, 160, 0.58);
+    background: rgba(139, 92, 246, 0.042);
+    box-shadow: inset 3px 0 0 rgba(139, 92, 246, 0.58);
 }
 
 .services-table tbody tr:last-child td {
@@ -1945,9 +1945,9 @@
     min-height: 27px;
     margin-top: 0;
     padding: 0.3rem 0.52rem;
-    border: 1px solid rgba(61, 255, 160, 0.32);
+    border: 1px solid rgba(139, 92, 246, 0.32);
     border-radius: 8px;
-    background: linear-gradient(180deg, rgba(61, 255, 160, 0.14), rgba(61, 255, 160, 0.075));
+    background: linear-gradient(180deg, rgba(139, 92, 246, 0.14), rgba(139, 92, 246, 0.075));
     color: var(--accent);
     font-size: 0.68rem;
     font-weight: 900;
@@ -1968,8 +1968,8 @@
 }
 
 .table-panel-link:hover {
-    border-color: rgba(61, 255, 160, 0.48);
-    background: rgba(61, 255, 160, 0.16);
+    border-color: rgba(139, 92, 246, 0.48);
+    background: rgba(139, 92, 246, 0.16);
     transform: translateY(-1px);
 }
 
@@ -2201,7 +2201,7 @@ body.has-cancel-modal {
 }
 
 .table-pagination button:not(:disabled):hover {
-    background: rgba(61, 255, 160, 0.1);
+    background: rgba(139, 92, 246, 0.1);
     color: var(--accent);
 }
 
@@ -2230,7 +2230,7 @@ body.has-cancel-modal {
 
 .status-pago,
 .status-ativo {
-    border-color: rgba(61, 255, 160, 0.22);
+    border-color: rgba(139, 92, 246, 0.22);
     background: var(--accent-d);
     color: var(--accent);
 }

@@ -160,6 +160,6 @@ class ProvisioningService
     {
         $suffix = $item->quantidade > 1 ? " {$copy}" : '';
 
-        return ($item->product?->nome ?: 'Serviço VortexHost') . $suffix;
+        return ($item->product?->nome ?: 'Serviço Saturn Cloud') . $suffix;
     }
 }

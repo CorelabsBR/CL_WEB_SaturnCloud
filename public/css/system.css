@@ -1,11 +1,11 @@
-/* VortexHost interface system
+/* Saturn Cloud interface system
    Loaded last so legacy page styles inherit one coherent visual language. */
 
 :root {
-    --surface-0: #0a0b0c;
-    --surface-1: #111315;
-    --surface-2: #181b1e;
-    --line: #2a2f33;
+    --surface-0: #09090B;
+    --surface-1: #18181B;
+    --surface-2: #202024;
+    --line: #303036;
     --font-sans: Inter, "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
     --radius: 12px;
@@ -15,18 +15,22 @@
     --bg2: var(--surface-2);
     --dark-index: var(--surface-0);
     --card: var(--surface-2);
-    --card-hv: #1d2124;
+    --card-hv: #27272A;
     --border: rgba(139, 148, 158, .18);
     --border-s: rgba(139, 148, 158, .34);
-    --text: #e6e8ea;
-    --muted: #8b949e;
-    --dim: #626b73;
-    --White-title: #f7fafc;
-    --white-menos: #d8e1e9;
-    --accent: #00ff88;
-    --accent-d: rgba(0, 255, 136, .1);
-    --accent-g: rgba(0, 255, 136, .22);
-    --btn-grad: #22c55e;
+    --text: #FAFAFA;
+    --muted: #A1A1AA;
+    --dim: #71717A;
+    --White-title: #FAFAFA;
+    --white-menos: #D4D4D8;
+    --accent: #8B5CF6;
+    --accent-hover: #A78BFA;
+    --accent-dark: #6D28D9;
+    --accent-d: rgba(139, 92, 246, .1);
+    --accent-g: rgba(139, 92, 246, .22);
+    --btn-grad: #8B5CF6;
+    --success: #22C55E;
+    --success-d: rgba(34, 197, 94, .12);
     --shadow: 0 24px 56px rgba(0, 0, 0, .32);
     --shadow-sm: 0 10px 24px rgba(0, 0, 0, .24);
     --r: 12px;
@@ -72,7 +76,7 @@ main:focus { outline: none; }
 .skip-link:focus { transform: translateY(0); }
 
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
-    outline: 2px solid #7af0a9;
+    outline: 2px solid #A78BFA;
     outline-offset: 3px;
 }
 
@@ -101,20 +105,20 @@ main:focus { outline: none; }
 }
 
 .btn-primary {
-    border: 1px solid #74eca4;
+    border: 1px solid #A78BFA;
     background: var(--accent);
     color: #07111d;
     box-shadow: none;
 }
 
-.btn-primary:hover { filter: none; transform: translateY(-1px); background: #70eda3; box-shadow: none; }
+.btn-primary:hover { filter: none; transform: translateY(-1px); background: #A78BFA; box-shadow: none; }
 .btn-primary:active { transform: translateY(0); }
 .btn-ghost { border-color: var(--border-s); background: rgba(255, 255, 255, .025); }
-.btn-ghost:hover { border-color: #68df98; background: var(--accent-d); color: #dffbea; }
+.btn-ghost:hover { border-color: #A78BFA; background: var(--accent-d); color: #ede9fe; }
 .btn:disabled, .btn[aria-disabled="true"] { cursor: not-allowed; opacity: .5; transform: none; }
 
 .pill { border-radius: 999px; letter-spacing: .06em; }
-.pill-accent { border-color: rgba(78, 229, 138, .3); background: var(--accent-d); color: #9df1bd; }
+.pill-accent { border-color: rgba(78, 229, 138, .3); background: var(--accent-d); color: #c4b5fd; }
 
 /* Shared shell */
 .site-header {
@@ -125,6 +129,7 @@ main:focus { outline: none; }
 }
 
 #logo_img { width: 44px; height: 44px; }
+.footer-brand #logo_img { width: min(220px, 100%); height: auto; }
 .nav-inner { min-height: 68px; }
 .nav-links a, .nav-actions a { letter-spacing: 0; }
 .nav-links a::after { box-shadow: none !important; }
@@ -218,7 +223,7 @@ main:focus { outline: none; }
     border: 1px solid var(--border-s);
     border-radius: var(--r-sm);
     background: var(--accent-d);
-    color: #8ceeb3;
+    color: #c4b5fd;
 }
 .svc-icon svg, .plan-icon svg { width: 21px; height: 21px; stroke: currentColor; fill: none; stroke-width: 1.8; }
 

@@ -55,7 +55,7 @@ return [
     'access_token' => env('MERCADOPAGO_ACCESS_TOKEN'),
     'webhook_secret' => env('MERCADOPAGO_WEBHOOK_SECRET'),
     'base_url' => env('MERCADOPAGO_BASE_URL', 'https://api.mercadopago.com'),
-    'statement_descriptor' => env('MERCADOPAGO_STATEMENT_DESCRIPTOR', 'VORTEXHOST'),
+    'statement_descriptor' => env('MERCADOPAGO_STATEMENT_DESCRIPTOR', 'SATURNCLOUD'),
 ],
 
 'hestia' => [

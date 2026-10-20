@@ -9,7 +9,7 @@
             <h1>Termos de Serviço</h1>
 
             <p>
-                Ao contratar ou utilizar os serviços da VortexHost, você concorda com as regras,
+                Ao contratar ou utilizar os serviços da Saturn Cloud, você concorda com as regras,
                 limites e responsabilidades descritos nesta página.
             </p>
 
@@ -30,7 +30,7 @@
                 <a href="#uso-aceitavel">Uso aceitável</a>
                 <a href="#sigilo">Sigilo</a>
                 <a href="#responsabilidade-cliente">Resp. do cliente</a>
-                <a href="#responsabilidade-vortex">Resp. da VortexHost</a>
+                <a href="#responsabilidade-vortex">Resp. da Saturn Cloud</a>
                 <a href="#garantias">Garantias</a>
                 <a href="#antifraude">Antifraude</a>
                 <a href="#privacidade">Privacidade</a>
@@ -46,13 +46,13 @@
     <section id="introducao">
         <h2>Introdução</h2>
         <p>
-            A VortexHost estabelece estes Termos de Serviço para regular a contratação,
+            A Saturn Cloud estabelece estes Termos de Serviço para regular a contratação,
             utilização e manutenção dos serviços de hospedagem, servidores de jogos,
             VPS, hospedagem web, painéis e demais produtos digitais oferecidos.
         </p>
         <p>
             Ao criar uma conta, contratar um serviço ou utilizar qualquer recurso da
-            VortexHost, o cliente declara que leu, entendeu e concorda integralmente
+            Saturn Cloud, o cliente declara que leu, entendeu e concorda integralmente
             com estes termos.
         </p>
     </section>
@@ -61,7 +61,7 @@
         <h2>Definições</h2>
         <ul>
             <li><strong>Cliente:</strong> pessoa física ou jurídica que contrata ou utiliza os serviços.</li>
-            <li><strong>Serviço:</strong> qualquer produto digital fornecido pela VortexHost.</li>
+            <li><strong>Serviço:</strong> qualquer produto digital fornecido pela Saturn Cloud.</li>
             <li><strong>Conta:</strong> cadastro usado para acessar painéis, pagamentos e serviços.</li>
             <li><strong>Backup:</strong> cópia de segurança dos arquivos, sob responsabilidade principal do cliente.</li>
             <li><strong>Chargeback:</strong> contestação de pagamento feita pelo cliente junto ao meio de pagamento.</li>
@@ -106,7 +106,7 @@
 
     <section id="uso-aceitavel">
         <h2>4. Política de Uso Aceitável</h2>
-        <p>É proibido utilizar os serviços da VortexHost para:</p>
+        <p>É proibido utilizar os serviços da Saturn Cloud para:</p>
         <ul>
             <li>Atividades ilegais, fraudes, golpes ou violação da legislação brasileira;</li>
             <li>Hospedagem ou distribuição de malware, phishing, botnets ou scripts nocivos;</li>
@@ -122,7 +122,7 @@
     <section id="sigilo">
         <h2>5. Quebra de Sigilo e Autoridades</h2>
         <p>
-            A VortexHost poderá fornecer dados cadastrais, registros de acesso, informações
+            A Saturn Cloud poderá fornecer dados cadastrais, registros de acesso, informações
             técnicas e demais dados necessários quando houver solicitação legal, ordem judicial
             ou requisição válida de autoridade competente.
         </p>
@@ -140,9 +140,9 @@
     </section>
 
     <section id="responsabilidade-vortex">
-        <h2>7. Responsabilidades da VortexHost</h2>
+        <h2>7. Responsabilidades da Saturn Cloud</h2>
         <p>
-            A VortexHost se compromete a prestar os serviços contratados conforme o plano
+            A Saturn Cloud se compromete a prestar os serviços contratados conforme o plano
             escolhido, buscando estabilidade, segurança e disponibilidade da infraestrutura.
         </p>
         <p>
@@ -174,7 +174,7 @@
         <h2>10. Privacidade e Dados</h2>
         <p>
             Os dados do cliente são utilizados para cadastro, pagamento, suporte, segurança,
-            entrega dos serviços e cumprimento de obrigações legais. A VortexHost não vende
+            entrega dos serviços e cumprimento de obrigações legais. A Saturn Cloud não vende
             dados pessoais de clientes.
         </p>
     </section>
@@ -191,7 +191,7 @@
     <section id="limitacao">
         <h2>12. Limitação de Responsabilidade</h2>
         <p>
-            A VortexHost não será responsável por perdas indiretas, lucros cessantes, perda de
+            A Saturn Cloud não será responsável por perdas indiretas, lucros cessantes, perda de
             receita, danos comerciais, perda de dados, interrupções externas ou prejuízos causados
             por uso inadequado do serviço.
         </p>
@@ -208,7 +208,7 @@
     <section id="suporte">
         <h2>14. Atendimento e Suporte</h2>
         <p>
-            O suporte será prestado pelos canais oficiais da VortexHost. O suporte cobre problemas
+            O suporte será prestado pelos canais oficiais da Saturn Cloud. O suporte cobre problemas
             relacionados à infraestrutura contratada, não incluindo desenvolvimento, correção de
             código, configuração avançada de aplicações ou administração completa de serviços
             self-managed, salvo contratação específica.
@@ -244,7 +244,7 @@
     <section id="foro">
         <h2>18. Foro</h2>
         <p>
-            Fica eleito o foro da comarca correspondente à sede da VortexHost, salvo disposição
+            Fica eleito o foro da comarca correspondente à sede da Saturn Cloud, salvo disposição
             legal obrigatória em contrário.
         </p>
     </section>

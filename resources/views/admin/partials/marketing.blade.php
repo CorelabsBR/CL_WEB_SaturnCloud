@@ -1,6 +1,6 @@
 <section class="admin-block admin-tab-panel" id="marketing" data-admin-panel="marketing" hidden>
     <div class="admin-block-head">
-        <div><h2>Marketing</h2><p>Campanhas, conteúdo, aquisição e integrações dentro da operação administrativa da Vortex.</p></div>
+        <div><h2>Marketing</h2><p>Campanhas, conteúdo, aquisição e integrações dentro da operação administrativa da Saturn Cloud.</p></div>
         <a class="btn btn-ghost btn-sm" href="{{ route('marketing.openapi') }}">Documentação da API</a>
     </div>
 

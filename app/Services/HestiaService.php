@@ -548,6 +548,6 @@ class HestiaService
     {
         $parts = Str::of($user->nome)->trim()->explode(' ')->filter()->values();
 
-        return $parts->count() > 1 ? $parts->slice(1)->join(' ') : 'VortexHost';
+        return $parts->count() > 1 ? $parts->slice(1)->join(' ') : 'Saturn Cloud';
     }
 }

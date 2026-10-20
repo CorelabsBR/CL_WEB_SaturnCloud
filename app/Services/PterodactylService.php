@@ -450,7 +450,7 @@ class PterodactylService
                 'email' => $user->email,
                 'username' => $this->username($user),
                 'first_name' => $names->first() ?: 'Cliente',
-                'last_name' => $names->count() > 1 ? $names->slice(1)->join(' ') : 'VortexHost',
+                'last_name' => $names->count() > 1 ? $names->slice(1)->join(' ') : 'Saturn Cloud',
                 'password' => $password,
                 'language' => config('services.pterodactyl.user_language', 'en'),
                 'root_admin' => false,
@@ -513,7 +513,7 @@ class PterodactylService
 
         $payload = [
             'name' => $this->serverName($service),
-            'description' => "Vortex | ID: {$provisionIdentifier} | Serviço #{$service->id}",
+            'description' => "Saturn Cloud | ID: {$provisionIdentifier} | Serviço #{$service->id}",
             'external_id' => $externalId,
             'user' => $pterodactylUserId,
             'egg' => $egg->egg_id,

@@ -3,8 +3,8 @@
    ══════════════════════════════════════════════════════ */
 
 :root {
-    --accent:       #00ff64;
-    --accent-d:     rgba(0,255,100,.08);
+    --accent:       #8B5CF6;
+    --accent-d:     rgba(139, 92, 246,.08);
     --dark:         #0a0a0a;
     --dark-index:   #0d0d0d;
     --surface:      #111111;
@@ -68,7 +68,7 @@ img { max-width: 100%; height: auto; display: block; }
 .btn-primary:hover {
     background: #00e659;
     border-color: #00e659;
-    box-shadow: 0 0 16px rgba(0,255,100,.35);
+    box-shadow: 0 0 16px rgba(139, 92, 246,.35);
 }
 
 .btn-ghost {

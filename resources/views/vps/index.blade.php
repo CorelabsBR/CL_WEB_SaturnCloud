@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Servidores VPS | VortexHost')
+@section('title', 'Servidores VPS | Saturn Cloud')
 @section('meta_description', 'Servidores VPS para aplicações, sites e ambientes profissionais, com gestão centralizada pela área do cliente.')
 @section('content')
 <section class="vps-hero">
@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="vps-terminal" aria-label="Características da infraestrutura VPS">
-            <div class="vps-terminal-head"><span></span><span></span><span></span><strong>VORTEX CLOUD</strong></div>
+            <div class="vps-terminal-head"><span></span><span></span><span></span><strong>SATURN CLOUD</strong></div>
             <dl>
                 <div><dt>Ambiente</dt><dd>Isolado</dd></div>
                 <div><dt>Armazenamento</dt><dd>SSD / NVMe*</dd></div>

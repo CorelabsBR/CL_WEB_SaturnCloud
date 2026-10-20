@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $article['title'].' | Central de Ajuda Vortex')
+@section('title', $article['title'].' | Central de Ajuda Saturn Cloud')
 @section('meta_description', $article['excerpt'])
 @push('styles')<link rel="stylesheet" href="{{ asset('css/help.css') }}?v={{ filemtime(public_path('css/help.css')) }}">@endpush
 @section('content')
@@ -10,5 +10,5 @@
     <aside class="help-support-cta"><div><strong>Ainda com dúvida?</strong><p>Entre na sua conta e envie os detalhes para nossa equipe.</p></div><a class="btn btn-primary" href="{{ auth()->check() ? route('ticket.index') : route('login') }}">Abrir um chamado</a></aside></article>
     @if($related->isNotEmpty())<section class="help-related"><h2>Continue nesta categoria</h2><div>@foreach($related as $relatedSlug => $item)<a href="{{ route('help.show', $relatedSlug) }}">{{ $item['title'] }} <span>→</span></a>@endforeach</div></section>@endif
 </div>
-<script type="application/ld+json">{!! json_encode(['@context'=>'https://schema.org','@type'=>'TechArticle','headline'=>$article['title'],'description'=>$article['excerpt'],'publisher'=>['@type'=>'Organization','name'=>'Vortex'],'mainEntityOfPage'=>url()->current()], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!}</script>
+<script type="application/ld+json">{!! json_encode(['@context'=>'https://schema.org','@type'=>'TechArticle','headline'=>$article['title'],'description'=>$article['excerpt'],'publisher'=>['@type'=>'Organization','name'=>'Saturn Cloud'],'mainEntityOfPage'=>url()->current()], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!}</script>
 @endsection

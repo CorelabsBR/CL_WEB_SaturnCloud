@@ -1,4 +1,4 @@
 @extends('layouts.app')
-@section('title', 'Conteúdos técnicos | VortexHost')
-@section('meta_description', 'Tutoriais e conteúdos técnicos revisados pela equipe da VortexHost.')
+@section('title', 'Conteúdos técnicos | Saturn Cloud')
+@section('meta_description', 'Tutoriais e conteúdos técnicos revisados pela equipe da Saturn Cloud.')
 @section('content')<section class="catalog-section"><div class="container"><p class="eyebrow">Base técnica</p><h1 class="section-title">Conteúdos e tutoriais</h1><div class="product-list">@forelse($contents as $content)<article class="product-row"><div class="product-index">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</div><div class="product-copy"><div class="product-status">{{ $content->category ?: $content->type }}</div><h2><a href="{{ route('content.show', $content) }}">{{ $content->title }}</a></h2><p>{{ $content->excerpt }}</p></div><span>{{ $content->published_at->format('d/m/Y') }}</span></article>@empty<div class="empty-state"><h2>Nenhum conteúdo publicado</h2><p>Rascunhos e materiais não aprovados não aparecem publicamente.</p></div>@endforelse</div>{{ $contents->links() }}</div></section>@endsection

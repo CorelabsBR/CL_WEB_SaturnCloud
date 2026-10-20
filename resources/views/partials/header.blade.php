@@ -5,7 +5,7 @@
         <nav class="nav-inner">
 
             <a class="brand" href="{{ url('/') }}">
-                <img src="{{ asset('img/vortex-logo-mark.png') }}" alt="VortexHost" id="logo_img">
+                <img src="{{ asset('img/saturn-cloud-mark.svg') }}" alt="Saturn Cloud" id="logo_img">
             </a>
 
             @php
@@ -84,7 +84,7 @@
                             </svg>
                         </button>
                         <div class="profile-menu" id="profile-menu" role="menu" aria-labelledby="profile-btn" hidden>
-                            <div class="profile-menu-head"><span>{{ auth()->user()?->nome ?? 'Cliente Vortex' }}</span><small>{{ auth()->user()?->email }}</small></div>
+                            <div class="profile-menu-head"><span>{{ auth()->user()?->nome ?? 'Cliente Saturn Cloud' }}</span><small>{{ auth()->user()?->email }}</small></div>
                             <a href="{{ url('/painel') }}" class="profile-menu-item" role="menuitem">
                                 <svg viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M3 13h2v8H3zm4-8h2v16H7zm4-2h2v18h-2zm4-2h2v20h-2zm4 4h2v16h-2z" />

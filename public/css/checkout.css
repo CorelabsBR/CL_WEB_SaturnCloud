@@ -16,7 +16,7 @@
 .checkout-hero,
 .checkout-box,
 .summary-card {
-    border: 1px solid rgba(61, 255, 160, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.12);
     border-radius: var(--r);
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.018)),
@@ -39,7 +39,7 @@
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(circle at 12% 0%, rgba(61, 255, 160, 0.12), transparent 34%),
+        radial-gradient(circle at 12% 0%, rgba(139, 92, 246, 0.12), transparent 34%),
         radial-gradient(circle at 100% 80%, rgba(143, 214, 255, 0.07), transparent 32%);
     pointer-events: none;
 }
@@ -79,8 +79,8 @@
 }
 
 .checkout-alert-success {
-    border-color: rgba(61, 255, 160, 0.22);
-    background: rgba(61, 255, 160, 0.08);
+    border-color: rgba(139, 92, 246, 0.22);
+    background: rgba(139, 92, 246, 0.08);
     color: #c9ffe0;
 }
 
@@ -102,7 +102,7 @@
     justify-content: space-between;
     gap: 1rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(61, 255, 160, 0.08);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.08);
 }
 
 .checkout-box-head h2,
@@ -118,7 +118,7 @@
     align-items: center;
     min-height: 30px;
     padding: 0.35rem 0.7rem;
-    border: 1px solid rgba(61, 255, 160, 0.18);
+    border: 1px solid rgba(139, 92, 246, 0.18);
     border-radius: 999px;
     background: var(--accent-d);
     color: var(--accent);
@@ -139,14 +139,14 @@
     gap: 1rem;
     align-items: center;
     padding: 1rem;
-    border: 1px solid rgba(61, 255, 160, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.1);
     border-radius: var(--r-sm);
     background: rgba(255, 255, 255, 0.026);
     transition: border-color var(--ease), background var(--ease), transform var(--ease);
 }
 
 .checkout-item:hover {
-    border-color: rgba(61, 255, 160, 0.22);
+    border-color: rgba(139, 92, 246, 0.22);
     background: rgba(255, 255, 255, 0.046);
     transform: translateY(-1px);
 }
@@ -185,7 +185,7 @@
     min-height: 42px;
     width: 100%;
     padding: 0 0.85rem;
-    border: 1px solid rgba(61, 255, 160, 0.14);
+    border: 1px solid rgba(139, 92, 246, 0.14);
     border-radius: 10px;
     outline: none;
     background: rgba(0, 0, 0, 0.22);
@@ -196,7 +196,7 @@
 
 .checkout-username input:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(61, 255, 160, 0.08);
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.08);
 }
 
 .checkout-field-error {
@@ -248,7 +248,7 @@
 
 .summary-row {
     padding: 0.85rem 0;
-    border-bottom: 1px solid rgba(61, 255, 160, 0.08);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.08);
 }
 
 .summary-row span,
@@ -271,7 +271,7 @@
     display: grid;
     gap: 0.6rem;
     padding: 0.9rem 0;
-    border-bottom: 1px solid rgba(61, 255, 160, 0.08);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.08);
 }
 
 .checkout-coupon > span {
@@ -290,7 +290,7 @@
     min-height: 42px;
     width: 100%;
     padding: 0 0.85rem;
-    border: 1px solid rgba(61, 255, 160, 0.14);
+    border: 1px solid rgba(139, 92, 246, 0.14);
     border-radius: 10px;
     outline: none;
     background: rgba(0, 0, 0, 0.22);
@@ -301,15 +301,15 @@
 
 .checkout-coupon input:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(61, 255, 160, 0.08);
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.08);
 }
 
 .checkout-coupon button {
     min-height: 42px;
     padding: 0 0.85rem;
-    border: 1px solid rgba(61, 255, 160, 0.18);
+    border: 1px solid rgba(139, 92, 246, 0.18);
     border-radius: 10px;
-    background: rgba(61, 255, 160, 0.08);
+    background: rgba(139, 92, 246, 0.08);
     color: var(--accent);
     font-weight: 900;
     cursor: pointer;
@@ -337,9 +337,9 @@
 
 .summary-total {
     padding: 1rem;
-    border: 1px solid rgba(61, 255, 160, 0.18);
+    border: 1px solid rgba(139, 92, 246, 0.18);
     border-radius: var(--r-sm);
-    background: rgba(61, 255, 160, 0.07);
+    background: rgba(139, 92, 246, 0.07);
 }
 
 .summary-total strong {

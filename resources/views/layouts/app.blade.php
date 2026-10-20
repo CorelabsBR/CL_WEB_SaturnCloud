@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0A0B0C">
+    <meta name="theme-color" content="#09090B">
     <meta name="description" content="@yield('meta_description', 'Hospedagem web e infraestrutura gerenciada com suporte humano e operação no Brasil.')">
     <meta property="og:locale" content="pt_BR">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="VortexHost">
-    <meta property="og:title" content="@yield('title', 'VortexHost')">
+    <meta property="og:site_name" content="Saturn Cloud">
+    <meta property="og:title" content="@yield('title', 'Saturn Cloud')">
     <meta property="og:description" content="@yield('meta_description', 'Hospedagem web e infraestrutura digital com informações comerciais claras.')">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:image" content="{{ asset('img/vortexhost-logo-full.png') }}">
+    <meta property="og:image" content="{{ asset('img/saturn-cloud-og.png') }}">
     <link rel="canonical" href="{{ url()->current() }}">
-    <title>@yield('title', 'VortexHost')</title>
+    <title>@yield('title', 'Saturn Cloud')</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('img/vortex-logo-mark.png') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 
     <link rel="stylesheet" href="{{ asset('css/base.css') }}?v={{ filemtime(public_path('css/base.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}?v={{ filemtime(public_path('css/footer.css')) }}">
@@ -35,7 +35,7 @@
 
 
     @stack('styles')
-    <script type="application/ld+json">{!! json_encode(['@context' => 'https://schema.org', '@type' => 'Organization', 'name' => 'Vortex', 'url' => url('/'), 'logo' => asset('img/vortexhost-logo-full.png'), 'email' => 'contato@corelabs.dev.br', 'parentOrganization' => ['@type' => 'Organization', 'name' => 'CoreLabs']], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!}</script>
+    <script type="application/ld+json">{!! json_encode(['@context' => 'https://schema.org', '@type' => 'Organization', 'name' => 'Saturn Cloud', 'url' => url('/'), 'logo' => asset('img/saturn-cloud-logo-full.svg'), 'email' => 'contato@corelabs.dev.br', 'parentOrganization' => ['@type' => 'Organization', 'name' => 'CoreLabs']], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!}</script>
 </head>
 
 <body class="@yield('body_class')">
@@ -62,7 +62,7 @@
 @if (!View::hasSection('hide_header') && !request()->routeIs('dashboard.*', 'admin.*', 'checkout.*', 'cart.*'))
     <a class="mobile-buy-bar" href="{{ route('vps.index') }}">Contratar agora</a>
     @if(config('services.whatsapp.number'))
-        <a class="whatsapp-fab" href="https://wa.me/{{ preg_replace('/\D+/', '', config('services.whatsapp.number')) }}" target="_blank" rel="noopener" aria-label="Falar com a Vortex pelo WhatsApp">WA</a>
+        <a class="whatsapp-fab" href="https://wa.me/{{ preg_replace('/\D+/', '', config('services.whatsapp.number')) }}" target="_blank" rel="noopener" aria-label="Falar com a Saturn Cloud pelo WhatsApp">WA</a>
     @endif
 @endif
 

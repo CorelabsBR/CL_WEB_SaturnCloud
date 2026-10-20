@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Completar Cadastro - VortexHost')
+@section('title', 'Completar Cadastro - Saturn Cloud')
 @section('body_class', 'register-body complete-profile-body')
 @section('hide_header', true)
 @section('hide_footer', true)
@@ -18,7 +18,7 @@
 <section class="complete-profile-shell">
     <header class="complete-profile-header">
         <div class="complete-profile-brand">
-            <img src="{{ asset('img/vortexhost-logo-full.png') }}" alt="VortexHost" class="complete-profile-logo">
+            <img src="{{ asset('img/saturn-cloud-logo-full.svg') }}" alt="Saturn Cloud" class="complete-profile-logo">
         </div>
         <div class="complete-profile-intro">
             <span class="complete-profile-eyebrow">Última etapa</span>

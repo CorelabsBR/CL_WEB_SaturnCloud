@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0b0f14">
-    <title>{{ $jogo->nome }} - VortexHost</title>
+    <meta name="theme-color" content="#09090B">
+    <title>{{ $jogo->nome }} - Saturn Cloud</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('img/vortex-logo-mark.png') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <link rel="stylesheet" href="{{ asset('css/minecraft.css') }}?v={{ filemtime(public_path('css/minecraft.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/game-standard.css') }}?v={{ filemtime(public_path('css/game-standard.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">

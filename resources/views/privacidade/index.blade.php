@@ -9,7 +9,7 @@
             <h1>Política de Privacidade</h1>
 
             <p>
-                Esta Política explica como a VortexHost coleta, utiliza, armazena e protege
+                Esta Política explica como a Saturn Cloud coleta, utiliza, armazena e protege
                 os dados dos clientes ao utilizar nossos serviços de hospedagem.
             </p>
 
@@ -40,13 +40,13 @@
                 <section id="introducao">
                     <h2>Introdução</h2>
                     <p>
-                        A VortexHost respeita a privacidade dos clientes e busca tratar os dados
+                        A Saturn Cloud respeita a privacidade dos clientes e busca tratar os dados
                         pessoais de forma segura, transparente e limitada ao necessário para
                         prestação dos serviços.
                     </p>
                     <p>
                         Ao criar uma conta, contratar um plano, acessar nossos painéis ou utilizar
-                        qualquer serviço da VortexHost, o cliente concorda com esta Política de Privacidade.
+                        qualquer serviço da Saturn Cloud, o cliente concorda com esta Política de Privacidade.
                     </p>
                 </section>
 
@@ -83,13 +83,13 @@
                 <section id="pagamentos">
                     <h2>3. Pagamentos</h2>
                     <p>
-                        Pagamentos podem ser processados por plataformas terceiras. A VortexHost
+                        Pagamentos podem ser processados por plataformas terceiras. A Saturn Cloud
                         pode receber informações como status da transação, identificador do pagamento,
                         valor, data, método utilizado e dados necessários para confirmação antifraude.
                     </p>
                     <p>
                         Dados sensíveis de cartão, quando aplicável, são tratados diretamente pelos
-                        intermediadores de pagamento. A VortexHost não armazena número completo de cartão.
+                        intermediadores de pagamento. A Saturn Cloud não armazena número completo de cartão.
                     </p>
                 </section>
 
@@ -122,7 +122,7 @@
                 <section id="compartilhamento">
                     <h2>6. Compartilhamento de dados</h2>
                     <p>
-                        A VortexHost não vende dados pessoais. Dados podem ser compartilhados apenas
+                        A Saturn Cloud não vende dados pessoais. Dados podem ser compartilhados apenas
                         quando necessário com:
                     </p>
 
@@ -176,7 +176,7 @@
                     <h2>10. Menores de idade</h2>
                     <p>
                         Serviços contratados por menores de idade devem possuir autorização dos responsáveis
-                        legais. Caso sejam identificados dados fornecidos sem autorização adequada, a VortexHost
+                        legais. Caso sejam identificados dados fornecidos sem autorização adequada, a Saturn Cloud
                         poderá suspender a conta até regularização.
                     </p>
                 </section>
@@ -196,7 +196,7 @@
                     <h2>12. Contato</h2>
                     <p>
                         Para dúvidas, solicitações ou assuntos relacionados à privacidade e proteção de dados,
-                        entre em contato pelos canais oficiais da VortexHost.
+                        entre em contato pelos canais oficiais da Saturn Cloud.
                     </p>
 
                     <a href="#suporte" class="btn btn-primary" data-support-open>Falar com suporte</a>

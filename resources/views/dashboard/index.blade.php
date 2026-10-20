@@ -277,7 +277,7 @@
 
                                                 <tr data-service-row>
                                                     <td>
-                                                        <div class="table-service-name">{{ data_get($service, 'name', 'Servidor Vortex') }}</div>
+                                                        <div class="table-service-name">{{ data_get($service, 'name', 'Servidor Saturn Cloud') }}</div>
                                                         <div class="table-service-meta">
                                                             <span>{{ data_get($service, 'plan', 'Plano sob demanda') }}</span>
                                                             @if (data_get($service, 'provision_identifier'))
@@ -321,7 +321,7 @@
                                                                     data-open-service-cancel
                                                                     data-cancel-url="{{ route('services.cancel', data_get($service, 'id')) }}"
                                                                     data-cancel-identifier="{{ $cancelIdentifier }}"
-                                                                    data-cancel-name="{{ data_get($service, 'name', 'Servidor Vortex') }}"
+                                                                    data-cancel-name="{{ data_get($service, 'name', 'Servidor Saturn Cloud') }}"
                                                                 >
                                                                     Cancelar plano
                                                                 </button>
@@ -383,7 +383,7 @@
                                             <div class="invoice-slip-brand">
                                                 <span class="invoice-slip-logo">V</span>
                                                 <div>
-                                                    <strong>VortexHost</strong>
+                                                    <strong>Saturn Cloud</strong>
                                                     <small>Fatura digital de renovação</small>
                                                 </div>
                                             </div>
@@ -401,7 +401,7 @@
                                         <div class="invoice-slip-fields">
                                             <div>
                                                 <span>Beneficiário</span>
-                                                <strong>VortexHost</strong>
+                                                <strong>Saturn Cloud</strong>
                                             </div>
                                             <div>
                                                 <span>Cliente</span>
@@ -409,7 +409,7 @@
                                             </div>
                                             <div>
                                                 <span>Serviço</span>
-                                                <strong>{{ data_get($invoice, 'description', 'Serviços VortexHost') }}</strong>
+                                                <strong>{{ data_get($invoice, 'description', 'Serviços Saturn Cloud') }}</strong>
                                             </div>
                                             <div>
                                                 <span>Emissão</span>
@@ -501,7 +501,7 @@
 
         <div class="cancel-modal-service">
             <span>Serviço</span>
-            <strong data-cancel-modal-name>Servidor Vortex</strong>
+            <strong data-cancel-modal-name>Servidor Saturn Cloud</strong>
             <code data-cancel-modal-identifier>srv.vortex</code>
         </div>
 
@@ -636,7 +636,7 @@
             cancelForm.action = trigger.dataset.cancelUrl || '';
 
             if (cancelName) {
-                cancelName.textContent = trigger.dataset.cancelName || 'Servidor Vortex';
+                cancelName.textContent = trigger.dataset.cancelName || 'Servidor Saturn Cloud';
             }
 
             if (cancelIdentifier) {

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Editar Perfil - VortexHost')
+@section('title', 'Editar Perfil - Saturn Cloud')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/profile-edit.css') }}?v={{ filemtime(public_path('css/profile-edit.css')) }}">

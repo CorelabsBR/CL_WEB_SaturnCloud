@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Planos de hospedagem web | VortexHost')
-@section('meta_description', 'Compare planos de hospedagem web da VortexHost, incluindo memória, armazenamento, bancos de dados, domínios e preço anual.')
+@section('title', 'Planos de hospedagem web | Saturn Cloud')
+@section('meta_description', 'Compare planos de hospedagem web da Saturn Cloud, incluindo memória, armazenamento, bancos de dados, domínios e preço anual.')
 @section('content')
 
 

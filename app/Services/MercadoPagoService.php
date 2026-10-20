@@ -127,7 +127,7 @@ class MercadoPagoService
         $payload = [
             'transaction_amount' => (float) $order->total,
             'description' => Str::limit(
-                $order->items->pluck('product.nome')->filter()->join(', ') ?: 'Renovação VortexHost',
+                $order->items->pluck('product.nome')->filter()->join(', ') ?: 'Renovação Saturn Cloud',
                 120,
                 ''
             ),
@@ -357,10 +357,10 @@ class MercadoPagoService
         if (round((float) $order->total, 2) !== $itemsTotal) {
             return [[
                 'id' => (string) $order->id,
-                'title' => 'Pedido VortexHost',
+                'title' => 'Pedido Saturn Cloud',
                 'description' => $order->coupon_code
                     ? "Pedido com cupom {$order->coupon_code}"
-                    : 'Pedido VortexHost',
+                    : 'Pedido Saturn Cloud',
                 'quantity' => 1,
                 'currency_id' => 'BRL',
                 'unit_price' => (float) $order->total,

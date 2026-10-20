@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Código de Recuperação - VortexHost')
+@section('title', 'Código de Recuperação - Saturn Cloud')
 @section('body_class', 'auth-body')
 @section('hide_header', true)
 @section('hide_footer', true)
@@ -20,7 +20,7 @@
 <div class="auth-split">
     <div class="auth-panel">
         <div class="auth-panel-inner">
-            <img src="{{ asset('img/vortexhost-logo-full.png') }}" alt="VortexHost" class="auth-logo">
+            <img src="{{ asset('img/saturn-cloud-logo-full.svg') }}" alt="Saturn Cloud" class="auth-logo">
 
             <h2 class="auth-panel-title">Confirme o código.</h2>
 

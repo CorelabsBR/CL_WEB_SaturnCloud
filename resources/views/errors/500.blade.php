@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Erro de Servidor - VortexHost')
+@section('title', 'Erro de Servidor - Saturn Cloud')
 @section('main_class', 'not-found-main')
 @section('hide_header', true)
 @section('hide_footer', true)
@@ -20,7 +20,7 @@
             </div>
 
             <div class="not-found-brand" aria-hidden="true">
-                <img src="{{ asset('img/vortex-logo-mark.png') }}" alt="">
+                <img src="{{ asset('img/saturn-cloud-mark.svg') }}" alt="">
                 <div class="not-found-orbit"></div>
             </div>
         </div>

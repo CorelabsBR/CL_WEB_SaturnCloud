@@ -9,7 +9,7 @@
             <h1>Política de Reembolso</h1>
 
             <p>
-                Esta Política explica quando a VortexHost pode aprovar, recusar ou analisar
+                Esta Política explica quando a Saturn Cloud pode aprovar, recusar ou analisar
                 solicitações de reembolso relacionadas aos serviços contratados.
             </p>
 
@@ -39,7 +39,7 @@
                 <section id="introducao">
                     <h2>Introdução</h2>
                     <p>
-                        A VortexHost busca manter uma política clara e justa para reembolsos.
+                        A Saturn Cloud busca manter uma política clara e justa para reembolsos.
                         Ao contratar qualquer serviço, o cliente declara estar ciente das condições
                         descritas nesta página.
                     </p>
@@ -58,7 +58,7 @@
                     </p>
                     <p>
                         Após esse prazo, pedidos de reembolso poderão ser recusados, salvo em casos
-                        excepcionais analisados pela VortexHost.
+                        excepcionais analisados pela Saturn Cloud.
                     </p>
                 </section>
 
@@ -68,7 +68,7 @@
 
                     <ul>
                         <li>Serviços contratados por engano e ainda não utilizados de forma relevante;</li>
-                        <li>Serviços que não foram ativados por falha interna da VortexHost;</li>
+                        <li>Serviços que não foram ativados por falha interna da Saturn Cloud;</li>
                         <li>Cobranças duplicadas confirmadas;</li>
                         <li>Problemas técnicos comprovados que impeçam totalmente o uso do serviço;</li>
                         <li>Pedidos feitos dentro do prazo de 7 dias corridos após a contratação.</li>
@@ -100,7 +100,7 @@
                     </p>
                     <p>
                         Após o cancelamento, dados, arquivos, bancos de dados e configurações poderão ser
-                        removidos definitivamente conforme os prazos internos da VortexHost.
+                        removidos definitivamente conforme os prazos internos da Saturn Cloud.
                     </p>
                 </section>
 
@@ -112,7 +112,7 @@
                         relacionados.
                     </p>
                     <p>
-                        Em caso de chargeback indevido, a VortexHost poderá bloquear novas contratações,
+                        Em caso de chargeback indevido, a Saturn Cloud poderá bloquear novas contratações,
                         encerrar serviços ativos e aplicar medidas administrativas para proteção da plataforma.
                     </p>
                 </section>
@@ -120,12 +120,12 @@
                 <section id="analise">
                     <h2>6. Processo de análise</h2>
                     <p>
-                        Toda solicitação será analisada pela equipe da VortexHost. Poderão ser verificados
+                        Toda solicitação será analisada pela equipe da Saturn Cloud. Poderão ser verificados
                         dados da contratação, logs de uso, status do serviço, pagamentos, suporte prestado
                         e eventuais violações de política.
                     </p>
                     <p>
-                        A VortexHost poderá solicitar informações adicionais antes de aprovar ou recusar
+                        A Saturn Cloud poderá solicitar informações adicionais antes de aprovar ou recusar
                         o pedido.
                     </p>
                 </section>
@@ -138,7 +138,7 @@
                     </p>
                     <p>
                         Dependendo do método de pagamento, banco ou intermediador, o prazo para o valor
-                        retornar ao cliente pode variar e não depende exclusivamente da VortexHost.
+                        retornar ao cliente pode variar e não depende exclusivamente da Saturn Cloud.
                     </p>
                 </section>
 
@@ -166,7 +166,7 @@
                     <h2>10. Contato</h2>
                     <p>
                         Para solicitar reembolso ou tirar dúvidas sobre esta Política, entre em contato
-                        pelos canais oficiais de atendimento da VortexHost.
+                        pelos canais oficiais de atendimento da Saturn Cloud.
                     </p>
 
                     <a href="#suporte" class="btn btn-primary" data-support-open>Solicitar atendimento</a>

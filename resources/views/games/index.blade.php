@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Servidores de Jogos - VortexHost')
+@section('title', 'Servidores de Jogos - Saturn Cloud')
 @section('content')
 
 <section class="games-page">

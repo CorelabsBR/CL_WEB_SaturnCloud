@@ -35,7 +35,7 @@
     <section class="support-chat" aria-label="Chat de suporte">
         <div class="support-chat-head">
             <div>
-                <strong>Suporte VortexHost</strong>
+                <strong>Suporte Saturn Cloud</strong>
                 <span>Responderemos assim que possível.</span>
             </div>
             <button type="button" aria-label="Fechar chat de suporte" data-support-toggle>×</button>

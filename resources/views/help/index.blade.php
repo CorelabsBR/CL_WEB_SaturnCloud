@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Central de Ajuda | Vortex')
+@section('title', 'Central de Ajuda | Saturn Cloud')
 @section('meta_description', 'Tutoriais de hospedagem de sites, VPS, domínios, DNS, pagamentos e segurança explicados de forma simples.')
 @push('styles')<link rel="stylesheet" href="{{ asset('css/help.css') }}?v={{ filemtime(public_path('css/help.css')) }}">@endpush
 @section('content')

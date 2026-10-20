@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Vortex Marketing Administrative API
+  title: Saturn Cloud Marketing Administrative API
   version: 1.0.0
   description: API interna protegida pela sessão administrativa, CSRF e rate limiting. Não publica em serviços externos.
 servers:

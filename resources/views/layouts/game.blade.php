@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0b0f14">
-    <title>@yield('title', 'VortexHost')</title>
+    <meta name="theme-color" content="#09090B">
+    <title>@yield('title', 'Saturn Cloud')</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('img/vortex-logo-mark.png') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 
     <link rel="stylesheet" href="{{ asset('css/basegame.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">

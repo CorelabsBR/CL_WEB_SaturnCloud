@@ -42,7 +42,7 @@ class SocialAuthController extends Controller
             $user = User::create([
                 'nome' => $socialUser->getName()
                     ?: $socialUser->getNickname()
-                    ?: 'Cliente Vortex',
+                    ?: 'Cliente Saturn Cloud',
 
                 'email' => $socialUser->getEmail(),
 

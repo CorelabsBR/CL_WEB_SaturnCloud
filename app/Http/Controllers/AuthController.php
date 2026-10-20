@@ -650,7 +650,7 @@ class AuthController extends Controller
     <html lang="pt-BR">
     <head>
         <meta charset="UTF-8">
-        <title>Código de verificação - VortexHost</title>
+        <title>Código de verificação - Saturn Cloud</title>
     </head>
     <body style="margin:0;padding:0;background-color:#050c08;font-family:Arial,sans-serif;color:#f0fdf6;">
         <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px;">
@@ -660,8 +660,8 @@ class AuthController extends Controller
 
                         <tr>
                             <td style="background:linear-gradient(135deg,#0d2e1a 0%,#0a2416 100%);padding:28px 32px;text-align:center;border-bottom:1px solid rgba(61,255,140,0.28);">
-                                <h1 style="margin:0;font-size:28px;color:#3dffa0;">
-                                    VortexHost
+                                <h1 style="margin:0;font-size:28px;color:#8B5CF6;">
+                                    Saturn Cloud
                                 </h1>
                                 <p style="margin:8px 0 0 0;color:#87b89d;font-size:14px;">
                                     Verificação de e-mail
@@ -688,7 +688,7 @@ class AuthController extends Controller
                                                 <p style="margin:0 0 8px 0;font-size:12px;color:#87b89d;letter-spacing:2px;text-transform:uppercase;">
                                                     Seu código
                                                 </p>
-                                                <p style="margin:0;font-size:36px;font-weight:bold;color:#3dffa0;letter-spacing:10px;">
+                                                <p style="margin:0;font-size:36px;font-weight:bold;color:#8B5CF6;letter-spacing:10px;">
                                                     {$code}
                                                 </p>
                                             </div>
@@ -705,8 +705,8 @@ class AuthController extends Controller
 
                         <tr>
                             <td style="padding:24px 32px;background:#050c08;border-top:1px solid rgba(61,255,140,0.1);">
-                                <p style="margin:0;font-size:13px;color:#4c6d5c;text-align:center;">
-                                    © VortexHost — Infraestrutura de alta performance.
+                                <p style="margin:0;font-size:13px;color:#A1A1AA;text-align:center;">
+                                    © Saturn Cloud — Infraestrutura de alta performance.
                                 </p>
                             </td>
                         </tr>
@@ -721,7 +721,7 @@ class AuthController extends Controller
 
         Mail::html($html, function ($message) use ($user) {
             $message->to($user->email)
-                ->subject('Código de verificação - VortexHost');
+                ->subject('Código de verificação - Saturn Cloud');
         });
     }
 
@@ -734,7 +734,7 @@ class AuthController extends Controller
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Código para trocar senha - VortexHost</title>
+    <title>Código para trocar senha - Saturn Cloud</title>
 </head>
 <body style="margin:0;padding:0;background-color:#050c08;font-family:Arial,sans-serif;color:#f0fdf6;">
     <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px;">
@@ -743,7 +743,7 @@ class AuthController extends Controller
                 <table width="600" cellpadding="0" cellspacing="0" style="background:#071009;border-radius:12px;overflow:hidden;border:1px solid rgba(61,255,140,0.28);">
                     <tr>
                         <td style="background:linear-gradient(135deg,#0d2e1a 0%,#0a2416 100%);padding:28px 32px;text-align:center;border-bottom:1px solid rgba(61,255,140,0.28);">
-                            <h1 style="margin:0;font-size:28px;color:#3dffa0;">VortexHost</h1>
+                            <h1 style="margin:0;font-size:28px;color:#8B5CF6;">Saturn Cloud</h1>
                             <p style="margin:8px 0 0 0;color:#87b89d;font-size:14px;">Recuperação de senha</p>
                         </td>
                     </tr>
@@ -763,7 +763,7 @@ class AuthController extends Controller
                                     <td align="center">
                                         <div style="display:inline-block;background:#0c1a11;border:1px solid rgba(61,255,140,0.28);border-radius:12px;padding:24px 48px;text-align:center;">
                                             <p style="margin:0 0 8px 0;font-size:12px;color:#87b89d;letter-spacing:2px;text-transform:uppercase;">Seu código</p>
-                                            <p style="margin:0;font-size:36px;font-weight:bold;color:#3dffa0;letter-spacing:10px;">{$code}</p>
+                                            <p style="margin:0;font-size:36px;font-weight:bold;color:#8B5CF6;letter-spacing:10px;">{$code}</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -776,7 +776,7 @@ class AuthController extends Controller
                     </tr>
                     <tr>
                         <td style="padding:24px 32px;background:#050c08;border-top:1px solid rgba(61,255,140,0.1);">
-                            <p style="margin:0;font-size:13px;color:#4c6d5c;text-align:center;">© VortexHost — Infraestrutura de alta performance.</p>
+                            <p style="margin:0;font-size:13px;color:#A1A1AA;text-align:center;">© Saturn Cloud — Infraestrutura de alta performance.</p>
                         </td>
                     </tr>
                 </table>
@@ -789,7 +789,7 @@ HTML;
 
         Mail::html($html, function ($message) use ($user) {
             $message->to($user->email)
-                ->subject('Código para trocar senha - VortexHost');
+                ->subject('Código para trocar senha - Saturn Cloud');
         });
     }
 

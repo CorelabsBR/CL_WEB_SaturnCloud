@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Entrar na área do cliente | VortexHost')
-@section('meta_description', 'Acesse sua conta VortexHost para acompanhar pedidos, serviços, pagamentos e chamados de suporte.')
+@section('title', 'Entrar na área do cliente | Saturn Cloud')
+@section('meta_description', 'Acesse sua conta Saturn Cloud para acompanhar pedidos, serviços, pagamentos e chamados de suporte.')
 @section('body_class', 'auth-body login-body')
 @section('main_class', 'auth-main login-main')
 @section('hide_header', true)
@@ -10,9 +10,9 @@
 @section('content')
 <div class="login-shell">
     <aside class="login-aside" aria-labelledby="login-context-title">
-        <a href="{{ route('home') }}" class="login-brand" aria-label="Voltar para a página inicial da VortexHost">
-            <img src="{{ asset('img/vortex-logo-mark.png') }}" alt="" width="42" height="42">
-            <span>Vortex<strong>Host</strong></span>
+        <a href="{{ route('home') }}" class="login-brand" aria-label="Voltar para a página inicial da Saturn Cloud">
+            <img src="{{ asset('img/saturn-cloud-mark.svg') }}" alt="" width="42" height="42">
+            <span>Saturn Cloud<strong>Host</strong></span>
         </a>
 
         <div class="login-context">
@@ -27,7 +27,7 @@
             </ul>
         </div>
 
-        <p class="login-aside-note">Ambiente restrito a clientes e administradores VortexHost.</p>
+        <p class="login-aside-note">Ambiente restrito a clientes e administradores Saturn Cloud.</p>
     </aside>
 
     <section class="login-form-panel" aria-labelledby="login-title">

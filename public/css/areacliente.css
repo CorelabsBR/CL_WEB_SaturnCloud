@@ -31,4 +31,4 @@
 
 .role-badge { display:inline-flex; padding:.2rem .625rem; border-radius:999px; font-size:.72rem; font-weight:700; text-transform:uppercase; }
 .role-root   { background:rgba(255,200,0,.1); color:#ffd700; border:1px solid rgba(255,200,0,.22); }
-.role-client { background:var(--accent-d); color:var(--accent); border:1px solid rgba(61,255,160,.22); }
+.role-client { background:var(--accent-d); color:var(--accent); border:1px solid rgba(139, 92, 246,.22); }

@@ -7,37 +7,37 @@
 
 :root {
     /* ── Backgrounds ──────────────────────────────────── */
-    --bg:           #050c08;
-    --bg1:          #071009;
-    --bg2:          #0c1a11;
-    --dark-index:   #010E05;
+    --bg:           #09090B;
+    --bg1:          #18181B;
+    --bg2:          #202024;
+    --dark-index:   #09090B;
 
     /* ── Cards ────────────────────────────────────────── */
     --card:         rgba(255,255,255,0.025);
     --card-hv:      rgba(255,255,255,0.045);
 
     /* ── Borders ──────────────────────────────────────── */
-    --border:       rgba(61,255,140,0.10);
-    --border-s:     rgba(61,255,140,0.28);
+    --border:       rgba(139, 92, 246,0.10);
+    --border-s:     rgba(139, 92, 246,0.28);
 
     /* ── Text ─────────────────────────────────────────── */
-    --text:         #f0fdf6;
-    --muted:        #87b89d;
-    --dim:          #4c6d5c;
+    --text:         #FAFAFA;
+    --muted:        #A1A1AA;
+    --dim:          #71717A;
     --White-title:  #F9F4FC;
     --white-menos:  #DFDDE3;
 
     /* ── Accent ───────────────────────────────────────── */
-    --accent:       #3dffa0;
-    --accent-d:     rgba(61,255,160,0.10);
-    --accent-g:     rgba(61,255,160,0.35);
+    --accent:       #8B5CF6;
+    --accent-d:     rgba(139, 92, 246,0.10);
+    --accent-g:     rgba(139, 92, 246,0.35);
 
     /* ── Danger ───────────────────────────────────────── */
     --danger:       #ff5e5e;
     --danger-d:     rgba(255,94,94,0.10);
 
     /* ── Buttons ──────────────────────────────────────── */
-    --btn-grad:     linear-gradient(135deg,#33d987 0%,#18a854 100%);
+    --btn-grad:     linear-gradient(135deg,#8B5CF6 0%,#6D28D9 100%);
 
     /* ── Shadows ──────────────────────────────────────── */
     --shadow:       0 28px 70px rgba(0,0,0,0.45);
@@ -64,8 +64,8 @@ body {
     color: var(--text);
     background-color: var(--bg);
     background-image:
-        radial-gradient(ellipse 80% 55% at 15%  -5%, rgba(40,215,110,0.13), transparent 50%),
-        radial-gradient(ellipse 60% 45% at 85% 110%, rgba(20,160,75,0.10),  transparent 50%);
+        radial-gradient(ellipse 80% 55% at 15%  -5%, rgba(139, 92, 246,0.13), transparent 50%),
+        radial-gradient(ellipse 60% 45% at 85% 110%, rgba(109, 40, 217,0.10),  transparent 50%);
     min-height: 100vh;
     line-height: 1.6;
 }
@@ -118,7 +118,7 @@ ul, ol  { list-style:none; }
     line-height: 1.5;
 }
 .flash-error   { background:var(--danger-d); color:#ffbcbc; border:1px solid rgba(255,94,94,.2); }
-.flash-success { background:var(--accent-d); color:#c0ffd9; border:1px solid rgba(61,255,160,.2); }
+.flash-success { background:var(--accent-d); color:#ddd6fe; border:1px solid rgba(139, 92, 246,.2); }
 
 /* ── Buttons ────────────────────────────────────────── */
 .btn {
@@ -143,21 +143,21 @@ ul, ol  { list-style:none; }
 
 .btn-primary {
     background: var(--btn-grad);
-    color: #031408;
-    box-shadow: 0 8px 26px rgba(27,165,78,.35);
+    color: #fafafa;
+    box-shadow: 0 8px 26px rgba(109, 40, 217,.35);
 }
 .btn-primary:hover {
     filter: brightness(1.1);
     transform: translateY(-1px);
-    box-shadow: 0 14px 36px rgba(27,165,78,.5);
+    box-shadow: 0 14px 36px rgba(109, 40, 217,.5);
 }
 .btn-primary:active { transform: translateY(0); filter: brightness(0.97); }
 
 .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border-s); }
 .btn-ghost:hover  { background: var(--accent-d); border-color: var(--accent); color: var(--accent); }
 
-.btn-outline { background: var(--accent-d); color: var(--accent); border: 1px solid rgba(61,255,160,.2); }
-.btn-outline:hover { background: rgba(61,255,160,.18); }
+.btn-outline { background: var(--accent-d); color: var(--accent); border: 1px solid rgba(139, 92, 246,.2); }
+.btn-outline:hover { background: rgba(139, 92, 246,.18); }
 
 .btn-danger { background: var(--danger-d); color: #ffb0b0; border: 1px solid rgba(255,94,94,.25); }
 .btn-danger:hover { background: rgba(255,94,94,.2); }
@@ -179,7 +179,7 @@ ul, ol  { list-style:none; }
     text-transform: uppercase;
     white-space: nowrap;
 }
-.pill-accent { background: var(--accent-d); color: var(--accent); border: 1px solid rgba(61,255,160,.2); }
+.pill-accent { background: var(--accent-d); color: var(--accent); border: 1px solid rgba(139, 92, 246,.2); }
 .pill-dim    { background: rgba(255,255,255,.05); color: var(--muted); border: 1px solid var(--border); }
 .pill::before {
     content: '';
