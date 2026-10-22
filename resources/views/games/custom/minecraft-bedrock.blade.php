@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#09090B">
     <title>{{ $jogo->nome }} - Saturn Cloud</title>
 
-    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="icon" type="image/png" sizes="128x128" href="{{ asset('img/logo-128.png') }}">
     <link rel="stylesheet" href="{{ asset('css/minecraft_bed.css') }}?v={{ filemtime(public_path('css/minecraft_bed.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/game-standard.css') }}?v={{ filemtime(public_path('css/game-standard.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">

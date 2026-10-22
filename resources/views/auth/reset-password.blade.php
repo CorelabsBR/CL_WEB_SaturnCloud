@@ -20,7 +20,7 @@
 <div class="auth-split">
     <div class="auth-panel">
         <div class="auth-panel-inner">
-            <img src="{{ asset('img/saturno_branco_quadrado.svg') }}" alt="Saturn Cloud" class="auth-logo">
+            <img src="{{ asset('img/logo-128.png') }}" alt="Saturn Cloud" class="auth-logo">
 
             <h2 class="auth-panel-title">Crie uma nova senha.</h2>
 

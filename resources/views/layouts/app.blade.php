@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#09090B">
+    <meta name="theme-color" content="#050505">
     <meta name="description" content="@yield('meta_description', 'Hospedagem web e infraestrutura gerenciada com suporte humano e operação no Brasil.')">
     <meta property="og:locale" content="pt_BR">
     <meta property="og:type" content="website">
@@ -11,37 +11,40 @@
     <meta property="og:title" content="@yield('title', 'Saturn Cloud')">
     <meta property="og:description" content="@yield('meta_description', 'Hospedagem web e infraestrutura digital com informações comerciais claras.')">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:image" content="{{ asset('img/saturn-cloud-og.png') }}">
+    <meta property="og:image" content="{{ asset('img/Minimalist_Saturn_Orbit_Emblem.webp') }}">
     <link rel="canonical" href="{{ url()->current() }}">
     <title>@yield('title', 'Saturn Cloud')</title>
 
-    <link rel="icon" type="image/svg+xml" href="{{ asset('img/saturno_branco_quadrado - Copy.svg') }}">
+    <link rel="icon" type="image/png" sizes="128x128" href="{{ asset('img/logo-128.png') }}">
 
     <link rel="stylesheet" href="{{ asset('css/base.css') }}?v={{ filemtime(public_path('css/base.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}?v={{ filemtime(public_path('css/footer.css')) }}">
-    @if(request()->routeIs('home'))
-        <link rel="stylesheet" href="{{ asset('css/index.css') }}?v={{ filemtime(public_path('css/index.css')) }}">
-    @elseif(request()->routeIs('vps.index'))
-        <link rel="stylesheet" href="{{ asset('css/vps.css') }}?v={{ filemtime(public_path('css/vps.css')) }}">
-    @else
-        <link rel="stylesheet" href="{{ asset('css/index.css') }}?v={{ filemtime(public_path('css/index.css')) }}">
-        <link rel="stylesheet" href="{{ asset('css/auth.css') }}?v={{ filemtime(public_path('css/auth.css')) }}">
-        <link rel="stylesheet" href="{{ asset('css/web.css') }}?v={{ filemtime(public_path('css/web.css')) }}">
-        <link rel="stylesheet" href="{{ asset('css/register.css') }}?v={{ filemtime(public_path('css/register.css')) }}">
-        <link rel="stylesheet" href="{{ asset('css/cart.css') }}?v={{ filemtime(public_path('css/cart.css')) }}">
-        <link rel="stylesheet" href="{{ asset('css/dash.css') }}?v={{ filemtime(public_path('css/dash.css')) }}">
-        <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
-        <link rel="stylesheet" href="{{ asset('css/checkout.css') }}?v={{ filemtime(public_path('css/checkout.css')) }}">
-        <link rel="stylesheet" href="{{ asset('css/responsive.css') }}?v={{ filemtime(public_path('css/responsive.css')) }}">
-    @endif
+    @php
+        $pageStyles = request()->routeIs('home') ? ['index']
+            : (request()->routeIs('vps.index') ? ['vps'] : ['index', 'responsive']);
+        if (request()->routeIs('login', 'registro*', 'password.*', 'cadastro.*', 'perfil.*')) {
+            $pageStyles = array_merge($pageStyles, ['auth', 'register']);
+        }
+        if (request()->routeIs('web')) $pageStyles[] = 'web';
+        if (request()->routeIs('dashboard.*', 'pterodactyl.*', 'ptero.*', 'hestia.*')) $pageStyles[] = 'dash';
+        if (request()->routeIs('checkout.*')) $pageStyles[] = 'checkout';
+        // The support widget also appears on public pages.
+        $pageStyles[] = 'suporte';
+    @endphp
+    @foreach(array_unique($pageStyles) as $style)
+        <link rel="stylesheet" href="{{ asset('css/'.$style.'.css') }}?v={{ filemtime(public_path('css/'.$style.'.css')) }}">
+    @endforeach
     <link rel="stylesheet" href="{{ asset('css/notifications.css') }}?v={{ filemtime(public_path('css/notifications.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/system.css') }}?v={{ filemtime(public_path('css/system.css')) }}">
 
 
     @stack('styles')
+    <link rel="preload" href="{{ asset('fonts/manrope-regular.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="{{ asset('css/cinematic.css') }}?v={{ filemtime(public_path('css/cinematic.css')) }}">
+    @vite('resources/js/app.js')
     @php($schemaContext = '@context')
-    <script type="application/ld+json">{!! json_encode([$schemaContext => 'https://schema.org', '@type' => 'Organization', 'name' => 'Saturn Cloud', 'url' => url('/'), 'logo' => asset('img/saturno_branco_quadrado - Copy.svg'), 'email' => 'contato@corelabs.dev.br', 'parentOrganization' => ['@type' => 'Organization', 'name' => 'CoreLabs']], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!}</script>
+    <script type="application/ld+json">{!! json_encode([$schemaContext => 'https://schema.org', '@type' => 'Organization', 'name' => 'Saturn Cloud', 'url' => url('/'), 'logo' => asset('img/saturno_branco_quadrado.png'), 'email' => 'contato@corelabs.dev.br', 'parentOrganization' => ['@type' => 'Organization', 'name' => 'CoreLabs']], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!}</script>
 </head>
 
 <body class="@yield('body_class')">

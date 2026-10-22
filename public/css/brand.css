@@ -1,0 +1,12 @@
+/* Shared Saturn Cloud tokens. */
+:root {
+    --brand-rgb: 124 58 237;
+    --bg: #050505;
+    --text: #f2f0f5;
+    --muted: #a3a0aa;
+    --accent: #7c3aed;
+    --accent-d: rgba(124, 58, 237, 0.1);
+    --border: #242326;
+    --border-s: #3c3942;
+    --btn-grad: #7c3aed;
+}

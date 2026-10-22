@@ -1,6 +1,10 @@
 {
+  "_saturn-brand-viewer-7Wkmvcw2.js": {
+    "file": "assets/saturn-brand-viewer-7Wkmvcw2.js",
+    "name": "saturn-brand-viewer"
+  },
   "resources/css/app.css": {
-    "file": "assets/app-BY4d7PMC.css",
+    "file": "assets/app-CEY-ya1n.css",
     "name": "app",
     "names": [
       "app.css"
@@ -9,9 +13,30 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-34mOoJaZ.js",
+    "file": "assets/app-CD8U0vBq.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "dynamicImports": [
+      "resources/js/saturn-scene.js"
+    ]
+  },
+  "resources/js/saturn-model-preview.js": {
+    "file": "assets/saturn-model-preview-CGCcwUZm.js",
+    "name": "saturn-model-preview",
+    "src": "resources/js/saturn-model-preview.js",
+    "isEntry": true,
+    "imports": [
+      "_saturn-brand-viewer-7Wkmvcw2.js"
+    ]
+  },
+  "resources/js/saturn-scene.js": {
+    "file": "assets/saturn-scene-B6dxkpIt.js",
+    "name": "saturn-scene",
+    "src": "resources/js/saturn-scene.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_saturn-brand-viewer-7Wkmvcw2.js"
+    ]
   }
 }

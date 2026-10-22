@@ -18,7 +18,7 @@
 <section class="complete-profile-shell">
     <header class="complete-profile-header">
         <div class="complete-profile-brand">
-            <img src="{{ asset('img/saturno_branco_quadrado.svg') }}" alt="Saturn Cloud" class="complete-profile-logo">
+            <img src="{{ asset('img/logo-128.png') }}" alt="Saturn Cloud" class="complete-profile-logo">
         </div>
         <div class="complete-profile-intro">
             <span class="complete-profile-eyebrow">Última etapa</span>

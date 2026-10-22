@@ -11,7 +11,7 @@
 <div class="login-shell">
     <aside class="login-aside" aria-labelledby="login-context-title">
         <a href="{{ route('home') }}" class="login-brand" aria-label="Voltar para a página inicial da Saturn Cloud">
-            <img src="{{ asset('img/saturno_branco_quadrado.svg') }}" alt="" width="48" height="48">
+            <img src="{{ asset('img/logo-128.png') }}" alt="" width="48" height="48">
             <span>Saturn <strong>Cloud</strong></span>
         </a>
 

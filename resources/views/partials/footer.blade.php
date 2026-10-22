@@ -1,15 +1,15 @@
 <footer class="site-footer">
     <div class="container">
+        <div class="footer-editorial"><p>Seu próximo projeto<br>começa com uma boa base.</p><a href="{{ route('vps.index') }}" aria-label="Explorar servidores">↗</a></div>
         <div class="footer-grid">
 
             <div class="footer-brand">
                 <div class="brand">
-                    <img src="{{ asset('img/saturno_branco_quadrado.svg') }}" alt="" class="footer-logo" width="50" height="50">
-                    <span class="footer-brand-name">Saturn <strong>Cloud</strong></span>
+                    <img src="{{ asset('img/logo-128.png') }}" alt="" class="footer-logo" width="44" height="44" decoding="async">
+                    <span class="saturn-brand-wordmark">Saturn <strong>Cloud</strong></span>
                 </div>
 
                 <p>Hospedagem e infraestrutura digital com informações comerciais claras e gestão pela área do cliente.</p>
-                {{-- [SUBSTITUIR POR DADO REAL] Adicionar razão social e CNPJ após validação jurídica. --}}
 
                 <a href="mailto:contato@corelabs.dev.br">
                     contato@corelabs.dev.br

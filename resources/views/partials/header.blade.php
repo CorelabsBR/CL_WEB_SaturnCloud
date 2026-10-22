@@ -5,8 +5,8 @@
         <nav class="nav-inner">
 
             <a class="brand" href="{{ url('/') }}" aria-label="Saturn Cloud — página inicial">
-                <img src="{{ asset('img/saturno_branco_quadrado.svg') }}" alt="" class="site-logo" width="44" height="44">
-                <span class="site-brand-name">Saturn <strong>Cloud</strong></span>
+                <img src="{{ asset('img/logo-128.png') }}" alt="" class="site-logo" width="44" height="44" decoding="async">
+                    <span class="saturn-brand-wordmark">Saturn <strong>Cloud</strong></span>
             </a>
 
             @php
@@ -44,8 +44,9 @@
                 </li>
                 <li><a href="{{ url('/vps') }}" class="{{ $navActive(['vps', 'vps/*']) }}">Servidores VPS</a></li>
                 <li><a href="{{ route('pages.show', 'infraestrutura') }}" class="{{ $navActive(['infraestrutura']) }}">Infraestrutura</a></li>
+                <li><a href="{{ route('pages.show', 'sobre') }}" class="{{ $navActive(['sobre']) }}">Sobre</a></li>
                 <li>
-                    <a href="{{ route('help.index') }}" class="{{ $navActive(['ajuda', 'ajuda/*']) }}">Ajuda</a>
+                    <a href="{{ route('help.index') }}" class="{{ $navActive(['ajuda', 'ajuda/*']) }}">Suporte</a>
                 </li>
             </ul>
 
@@ -126,7 +127,7 @@
 
         </nav>
 
-        <nav class="mobile-nav" id="mobile-nav">
+        <nav class="mobile-nav" id="mobile-nav" aria-label="Navegação mobile" inert>
             <a
                 href="{{ url('/') }}"
                 class="{{ request()->is('/') ? 'active' : '/' }}"
@@ -147,7 +148,8 @@
                 Hospedagem Web
             </a>
             <a href="{{ route('pages.show', 'infraestrutura') }}">Infraestrutura</a>
-            <a href="{{ route('help.index') }}" class="{{ $navActive(['ajuda', 'ajuda/*']) }}">Ajuda</a>
+            <a href="{{ route('pages.show', 'sobre') }}">Sobre a Saturn</a>
+            <a href="{{ route('help.index') }}" class="{{ $navActive(['ajuda', 'ajuda/*']) }}">Suporte</a>
 
             @auth
                 <a

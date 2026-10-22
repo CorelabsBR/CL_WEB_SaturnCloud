@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#09090B">
     <title>{{ $jogo->nome }} - Saturn Cloud</title>
 
-    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="icon" type="image/png" sizes="128x128" href="{{ asset('img/logo-128.png') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/terraria.css') }}?v={{ filemtime(public_path('css/terraria.css')) }}">

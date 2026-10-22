@@ -3,3 +3,6 @@
 @media(max-width:1050px){.nav-inner{grid-template-columns:190px 1fr auto}.nav-links{display:none}.hamburger{display:block;margin-left:.4rem}.nav-actions{grid-column:2}.site-logo{width:175px}}
 @media(max-width:640px){.nav-inner{min-height:68px;grid-template-columns:1fr auto}.site-logo{width:156px}.nav-actions{display:none}.hamburger{grid-column:2}.mobile-nav{grid-column:1/-1}.nav-cart-label{display:inline}}
 @media(prefers-reduced-motion:reduce){.nav-links a::after,.hamburger span{transition:none}}
+/* Shared official mark, including layouts that do not load cinematic.css. */
+.brand{gap:10px}.brand .site-logo{width:44px;height:44px;max-height:none;object-fit:contain;flex-shrink:0}.saturn-brand-wordmark{color:#f2f0f5;font-size:1rem;font-weight:500;letter-spacing:-.035em;white-space:nowrap}.saturn-brand-wordmark strong{font-weight:700}
+@media(max-width:760px){.brand .site-logo{width:36px;height:36px}.saturn-brand-wordmark{font-size:.9rem}}

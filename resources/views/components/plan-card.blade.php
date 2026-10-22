@@ -1,7 +1,7 @@
 @props(['product', 'type' => 'web'])
 <article class="vtx-plan-card {{ $product->featured ? 'is-featured' : '' }}">
-    @if($product->featured)<span class="vtx-plan-ribbon">Mais vendido</span>@endif
-    <p class="vtx-plan-kicker">{{ $type === 'vps' ? 'VPS NVMe' : 'Hospedagem de sites' }}</p>
+    @if($product->featured)<span class="vtx-plan-ribbon">Em destaque</span>@endif
+    <p class="vtx-plan-kicker">{{ $type === 'vps' ? 'Servidor VPS' : 'Hospedagem de sites' }}</p>
     <h3>{{ $product->nome }}</h3>
     <p class="vtx-plan-copy">{{ $product->descricao ?: ($type === 'vps' ? 'Servidor virtual para projetos profissionais.' : 'Hospedagem confiável para seu projeto online.') }}</p>
     <div class="vtx-plan-price"><span>R$</span><strong>{{ number_format($product->preco, 2, ',', '.') }}</strong><small>/{{ $type === 'vps' ? 'mês' : 'ano' }}</small></div>

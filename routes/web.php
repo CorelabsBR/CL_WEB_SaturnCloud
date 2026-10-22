@@ -23,6 +23,7 @@ use App\Http\Controllers\PublicPageController;
 use App\Http\Controllers\HelpCenterController;
 
 Route::get('/', HomeController::class)->name('home');
+Route::view('/modelo-saturno', 'pages.saturn-model')->name('saturn.model');
 Route::get('/ajuda', [HelpCenterController::class, 'index'])->name('help.index');
 Route::get('/ajuda/{slug}', [HelpCenterController::class, 'show'])->name('help.show');
 Route::get('/{page}', [PublicPageController::class, 'show'])

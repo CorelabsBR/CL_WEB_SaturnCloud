@@ -2,8 +2,10 @@
 @section('title', 'Central de Ajuda | Saturn Cloud')
 @section('meta_description', 'Tutoriais de hospedagem de sites, VPS, domínios, DNS, pagamentos e segurança explicados de forma simples.')
 @push('styles')<link rel="stylesheet" href="{{ asset('css/help.css') }}?v={{ filemtime(public_path('css/help.css')) }}">@endpush
+@section('body_class', 'saturn-help')
 @section('content')
 <section class="help-hero"><div class="container"><p class="eyebrow">Base de conhecimento</p><h1>Como podemos ajudar?</h1><p>Respostas claras para configurar sua hospedagem, domínio ou VPS — mesmo que seja sua primeira vez.</p><div class="help-search"><label class="sr-only" for="help-search">Buscar na Central de Ajuda</label><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="help-search" type="search" placeholder="Busque por DNS, SSL, Pix, VPS..." autocomplete="off" data-help-search></div><p class="help-search-status" role="status" aria-live="polite" data-help-status></p></div></section>
+<div class="container support-paths"><a href="{{ auth()->check() ? route('ticket.index') : route('login') }}"><h2>Suporte com contexto.</h2><p>Abra um chamado e acompanhe o histórico pela sua conta.</p><span>Acessar atendimento ↗</span></a><a href="{{ route('pages.show', 'contato') }}"><h2>Vamos falar do seu projeto.</h2><p>Entre em contato com a equipe para orientação comercial.</p><span>Falar com a Saturn ↗</span></a></div>
 <section class="help-catalog"><div class="container" data-help-catalog>
 @foreach($categories as $categorySlug => $category)
     @php($categoryArticles = $articles->filter(fn($article) => $article['category'] === $categorySlug))

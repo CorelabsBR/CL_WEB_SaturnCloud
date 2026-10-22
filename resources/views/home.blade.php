@@ -4,43 +4,16 @@
 @section('body_class', 'saturn-home')
 
 @section('content')
-<section class="home-hero" aria-labelledby="home-title">
-    <div class="home-hero-grid"></div>
-    <div class="container home-hero-layout">
-        <div class="home-hero-copy">
-            <p class="home-kicker"><span></span> Infraestrutura para projetos digitais</p>
-            <h1 id="home-title">Infraestrutura que mantém suas ideias <em>em movimento.</em></h1>
-            <p class="home-lead">Hospedagem de sites e servidores VPS com uma jornada direta: você compara, contrata e acompanha tudo pela mesma conta.</p>
-            <div class="home-hero-actions">
-                <a class="btn btn-primary btn-lg" href="#planos">Explorar planos <span aria-hidden="true">↗</span></a>
-                <a class="home-text-link" href="{{ route('pages.show', 'infraestrutura') }}">Conhecer a infraestrutura <span aria-hidden="true">→</span></a>
-            </div>
-            <ul class="home-proof" aria-label="Facilidades da plataforma">
-                <li><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 10 3 3 7-7"/></svg> Planos com recursos claros</li>
-                <li><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 10 3 3 7-7"/></svg> Pagamento via Pix ou cartão</li>
-            </ul>
-        </div>
-        <div class="home-console" aria-label="Representação visual da área do cliente">
-            <div class="console-orbit" aria-hidden="true"></div>
-            <div class="console-window">
-                <div class="console-bar"><span></span><span></span><span></span><small>painel.saturn</small></div>
-                <div class="console-shell">
-                    <aside><img src="{{ asset('img/saturno_branco_quadrado - Copy.svg') }}" alt=""><i class="active"></i><i></i><i></i><i></i></aside>
-                    <div class="console-content">
-                        <div class="console-heading"><div><small>VISÃO GERAL</small><strong>Boa noite.</strong></div><span>+ novo serviço</span></div>
-                        <div class="console-summary"><small>SERVIÇOS</small><strong>02</strong><i></i><small>EM UMA CONTA</small></div>
-                        <div class="console-services">
-                            <div><span class="service-dot"></span><p><strong>projeto-web</strong><small>Hospedagem</small></p><b>Ativo</b></div>
-                            <div><span class="service-dot"></span><p><strong>servidor-app</strong><small>VPS</small></p><b>Ativo</b></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="console-tag tag-one"><small>01 / CONTROLE</small><strong>Serviços centralizados</strong></div>
-            <div class="console-tag tag-two"><small>02 / CLAREZA</small><strong>Recursos à vista</strong></div>
-        </div>
+<section class="cosmic-hero" aria-labelledby="home-title">
+    <div class="container cosmic-heading">
+        <p class="scene-caption"><span></span> Saturn Cloud · Infraestrutura digital</p>
+        <h1 id="home-title"><span>INFRAESTRUTURA</span><span>SEM LIMITES.</span></h1>
     </div>
-    <a class="home-scroll" href="#solucoes" aria-label="Ir para as soluções"><span></span> Descubra</a>
+    @include('partials.saturn-scene', ['sceneClass' => 'saturn-home-scene', 'priority' => true])
+    <div class="container cosmic-bottom">
+        <div class="cosmic-intro"><p>Potência, estabilidade e liberdade para construir o que vem depois.</p><div class="cosmic-actions"><a class="btn btn-primary btn-lg" href="{{ route('vps.index') }}">Explorar servidores <span aria-hidden="true">↗</span></a><a class="quiet-link" href="{{ route('pages.show', 'sobre') }}">Conhecer a Saturn</a></div></div>
+        <a class="scroll-cue" href="#solucoes"><span aria-hidden="true">↓</span> Existe um universo de possibilidades.</a>
+    </div>
 </section>
 
 <section class="home-signal" aria-label="Recursos disponíveis conforme o plano"><div class="container"><span>Hospedagem web</span><i></i><span>Servidores VPS</span><i></i><span>Painel do cliente</span><i></i><span>Suporte com histórico</span></div></section>
@@ -65,10 +38,7 @@
     <ol class="operation-flow"><li><span>01</span><div><strong>Compare</strong><p>Veja preço e recursos publicados em cada plano.</p></div></li><li><span>02</span><div><strong>Contrate</strong><p>Finalize o pedido pelo checkout da plataforma.</p></div></li><li><span>03</span><div><strong>Acompanhe</strong><p>Consulte pedidos, serviços e suporte na área do cliente.</p></div></li></ol>
 </div></section>
 
-<section class="home-section home-platform"><div class="container platform-grid">
-    <div class="platform-visual" aria-hidden="true"><div class="platform-top"><span></span><span></span><span></span><b>painel.saturn</b></div><div class="platform-body"><aside><i></i><i></i><i></i><i></i></aside><div class="platform-content"><small>VISÃO GERAL</small><strong>Seus serviços</strong><div class="platform-line is-wide"></div><div class="platform-line"></div><div class="platform-metrics"><i></i><i></i><i></i></div></div></div></div>
-    <div class="platform-copy"><p class="home-kicker">Tudo em um só lugar</p><h2>Menos ruído.<br>Mais visão da operação.</h2><ul><li><span>01</span><div><strong>Pedidos e serviços</strong><p>Acompanhe o que foi contratado e o estado dos seus serviços.</p></div></li><li><span>02</span><div><strong>Atendimento registrado</strong><p>Mantenha o histórico de suporte associado à sua conta.</p></div></li><li><span>03</span><div><strong>Gestão centralizada</strong><p>Acesse os fluxos disponíveis sem alternar entre plataformas.</p></div></li></ul></div>
-</div></section>
+<section class="orbit-story" aria-labelledby="orbit-title"><div class="container orbit-story-layout"><p class="scene-caption">A base para o seu próximo passo</p><div><h2 id="orbit-title" data-reveal>Ideias grandes.<br>Uma base à altura.</h2><p>Da primeira publicação à próxima aplicação. Hospedagem, servidores e atendimento conectados para você seguir construindo.</p><a class="quiet-link" href="{{ route('pages.show', 'infraestrutura') }}">Infraestrutura sem caixa-preta <span aria-hidden="true">↗</span></a></div></div><div class="orbital-traces" aria-hidden="true"><i></i><i></i><i></i></div></section>
 
 @php($faqs = [
     ['Qual é a diferença entre hospedagem web e VPS?', 'A hospedagem web oferece um ambiente mais simples para publicar sites. A VPS dá mais autonomia sobre o servidor e é indicada para aplicações e configurações específicas.'],

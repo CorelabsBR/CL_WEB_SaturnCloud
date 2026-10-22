@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#09090B">
+    <meta name="theme-color" content="#050505">
     <meta name="description" content="@yield('meta_description', 'Políticas e termos aplicáveis aos serviços da Saturn Cloud.')">
     <title>@yield('title', 'Saturn Cloud')</title>
 
-    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="icon" type="image/png" sizes="128x128" href="{{ asset('img/logo-128.png') }}">
 
     <link rel="stylesheet" href="{{ asset('css/base.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
@@ -21,6 +21,9 @@
 
 
     @stack('styles')
+    <link rel="preload" href="{{ asset('fonts/manrope-regular.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="{{ asset('css/cinematic.css') }}?v={{ filemtime(public_path('css/cinematic.css')) }}">
+    @vite('resources/js/app.js')
 </head>
 
 <body class="@yield('body_class')">

@@ -5,26 +5,16 @@
 
 @section('content')
 <section class="vps-hero" aria-labelledby="vps-title">
-    <div class="vps-grid-bg"></div>
+
     <div class="container vps-hero-layout">
         <div class="vps-hero-copy">
             <p class="vps-kicker"><span></span> Servidores virtuais</p>
-            <h1 id="vps-title">Seu ambiente.<br><em>Suas decisões.</em></h1>
-            <p>Servidores VPS para aplicações, automações e múltiplos projetos. Compare os recursos publicados e contrate pela mesma plataforma em que você acompanha sua operação.</p>
+            <h1 id="vps-title">POTÊNCIA.<br>AUTONOMIA.<br>SEU VPS.</h1>
+            <p>Seu ambiente para aplicações, automações e novos projetos. Escolha uma configuração e assuma o próximo passo.</p>
             <div class="vps-actions"><a class="btn btn-primary btn-lg" href="#planos-vps">Comparar planos <span aria-hidden="true">↓</span></a><a class="vps-inline-link" href="#como-funciona">Entender o produto <span aria-hidden="true">→</span></a></div>
             <ul class="vps-quick"><li>Recursos descritos por plano</li><li>Pagamento em reais</li><li>Gestão pela área do cliente</li></ul>
         </div>
-        <div class="server-scene" aria-label="Representação visual de uma infraestrutura virtual">
-            <div class="server-orbit orbit-a"></div><div class="server-orbit orbit-b"></div>
-            <div class="server-rack">
-                <div class="rack-head"><span>SATURN NODE</span><i></i></div>
-                <div class="rack-unit"><span><i></i><i></i><i></i></span><b>COMPUTE</b><small>01</small></div>
-                <div class="rack-unit"><span><i></i><i></i><i></i></span><b>MEMORY</b><small>02</small></div>
-                <div class="rack-unit"><span><i></i><i></i><i></i></span><b>STORAGE</b><small>03</small></div>
-                <div class="rack-foot"><span>VIRTUAL ENVIRONMENT</span><strong>READY</strong></div>
-            </div>
-            <div class="scene-label label-compute"><small>CAMADA 01</small><strong>Processamento</strong></div><div class="scene-label label-storage"><small>CAMADA 02</small><strong>Armazenamento</strong></div>
-        </div>
+        <div class="vps-art" aria-hidden="true"><div class="compute-stack"><div><span>Compute</span><i></i></div><div><span>Memory</span><i></i></div><div><span>Storage</span><i></i></div><div><span>Saturn Cloud</span><i></i></div></div><span class="compute-caption">Seu espaço para construir.</span></div>
     </div>
 </section>
 

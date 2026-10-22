@@ -1,0 +1,133 @@
+import { mkdir, writeFile } from "node:fs/promises";
+import assert from "node:assert/strict";
+import * as THREE from "three";
+import { GLTFExporter } from "three/addons/exporters/GLTFExporter.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { createSaturnBrandModel } from "../resources/js/saturn-brand-model.js";
+import { applySaturnBrandPose } from "../resources/js/saturn-brand-motion.js";
+
+// The exporter only needs FileReader for its binary buffer; there are no images.
+globalThis.FileReader = class {
+    readAsArrayBuffer(blob) {
+        blob.arrayBuffer().then((result) => {
+            this.result = result;
+            this.onloadend?.();
+        });
+    }
+};
+const model = createSaturnBrandModel();
+model.updateMatrixWorld(true);
+assert.equal(
+    model.getObjectByName("Spherical network junctions"),
+    undefined,
+    "The globe grid must not contain node balls",
+);
+let triangles = 0,
+    meshes = 0;
+model.traverse((object) => {
+    if (!object.isMesh) return;
+    meshes++;
+    if (object.material.isMeshStandardMaterial) {
+        assert.equal(
+            object.material.metalness,
+            0,
+            "All surfaces must be nonmetallic",
+        );
+        assert.equal(
+            object.material.roughness,
+            1,
+            "All surfaces must have a matte finish",
+        );
+    }
+    assert(!object.material.map, "The emblem must not use an image texture");
+    object.geometry.computeBoundingBox();
+    const size = object.geometry.boundingBox.getSize(new THREE.Vector3());
+    assert(
+        size.x > 0.001 && size.y > 0.001 && size.z > 0.001,
+        `${object.name} must have volume`,
+    );
+    triangles +=
+        (object.geometry.index?.count ??
+            object.geometry.attributes.position.count) / 3;
+});
+// Verify six minutes of motion: the globe axis never pitches/rolls, even on scroll.
+const motionModel = createSaturnBrandModel({ lowPower: true });
+const axis = new THREE.Vector3(0, 1, 0);
+const quaternion = new THREE.Quaternion();
+const referenceRingAxis = axis
+    .clone()
+    .applyEuler(new THREE.Euler(0.34, 0, 0))
+    .applyEuler(new THREE.Euler(0, (75 * Math.PI) / 180, 0));
+let firstSatellite, lastSatellite;
+for (let time = 0; time <= 360; time += 0.5) {
+    applySaturnBrandPose(motionModel, time, (time % 7) / 6);
+    assert.equal(
+        motionModel.rotation.y,
+        (75 * Math.PI) / 180,
+        "The display must retain the 75-degree side view",
+    );
+    motionModel.updateMatrixWorld(true);
+    const globe = motionModel.getObjectByName("Spherical network");
+    globe.getWorldQuaternion(quaternion);
+    const worldAxis = axis.clone().applyQuaternion(quaternion);
+    assert(
+        worldAxis.distanceTo(axis) < 1e-10,
+        "The planet must stay upright throughout the animation",
+    );
+    const orbits = motionModel.getObjectByName("Orbital framework");
+    orbits.getWorldQuaternion(quaternion);
+    assert(
+        axis.clone().applyQuaternion(quaternion).distanceTo(referenceRingAxis) <
+            1e-10,
+        "The rings must keep exactly the same inclination while spinning",
+    );
+    const satellite = new THREE.Vector3(2.13, 0, 0).applyMatrix4(
+        orbits.matrixWorld,
+    );
+    if (time === 0) firstSatellite = satellite;
+    if (time === 30) lastSatellite = satellite;
+}
+assert(
+    firstSatellite.distanceTo(lastSatellite) > 0.5,
+    "The rings must actually rotate within their fixed plane",
+);
+assert(
+    model.getObjectByName("Solid spherical core").material.isMeshBasicMaterial,
+    "The ball must not reflect the lights",
+);
+const binary = await new GLTFExporter().parseAsync(model, {
+    binary: true,
+    onlyVisible: true,
+});
+const gltf = await new GLTFLoader().parseAsync(binary, "");
+assert(gltf.scene.children.length > 0);
+const bytes = Buffer.from(binary);
+assert.equal(bytes.toString("ascii", 0, 4), "glTF");
+await mkdir("public/models", { recursive: true });
+await writeFile("public/models/saturn-brand.glb", bytes);
+await writeFile(
+    "public/models/saturn-brand.json",
+    JSON.stringify(
+        {
+            source: "public/img/saturno_branco_quadrado.svg",
+            meshes,
+            triangles,
+            bytes: bytes.length,
+            textures: 0,
+            volumetric: true,
+        },
+        null,
+        2,
+    ) + "\n",
+);
+console.log(
+    JSON.stringify({
+        meshes,
+        triangles,
+        bytes: bytes.length,
+        textures: 0,
+        roundTripGLTF: "passed",
+        uprightMotionSamples: 721,
+        matteCore: true,
+    }),
+);

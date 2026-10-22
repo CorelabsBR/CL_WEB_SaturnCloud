@@ -14,7 +14,10 @@ class ExampleTest extends TestCase
         $response
             ->assertOk()
             ->assertSee('Hospedagem de sites')
-            ->assertSee('VPS Brasil')
+            ->assertSee('Servidores VPS')
+            ->assertSee('INFRAESTRUTURA')
+            ->assertSee('SEM LIMITES.')
+            ->assertSee('data-saturn-scene', false)
             ->assertSee('Infraestrutura sem caixa-preta')
             ->assertDontSee('99.9%')
             ->assertDontSee('24/7')
@@ -23,7 +26,7 @@ class ExampleTest extends TestCase
 
     public function test_public_institutional_routes_are_available(): void
     {
-        foreach (['/vps', '/vps/linux', '/vps/windows', '/ajuda', '/ajuda/o-que-e-hospedagem-de-sites', '/revenda', '/dominios', '/infraestrutura', '/sobre', '/faq', '/contato', '/sla', '/termos', '/politica-privacidade', '/reembolso'] as $uri) {
+        foreach (['/modelo-saturno', '/vps', '/vps/linux', '/vps/windows', '/ajuda', '/ajuda/o-que-e-hospedagem-de-sites', '/revenda', '/dominios', '/infraestrutura', '/sobre', '/faq', '/contato', '/sla', '/termos', '/politica-privacidade', '/reembolso'] as $uri) {
             $this->get($uri)->assertOk();
         }
     }

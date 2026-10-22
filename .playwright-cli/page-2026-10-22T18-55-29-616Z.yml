@@ -1,0 +1,207 @@
+- generic [ref=e2]:
+  - banner:
+    - generic [ref=e3]:
+      - link "Hyze Cloud, início" [ref=e4] [cursor=pointer]:
+        - /url: /pt-br
+        - generic [ref=e7]: Hyze Cloud
+      - navigation "Principal" [ref=e8]:
+        - button "Produto" [ref=e10] [cursor=pointer]
+        - button "Recursos" [ref=e14] [cursor=pointer]
+        - link "IA" [ref=e17] [cursor=pointer]:
+          - /url: /pt-br/ia
+        - link "Preços" [ref=e18] [cursor=pointer]:
+          - /url: /pt-br/pricing
+      - generic [ref=e19]:
+        - link "Entrar" [ref=e20] [cursor=pointer]:
+          - /url: /pt-br/login
+        - link "Testar 7 dias grátis" [ref=e21] [cursor=pointer]:
+          - /url: /pt-br/signup
+  - main [ref=e22]:
+    - generic [ref=e24]:
+      - paragraph [ref=e25]:
+        - generic [ref=e26]: Sobre
+        - text: Hyze Cloud
+      - heading "Hospedagem que sai do seu caminho." [level=1] [ref=e27]
+      - paragraph [ref=e28]: A Hyze Cloud existe para que colocar um projeto no ar seja a parte fácil. Você envia o código; o build, o HTTPS, os logs e o backup ficam com a plataforma.
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - heading "Do código à URL, sem virar especialista em servidor." [level=2] [ref=e32]: Do código à URL,sem virar especialista em servidor.
+          - paragraph [ref=e33]: A Hyze hoje, medida pela própria plataforma.
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - heading "Por que a Hyze existe" [level=3] [ref=e36]
+            - paragraph [ref=e37]: "Quem constrói quer o app no ar, com um endereço que funciona. Não quer gastar o dia configurando máquina, certificado e deploy, nem descobrir de madrugada por que o processo caiu. A Hyze encurta esse caminho: do código até a URL, com espaço para crescer quando o projeto pedir."
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - term [ref=e40]: Deploys nos últimos 30 dias
+              - definition [ref=e41]: "1.089"
+            - generic [ref=e42]:
+              - term [ref=e43]: Disponibilidade em 90 dias
+              - definition [ref=e44]: 99,99%
+            - generic [ref=e45]:
+              - term [ref=e46]: Requisições servidas em 30 dias
+              - definition [ref=e47]: "876.747"
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - heading "Quem faz a Hyze." [level=2] [ref=e50]: Quem faza Hyze.
+          - paragraph [ref=e51]: Uma empresa brasileira, com uma pessoa de verdade do outro lado.
+        - generic [ref=e57]:
+          - paragraph [ref=e58]: Fundador
+          - heading "Gabriel Augusto" [level=3] [ref=e59]
+          - paragraph [ref=e60]: Constrói e mantém a plataforma, do deploy ao pagamento no Pix.
+          - blockquote [ref=e61]: Quem responde no Discord é quem escreve o código da Hyze. Se algo não funcionar como deveria, você fala direto com quem pode resolver.
+          - generic [ref=e62]:
+            - link "Falar no Discord" [ref=e63] [cursor=pointer]:
+              - /url: https://discord.gg/SMrU4jdyd
+            - link "Hyze Cloud no GitHub" [ref=e66] [cursor=pointer]:
+              - /url: https://github.com/Hyze-Cloud
+      - generic [ref=e69]:
+        - generic [ref=e70]:
+          - heading "O que guia cada decisão." [level=2] [ref=e71]: O que guiacada decisão.
+          - paragraph [ref=e72]: Três regras que valem para cada tela e cada plano.
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - heading "Direto ao ponto" [level=3] [ref=e78]
+            - paragraph [ref=e79]: Telas claras e nenhum passo escondido. Se você entende o que está acontecendo em poucos minutos, o produto cumpriu o papel.
+          - generic [ref=e80]:
+            - heading "Sem letra miúda" [level=3] [ref=e84]
+            - paragraph [ref=e85]: Planos e limites explícitos, preço em reais e pagamento no Pix. Você sabe exatamente o que está pagando, e por quê.
+          - generic [ref=e86]:
+            - heading "Visível depois do deploy" [level=3] [ref=e90]
+            - paragraph [ref=e91]: Logs, métricas, status e variáveis à mão para manter o app saudável no dia a dia, não só no dia do lançamento.
+      - generic [ref=e92]:
+        - generic [ref=e93]:
+          - heading "O que você pode publicar." [level=2] [ref=e94]: O que vocêpode publicar.
+          - paragraph [ref=e95]: Tudo pelo mesmo fluxo, no mesmo painel.
+        - list [ref=e96]:
+          - listitem [ref=e97]: Sites, painéis e apps web, pelo GitHub ou por um arquivo .zip
+          - listitem [ref=e100]: APIs em Node.js, Bun, Python ou Go
+          - listitem [ref=e103]: Bancos de dados ao lado das aplicações que os usam
+          - listitem [ref=e106]: Domínio próprio com HTTPS automático
+          - listitem [ref=e109]: Variáveis de ambiente e configurações por aplicação
+          - listitem [ref=e112]: Deploy automático a cada push no GitHub
+      - generic [ref=e115]:
+        - generic [ref=e116]:
+          - heading "Feito para quem constrói." [level=2] [ref=e117]: Feito para quemconstrói.
+          - paragraph [ref=e118]: De projetos pessoais a produtos em produção.
+        - generic [ref=e119]:
+          - paragraph [ref=e120]: "Para quem constrói sozinho ou em equipe pequena: projeto pessoal, MVP, bot de comunidade ou um SaaS no começo. Para quem quer algo no ar de verdade, sem montar e manter servidor."
+          - generic [ref=e121]:
+            - figure "Oreon · via Discord" [ref=e122]:
+              - blockquote [ref=e123]: Se você procura uma hospedagem capaz de suportar aplicações sérias, acredito que acabou de encontrar!
+            - figure "Cryzen · via Discord" [ref=e125]:
+              - blockquote [ref=e126]: deploy super rápido, suporte rápido, barato 10/10 sem lag e delay
+          - link "Ver todos os depoimentos" [ref=e128] [cursor=pointer]:
+            - /url: /pt-br#depoimentos
+      - generic [ref=e131]:
+        - generic [ref=e132]:
+          - heading "Fale com a Hyze." [level=2] [ref=e133]: Falecom a Hyze.
+          - paragraph [ref=e134]: Os canais oficiais, todos em português.
+        - generic [ref=e135]:
+          - link "Discord Suporte e comunidade, em português." [ref=e136] [cursor=pointer]:
+            - /url: https://discord.gg/SMrU4jdyd
+            - generic [ref=e140]:
+              - generic [ref=e141]: Discord
+              - generic [ref=e142]: Suporte e comunidade, em português.
+          - link "Documentação Guias, API e referência da CLI." [ref=e145] [cursor=pointer]:
+            - /url: https://docs.hyzecloud.app
+            - generic [ref=e149]:
+              - generic [ref=e150]: Documentação
+              - generic [ref=e151]: Guias, API e referência da CLI.
+          - link "Status Disponibilidade dos serviços em tempo real." [ref=e154] [cursor=pointer]:
+            - /url: https://status.hyzecloud.com/
+            - generic [ref=e158]:
+              - generic [ref=e159]: Status
+              - generic [ref=e160]: Disponibilidade dos serviços em tempo real.
+    - generic [ref=e164]:
+      - heading "Coloque seu projeto no ar hoje." [level=2] [ref=e165]
+      - paragraph [ref=e166]: Veja os planos ou crie a conta e teste por 7 dias, sem cartão.
+      - generic [ref=e167]:
+        - link "Ver preços" [ref=e168] [cursor=pointer]:
+          - /url: /pt-br/pricing
+        - link "Testar 7 dias grátis" [ref=e169] [cursor=pointer]:
+          - /url: /pt-br/signup
+  - contentinfo [ref=e172]:
+    - generic [ref=e173]:
+      - generic [ref=e174]:
+        - generic [ref=e175]:
+          - link "Hyze Cloud" [ref=e176] [cursor=pointer]:
+            - /url: /pt-br
+          - paragraph [ref=e178]: Hospedagem para sites, APIs, bots e bancos de dados. Do push ao ar, sem configurar servidor — em reais e em português.
+          - link "Status dos serviços" [ref=e179] [cursor=pointer]:
+            - /url: https://status.hyzecloud.com/
+          - generic [ref=e181]:
+            - link "GitHub" [ref=e182] [cursor=pointer]:
+              - /url: https://github.com/Hyze-Cloud
+            - link "Discord" [ref=e185] [cursor=pointer]:
+              - /url: https://discord.gg/SMrU4jdyd
+            - link "npm" [ref=e188] [cursor=pointer]:
+              - /url: https://www.npmjs.com/package/@hyze-cloud/cli
+        - navigation "Rodapé" [ref=e191]:
+          - generic [ref=e192]:
+            - heading "Produto" [level=2] [ref=e193]
+            - link "O que hospedar" [ref=e194] [cursor=pointer]:
+              - /url: /pt-br#hospedar
+            - link "Como funciona" [ref=e195] [cursor=pointer]:
+              - /url: /pt-br#como
+            - link "Bots do Discord" [ref=e196] [cursor=pointer]:
+              - /url: /pt-br/bot-discord
+            - link "APIs" [ref=e197] [cursor=pointer]:
+              - /url: /pt-br/hospedar-api
+            - link "Sites" [ref=e198] [cursor=pointer]:
+              - /url: /pt-br/sites
+            - link "Bancos de dados" [ref=e199] [cursor=pointer]:
+              - /url: /pt-br/banco-de-dados
+            - link "Preços" [ref=e200] [cursor=pointer]:
+              - /url: /pt-br/pricing
+            - link "Novidades" [ref=e201] [cursor=pointer]:
+              - /url: /pt-br/changelog
+          - generic [ref=e202]:
+            - heading "Desenvolvedores" [level=2] [ref=e203]
+            - link "Documentação" [ref=e204] [cursor=pointer]:
+              - /url: https://docs.hyzecloud.app
+            - link "Quickstart" [ref=e205] [cursor=pointer]:
+              - /url: https://docs.hyzecloud.app/quickstart
+            - link "API Reference" [ref=e206] [cursor=pointer]:
+              - /url: https://docs.hyzecloud.app/api-reference/introduction
+            - link "CLI" [ref=e207] [cursor=pointer]:
+              - /url: /pt-br/cli
+            - link "SDK TypeScript" [ref=e208] [cursor=pointer]:
+              - /url: /pt-br/sdk-typescript
+            - link "SDK Python" [ref=e209] [cursor=pointer]:
+              - /url: /pt-br/sdk-python
+          - generic [ref=e210]:
+            - heading "Recursos" [level=2] [ref=e211]
+            - link "Guias" [ref=e212] [cursor=pointer]:
+              - /url: /pt-br/guias
+            - link "Comparar planos" [ref=e213] [cursor=pointer]:
+              - /url: /pt-br/pricing
+            - link "Hyze × alternativas" [ref=e214] [cursor=pointer]:
+              - /url: /pt-br/comparar
+            - link "Status dos serviços" [ref=e215] [cursor=pointer]:
+              - /url: /pt-br/status
+            - link "Comunidade no Discord" [ref=e216] [cursor=pointer]:
+              - /url: https://discord.gg/SMrU4jdyd
+          - generic [ref=e217]:
+            - heading "Empresa" [level=2] [ref=e218]
+            - link "Sobre" [ref=e219] [cursor=pointer]:
+              - /url: /pt-br/about
+            - link "Entrar" [ref=e220] [cursor=pointer]:
+              - /url: /pt-br/login
+            - link "Criar conta grátis" [ref=e221] [cursor=pointer]:
+              - /url: /pt-br/signup
+            - link "Termos de uso" [ref=e222] [cursor=pointer]:
+              - /url: /pt-br/terms
+            - link "Privacidade" [ref=e223] [cursor=pointer]:
+              - /url: /pt-br/privacy
+      - generic [ref=e224]:
+        - generic [ref=e225]: © 2026 Hyze Cloud · CNPJ 61.613.185/0001-02 · Feito no Brasil
+        - generic [ref=e226]:
+          - generic [ref=e227]: Pagamento via
+          - generic [ref=e228]: Pix
+        - combobox "Idioma" [ref=e233] [cursor=pointer]:
+          - option "Português (Brasil)" [selected]
+          - option "English"
+    - generic [aria-hidden] [ref=e234]: hyze
+  - status: Copiado

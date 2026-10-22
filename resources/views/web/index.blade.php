@@ -76,7 +76,7 @@
 
                 <div class="plans-empty">
                     <h3>Nenhum plano disponível</h3>
-                    <p>Cadastre produtos no banco para exibi-los aqui.</p>
+                    <p>Fale com a equipe para encontrar uma solução para o seu site.</p>
                 </div>
 
             @endforelse
