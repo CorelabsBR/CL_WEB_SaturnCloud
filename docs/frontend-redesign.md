@@ -124,3 +124,9 @@ A lente do display usa campo de visão de 16° (prévia técnica permanece em 34
 ### Área inteira da primeira dobra e acabamento fosco
 
 A cena ocupa agora 100% da hero, com inset zero; a janela retangular interna e sua borda foram removidas. O recorte ocorre somente nos limites externos da seção. O mesmo enquadramento em tela cheia foi aplicado à cena Sobre. Materiais do grid, anéis e satélites: metalness 0 e roughness 1, emissão reduzida e iluminação suavizada. A esfera interna continua sem reflexos. O exportador verifica também os parâmetros foscos antes de regenerar o GLB. Em telas verticais a lente é ajustada para manter o recorte aproximado de um quarto sem perder o preenchimento da seção. O orçamento de pixels continua limitado.
+
+## Saturno natural com anéis de partículas — versão atual
+
+A grade e os toros do símbolo deram lugar a uma esfera oblata com faixas atmosféricas procedurais e anéis granulares. São 48.000 partículas e 1.200 fragmentos 3D instanciados no desktop, 14.000 / 360 no modo leve. Três objetos renderizáveis: atmosfera, campo de pontos e malha instanciada. O material da atmosfera tem metalness 0, roughness 1 e specularIntensity 0, mantendo acabamento fosco com luz difusa. Não há imagens ou texturas aplicadas ao planeta.
+
+Os anéis têm distribuição radial variável, espessura tridimensional e espaços reais nas divisões. O plano orbital fica fixo e o grupo interno gira em seu próprio eixo. A abertura do plano permite ver a superfície granular. Mantidos posição, zoom, eixo vertical do planeta, pausa, movimento reduzido, 24 FPS e orçamento de pixels. O 3D continua sob ativação no mobile. Build e 10 testes aprovados; prévia, giro e pausa conferidos em desktop e mobile sem overflow ou erros JavaScript. Exportação GLB reimportada com 48.000 pontos e 1.200 instâncias intactos.

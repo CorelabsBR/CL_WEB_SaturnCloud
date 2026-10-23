@@ -1,120 +1,170 @@
 import * as THREE from "three";
-import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
-// Reconstructs the globe grid, concentric orbits and satellites from the brand SVG
-// as closed, volumetric surfaces. No image, plane, billboard or texture is used.
+// A physical globe and a three-dimensional field of grains. No image planes or textures.
 export function createSaturnBrandModel({ lowPower = false } = {}) {
     const root = new THREE.Group();
-    root.name = "Saturn Cloud — orbital emblem";
+    root.name = "Saturn — atmospheric globe and particulate rings";
     root.userData = {
-        source: "saturno_branco_quadrado.svg",
+        source: "Procedural Saturn, original geometry",
         geometry:
-            "Volumetric sphere, tubular meridians, latitudes, toroidal orbits and spherical nodes",
+            "Oblate banded sphere, 3D ring particles and instanced mineral grains",
         units: "meters",
     };
-    const segments = lowPower ? 64 : 112;
-    const tubeSides = lowPower ? 5 : 8;
-    const purple = new THREE.MeshStandardMaterial({
-        name: "Matte Saturn violet",
-        color: 0x6627c7,
-        metalness: 0,
-        roughness: 1,
-        emissive: 0x4200a8,
-        emissiveIntensity: 0.04,
-    });
-    // The inner ball stays uniformly matte: lighting cannot add a specular highlight.
-    const coreMaterial = new THREE.MeshBasicMaterial({
-        name: "Matte unlit globe",
-        color: 0x09070e,
-    });
-    const addMesh = (geometry, material, name, parent = root) => {
-        geometry.deleteAttribute("uv");
-        const mesh = new THREE.Mesh(geometry, material);
-        mesh.name = name;
-        parent.add(mesh);
-        return mesh;
-    };
-    const merge = (parts, material, name, parent = root) => {
-        const geometry = mergeGeometries(parts);
-        parts.forEach((part) => part.dispose());
-        return addMesh(geometry, material, name, parent);
+    let seed = 41721;
+    const random = () => {
+        seed = (seed * 1664525 + 1013904223) >>> 0;
+        return seed / 4294967296;
     };
     const globe = new THREE.Group();
     globe.name = "Spherical network";
-    globe.rotation.set(0, 0, 0);
     root.add(globe);
-    addMesh(
-        new THREE.SphereGeometry(1.065, lowPower ? 32 : 56, lowPower ? 24 : 40),
-        coreMaterial,
-        "Solid spherical core",
-        globe,
+    const surface = new THREE.SphereGeometry(
+        1.065,
+        lowPower ? 64 : 128,
+        lowPower ? 128 : 256,
     );
-    const ribs = [];
-    for (let index = 0; index < 6; index++) {
-        const meridian = new THREE.TorusGeometry(
-            1.11,
-            0.014,
-            tubeSides,
-            segments,
+    const positions = surface.attributes.position;
+    const colors = new Float32Array(positions.count * 3);
+    for (let index = 0; index < positions.count; index++) {
+        const latitude = positions.getY(index) / 1.065;
+        const longitude = Math.atan2(
+            positions.getZ(index),
+            positions.getX(index),
         );
-        meridian.rotateY((index * Math.PI) / 6);
-        ribs.push(meridian);
+        const turbulence =
+            Math.sin(longitude * 7 + latitude * 22) * 0.2 +
+            Math.sin(longitude * 13 - latitude * 14) * 0.09;
+        const band =
+            Math.sin(latitude * 83 + turbulence) * 0.018 +
+            Math.sin(latitude * 167 + turbulence) * 0.009 +
+            Math.sin(latitude * 28) * 0.027;
+        const polar = Math.abs(latitude) ** 5 * 0.05;
+        colors[index * 3] = 0.29 + band - polar;
+        colors[index * 3 + 1] = 0.235 + band * 0.83 - polar;
+        colors[index * 3 + 2] = 0.205 + band * 0.71 - polar * 0.65;
     }
-    for (const latitude of [-60, -30, 0, 30, 60]) {
-        const angle = THREE.MathUtils.degToRad(latitude);
-        const band = new THREE.TorusGeometry(
-            1.11 * Math.cos(angle),
-            0.014,
-            tubeSides,
-            segments,
-        );
-        band.rotateX(Math.PI / 2);
-        band.translate(0, 1.11 * Math.sin(angle), 0);
-        ribs.push(band);
-    }
-    merge(ribs, purple, "Tubular longitude and latitude grid", globe);
+    surface.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    surface.deleteAttribute("uv");
+    surface.scale(1, 0.9, 1);
+    const coreMaterial = new THREE.MeshPhysicalMaterial({
+        name: "Matte banded atmosphere — zero specular",
+        vertexColors: true,
+        metalness: 0,
+        roughness: 1,
+        specularIntensity: 0,
+    });
+    const core = new THREE.Mesh(surface, coreMaterial);
+    core.name = "Solid spherical core";
+    globe.add(core);
+
     const orbits = new THREE.Group();
     orbits.name = "Orbital framework";
-    orbits.rotation.x = 0.34;
-    orbits.scale.setScalar(1.35);
+    orbits.rotation.set(0.34, 0, 0.35);
+    orbits.scale.setScalar(1.15);
     root.add(orbits);
-    const ringParts = [];
-    for (const [radius, thickness] of [
-        [1.88, 0.014],
-        [2.13, 0.035],
-        [2.25, 0.015],
-    ]) {
-        const ring = new THREE.TorusGeometry(
+    const field = new THREE.Group();
+    field.name = "Particle ring field";
+    orbits.add(field);
+    const inner = 1.22,
+        outer = 2.28;
+    const sampleGrain = () => {
+        let radius;
+        for (;;) {
+            radius = Math.sqrt(
+                inner * inner + random() * (outer * outer - inner * inner),
+            );
+            // Cassini division and a fine outer gap are actual empty spaces in the particle field.
+            if (
+                (radius > 1.88 && radius < 1.96) ||
+                (radius > 2.22 && radius < 2.245)
+            )
+                continue;
+            const density = radius < 1.38 ? 0.3 : radius < 1.88 ? 0.95 : 0.72;
+            if (random() <= density) break;
+        }
+        const angle = random() * Math.PI * 2;
+        return {
             radius,
-            thickness,
-            tubeSides,
-            segments * 2,
+            x: Math.cos(angle) * radius,
+            y: (random() - 0.5) * 0.012,
+            z: Math.sin(angle) * radius,
+        };
+    };
+    const count = lowPower ? 14000 : 48000;
+    const grains = new Float32Array(count * 3);
+    const grainColors = new Float32Array(count * 3);
+    for (let index = 0; index < count; index++) {
+        const grain = sampleGrain();
+        grains.set([grain.x, grain.y, grain.z], index * 3);
+        const shade =
+            0.15 + random() * 0.16 + Math.sin(grain.radius * 220) * 0.025;
+        grainColors.set([shade * 1.05, shade * 0.96, shade * 1.1], index * 3);
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(grains, 3));
+    geometry.setAttribute("color", new THREE.BufferAttribute(grainColors, 3));
+    const material = new THREE.PointsMaterial({
+        name: "Mineral ring grains",
+        vertexColors: true,
+        size: lowPower ? 0.009 : 0.0075,
+        sizeAttenuation: true,
+        depthWrite: false,
+    });
+    // Round grains without downloading a sprite or introducing a textured plane.
+    material.onBeforeCompile = (shader) => {
+        shader.fragmentShader = shader.fragmentShader.replace(
+            "#include <clipping_planes_fragment>",
+            "#include <clipping_planes_fragment>\nif (dot(gl_PointCoord - vec2(0.5), gl_PointCoord - vec2(0.5)) > 0.25) discard;",
         );
-        ring.rotateX(Math.PI / 2);
-        ringParts.push(ring);
+    };
+    material.customProgramCacheKey = () => "round-mineral-grains-v1";
+    const points = new THREE.Points(geometry, material);
+    points.name = "Saturn ring particles";
+    points.renderOrder = 1;
+    field.add(points);
+
+    // A second, instanced layer gives the nearby grains genuine solid volume in close-up.
+    const rockCount = lowPower ? 360 : 1200;
+    const rockGeometry = new THREE.IcosahedronGeometry(1, 0);
+    rockGeometry.deleteAttribute("uv");
+    const rockMaterial = new THREE.MeshStandardMaterial({
+        name: "Matte mineral fragments",
+        color: 0x8f859c,
+        metalness: 0,
+        roughness: 1,
+    });
+    const rocks = new THREE.InstancedMesh(
+        rockGeometry,
+        rockMaterial,
+        rockCount,
+    );
+    rocks.name = "Volumetric ring fragments";
+    const transform = new THREE.Object3D();
+    const color = new THREE.Color();
+    for (let index = 0; index < rockCount; index++) {
+        const grain = sampleGrain();
+        const size = 0.003 + random() * 0.0045;
+        transform.position.set(grain.x, grain.y, grain.z);
+        transform.rotation.set(
+            random() * Math.PI,
+            random() * Math.PI,
+            random() * Math.PI,
+        );
+        transform.scale.set(
+            size,
+            size * (0.5 + random() * 0.5),
+            size * (0.7 + random() * 0.6),
+        );
+        transform.updateMatrix();
+        rocks.setMatrixAt(index, transform.matrix);
+        color.setScalar(0.62 + random() * 0.38);
+        rocks.setColorAt(index, color);
     }
-    merge(ringParts, purple, "Three solid toroidal orbits", orbits);
-    const dottedOrbit = [];
-    for (let index = 0; index < 64; index++) {
-        const angle = (index / 64) * Math.PI * 2;
-        const dot = new THREE.SphereGeometry(0.018, 6, 4);
-        dot.translate(Math.cos(angle) * 2.52, 0, Math.sin(angle) * 2.52);
-        dottedOrbit.push(dot);
-    }
-    merge(dottedOrbit, purple, "Outer orbit — 64 solid markers", orbits);
-    const satellites = [];
-    for (const angle of [0.25, 1.05, 2.8, 3.9, 5.3]) {
-        const x = Math.cos(angle) * 2.13,
-            z = Math.sin(angle) * 2.13;
-        const collar = new THREE.TorusGeometry(0.088, 0.022, tubeSides, 24);
-        collar.rotateX(Math.PI / 2);
-        collar.translate(x, 0, z);
-        satellites.push(collar);
-        const body = new THREE.SphereGeometry(0.045, 12, 8);
-        body.translate(x, 0, z);
-        satellites.push(body);
-    }
-    merge(satellites, purple, "Five volumetric orbital satellites", orbits);
+    rocks.instanceMatrix.needsUpdate = true;
+    rocks.computeBoundingSphere();
+    field.add(rocks);
     root.rotation.set(0, (75 * Math.PI) / 180, 0);
+    root.userData.particles = count;
+    root.userData.rockInstances = rockCount;
     return root;
 }

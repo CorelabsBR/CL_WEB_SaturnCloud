@@ -1,8 +1,10 @@
 {
-  "source": "public/img/saturno_branco_quadrado.svg",
-  "meshes": 5,
-  "triangles": 39896,
-  "bytes": 809796,
+  "source": "Procedural Saturn, original geometry",
+  "meshes": 2,
+  "triangles": 89280,
+  "bytes": 2806256,
   "textures": 0,
+  "particles": 48000,
+  "rockInstances": 1200,
   "volumetric": true
 }

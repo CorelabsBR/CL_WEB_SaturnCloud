@@ -23,7 +23,7 @@ try {
                 perspective: [0, 0, 7.8],
                 side: [7, 0, 0],
                 back: [0, 0, -7],
-                top: [0, 7, 0.01],
+                top: [0, 9, 0.01],
             };
             viewer.camera.position.set(...positions[button.dataset.modelAngle]);
             controls.target.set(0, 0, 0);

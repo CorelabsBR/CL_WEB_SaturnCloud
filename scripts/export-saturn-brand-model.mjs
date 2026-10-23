@@ -47,8 +47,10 @@ model.traverse((object) => {
         `${object.name} must have volume`,
     );
     triangles +=
-        (object.geometry.index?.count ??
-            object.geometry.attributes.position.count) / 3;
+        ((object.isInstancedMesh ? object.count : 1) *
+            (object.geometry.index?.count ??
+                object.geometry.attributes.position.count)) /
+        3;
 });
 // Verify six minutes of motion: the globe axis never pitches/rolls, even on scroll.
 const motionModel = createSaturnBrandModel({ lowPower: true });
@@ -56,7 +58,7 @@ const axis = new THREE.Vector3(0, 1, 0);
 const quaternion = new THREE.Quaternion();
 const referenceRingAxis = axis
     .clone()
-    .applyEuler(new THREE.Euler(0.34, 0, 0))
+    .applyEuler(new THREE.Euler(0.34, 0, 0.35))
     .applyEuler(new THREE.Euler(0, (75 * Math.PI) / 180, 0));
 let firstSatellite, lastSatellite;
 for (let time = 0; time <= 360; time += 0.5) {
@@ -82,7 +84,7 @@ for (let time = 0; time <= 360; time += 0.5) {
         "The rings must keep exactly the same inclination while spinning",
     );
     const satellite = new THREE.Vector3(2.13, 0, 0).applyMatrix4(
-        orbits.matrixWorld,
+        motionModel.getObjectByName("Particle ring field").matrixWorld,
     );
     if (time === 0) firstSatellite = satellite;
     if (time === 30) lastSatellite = satellite;
@@ -92,15 +94,64 @@ assert(
     "The rings must actually rotate within their fixed plane",
 );
 assert(
-    model.getObjectByName("Solid spherical core").material.isMeshBasicMaterial,
-    "The ball must not reflect the lights",
+    model.getObjectByName("Solid spherical core").material.specularIntensity ===
+        0,
+    "The atmosphere must have no specular shine",
 );
-const binary = await new GLTFExporter().parseAsync(model, {
+const particles = model.getObjectByName("Saturn ring particles");
+assert(
+    particles.isPoints &&
+        particles.geometry.attributes.position.count === 48000,
+);
+assert.equal(
+    model.getObjectByName("Tubular longitude and latitude grid"),
+    undefined,
+);
+const grainPositions = particles.geometry.attributes.position;
+for (let index = 0; index < grainPositions.count; index++) {
+    const radius = Math.hypot(
+        grainPositions.getX(index),
+        grainPositions.getZ(index),
+    );
+    assert(radius >= 1.22 - 1e-6 && radius <= 2.28 + 1e-6);
+    assert(
+        !(radius > 1.880001 && radius < 1.959999),
+        "Cassini division must remain empty",
+    );
+}
+// glTF represents particle fields as POINTS primitives. An unlit export material
+// preserves their vertex colors without exporter warnings about PointsMaterial.
+const exportModel = model.clone(true);
+exportModel.traverse((object) => {
+    if (object.isPoints)
+        object.material = new THREE.MeshBasicMaterial({
+            name: "Mineral ring grains",
+            vertexColors: true,
+        });
+});
+const binary = await new GLTFExporter().parseAsync(exportModel, {
     binary: true,
     onlyVisible: true,
 });
 const gltf = await new GLTFLoader().parseAsync(binary, "");
 assert(gltf.scene.children.length > 0);
+let loadedParticles = 0,
+    loadedInstances = 0;
+gltf.scene.traverse((object) => {
+    if (object.isPoints)
+        loadedParticles += object.geometry.attributes.position.count;
+    if (object.isInstancedMesh) loadedInstances += object.count;
+});
+assert.equal(
+    loadedParticles,
+    48000,
+    "The GLB must preserve every ring particle",
+);
+assert.equal(
+    loadedInstances,
+    1200,
+    "The GLB must preserve the solid mineral fragments",
+);
 const bytes = Buffer.from(binary);
 assert.equal(bytes.toString("ascii", 0, 4), "glTF");
 await mkdir("public/models", { recursive: true });
@@ -109,11 +160,13 @@ await writeFile(
     "public/models/saturn-brand.json",
     JSON.stringify(
         {
-            source: "public/img/saturno_branco_quadrado.svg",
+            source: model.userData.source,
             meshes,
             triangles,
             bytes: bytes.length,
             textures: 0,
+            particles: model.userData.particles,
+            rockInstances: model.userData.rockInstances,
             volumetric: true,
         },
         null,
@@ -126,6 +179,8 @@ console.log(
         triangles,
         bytes: bytes.length,
         textures: 0,
+        particles: model.userData.particles,
+        rockInstances: model.userData.rockInstances,
         roundTripGLTF: "passed",
         uprightMotionSamples: 721,
         matteCore: true,
