@@ -244,15 +244,6 @@ textarea:focus-visible {
     width: 116%;
     height: auto;
 }
-.saturn-artwork {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: min(100%, 1320px);
-    height: auto;
-    max-width: none;
-    transform: translate(-50%, -50%);
-}
 .cosmic-bottom {
     position: absolute;
     z-index: 3;
@@ -1857,7 +1848,7 @@ textarea:focus-visible {
         transform: none !important;
     }
 }
-/* True volumetric brand emblem, progressively loaded over the original SVG. */
+/* Fade in the 3D model once its first frame is ready. */
 .saturn-canvas {
     position: absolute;
     inset: 0;
@@ -1872,35 +1863,22 @@ textarea:focus-visible {
 .saturn-scene.is-rendered .saturn-canvas {
     opacity: 1;
 }
-.saturn-scene.is-rendered .saturn-artwork {
-    visibility: hidden;
-}
 @media (prefers-reduced-motion: reduce) {
     .saturn-canvas {
         transition: none;
     }
 }
-/* The display fills the complete hero; only the outer section bounds crop the model. */
+/* The star field spans the full display behind the transparent 3D canvas. */
 .saturn-display-viewport {
+    background: url("../img/saturn-starfield.svg") center / cover no-repeat;
     position: absolute;
     inset: 0;
     overflow: hidden;
     border: 0;
-}
-.saturn-display-viewport > .saturn-artwork {
-    top: 55%;
-    left: calc(90% + 126px);
-    width: 3240px;
 }
 .saturn-home-scene,
 .saturn-about-scene {
     inset: 0;
     width: 100%;
     height: 100%;
-}
-@media (max-width: 760px) {
-    .saturn-display-viewport > .saturn-artwork {
-        left: calc(90% + 72px);
-        width: 2160px;
-    }
 }

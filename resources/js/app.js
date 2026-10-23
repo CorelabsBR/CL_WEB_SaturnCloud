@@ -62,7 +62,7 @@ if (!reducedMotion.matches) {
         .forEach((el) => reveals.observe(el));
 }
 
-// The brand model upgrades the SVG only after the page is ready. Mobile stays opt-in.
+// The brand model loads after the page is ready. Mobile stays opt-in.
 const manualModel =
     matchMedia("(max-width: 760px)").matches ||
     (navigator.hardwareConcurrency || 4) <= 4 ||

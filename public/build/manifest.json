@@ -1,7 +1,7 @@
 {
-  "_saturn-brand-viewer-D05BCco1.js": {
-    "file": "assets/saturn-brand-viewer-D05BCco1.js",
-    "name": "saturn-brand-viewer"
+  "_saturn-brand-motion-DUmvCiYz.js": {
+    "file": "assets/saturn-brand-motion-DUmvCiYz.js",
+    "name": "saturn-brand-motion"
   },
   "resources/css/app.css": {
     "file": "assets/app-CEY-ya1n.css",
@@ -13,7 +13,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-Hbia_0cv.js",
+    "file": "assets/app-Dt4fgLpV.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -22,21 +22,21 @@
     ]
   },
   "resources/js/saturn-model-preview.js": {
-    "file": "assets/saturn-model-preview-BLP86_y9.js",
+    "file": "assets/saturn-model-preview-BRXYDFMT.js",
     "name": "saturn-model-preview",
     "src": "resources/js/saturn-model-preview.js",
     "isEntry": true,
     "imports": [
-      "_saturn-brand-viewer-D05BCco1.js"
+      "_saturn-brand-motion-DUmvCiYz.js"
     ]
   },
   "resources/js/saturn-scene.js": {
-    "file": "assets/saturn-scene-D5BOm8ad.js",
+    "file": "assets/saturn-scene-CR7mRFGS.js",
     "name": "saturn-scene",
     "src": "resources/js/saturn-scene.js",
     "isDynamicEntry": true,
     "imports": [
-      "_saturn-brand-viewer-D05BCco1.js"
+      "_saturn-brand-motion-DUmvCiYz.js"
     ]
   }
 }

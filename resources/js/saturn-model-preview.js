@@ -1,4 +1,5 @@
 import { createSaturnBrandViewer } from "./saturn-brand-viewer.js";
+import { applySaturnBrandPose } from "./saturn-brand-motion.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 const container = document.querySelector("[data-model-preview]");
@@ -17,6 +18,18 @@ try {
     const resize = new ResizeObserver(viewer.resize);
     resize.observe(container);
     viewer.resize();
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0, last = 0, time = 0;
+    const animate = (now) => {
+        if (!document.hidden && !reducedMotion.matches) {
+            time += last ? Math.min((now - last) / 1000, 0.1) : 0;
+            applySaturnBrandPose(viewer.model, time);
+            viewer.render();
+        }
+        last = now;
+        frame = requestAnimationFrame(animate);
+    };
+    frame = requestAnimationFrame(animate);
     document.querySelectorAll("[data-model-angle]").forEach((button) =>
         button.addEventListener("click", () => {
             const positions = {
@@ -45,6 +58,7 @@ try {
     window.addEventListener(
         "pagehide",
         () => {
+            cancelAnimationFrame(frame);
             resize.disconnect();
             controls.dispose();
             viewer.dispose();

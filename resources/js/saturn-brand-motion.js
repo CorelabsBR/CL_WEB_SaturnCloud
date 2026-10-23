@@ -5,8 +5,7 @@ export function applySaturnBrandPose(model, time) {
     const field = model.getObjectByName("Particle ring field");
     model.rotation.set(0, (75 * Math.PI) / 180, 0);
     model.position.set(0, 0, 0);
-    model.scale.setScalar(0.6336);
-    globe.rotation.set(0, time * 0.042, 0);
+    globe.rotation.set(0, time * 0.22, 0);
     orbits.rotation.set(0.34, 0, 0.35);
     field.rotation.set(0, time * 0.042, 0);
 }

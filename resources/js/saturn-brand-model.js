@@ -1,6 +1,23 @@
 import * as THREE from "three";
+import { refineSaturnAtmosphere } from "./saturn-atmosphere.js";
 
-// A physical globe and a three-dimensional field of grains. No image planes or textures.
+// Smooth spatial noise keeps cloud detail continuous across the longitude seam.
+function cloudNoise(x, y, z) {
+    const ix = Math.floor(x), iy = Math.floor(y), iz = Math.floor(z);
+    const smooth = (v) => v * v * (3 - 2 * v);
+    const tx = smooth(x - ix), ty = smooth(y - iy), tz = smooth(z - iz);
+    const hash = (a, b, c) => {
+        const n = Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453;
+        return n - Math.floor(n);
+    };
+    const row = (b, c) => THREE.MathUtils.lerp(hash(ix, b, c), hash(ix + 1, b, c), tx);
+    return THREE.MathUtils.lerp(
+        THREE.MathUtils.lerp(row(iy, iz), row(iy + 1, iz), ty),
+        THREE.MathUtils.lerp(row(iy, iz + 1), row(iy + 1, iz + 1), ty), tz,
+    ) * 2 - 1;
+}
+
+// Saturn-like atmospheric bands in violet, with a three-dimensional field of grains.
 export function createSaturnBrandModel({ lowPower = false } = {}) {
     const root = new THREE.Group();
     root.name = "Saturn — atmospheric globe and particulate rings";
@@ -20,39 +37,63 @@ export function createSaturnBrandModel({ lowPower = false } = {}) {
     root.add(globe);
     const surface = new THREE.SphereGeometry(
         1.065,
-        lowPower ? 64 : 128,
-        lowPower ? 128 : 256,
+        lowPower ? 96 : 192,
+        lowPower ? 192 : 384,
     );
     const positions = surface.attributes.position;
     const colors = new Float32Array(positions.count * 3);
+    const atmosphere = new THREE.Color();
+    const dark = new THREE.Color('#452960');
+    const middle = new THREE.Color('#9468b1');
+    const light = new THREE.Color('#e3c9ec');
     for (let index = 0; index < positions.count; index++) {
         const latitude = positions.getY(index) / 1.065;
         const longitude = Math.atan2(
             positions.getZ(index),
             positions.getX(index),
         );
-        const turbulence =
-            Math.sin(longitude * 7 + latitude * 22) * 0.2 +
-            Math.sin(longitude * 13 - latitude * 14) * 0.09;
-        const band =
-            Math.sin(latitude * 83 + turbulence) * 0.018 +
-            Math.sin(latitude * 167 + turbulence) * 0.009 +
-            Math.sin(latitude * 28) * 0.027;
-        const polar = Math.abs(latitude) ** 5 * 0.05;
-        colors[index * 3] = 0.29 + band - polar;
-        colors[index * 3 + 1] = 0.235 + band * 0.83 - polar;
-        colors[index * 3 + 2] = 0.205 + band * 0.71 - polar * 0.65;
+        // Latitude belts dominate Saturn's atmosphere. Periodic longitude terms
+        // add wind-sheared cloud detail without a seam around the globe.
+        const latitudeAngle = Math.asin(THREE.MathUtils.clamp(latitude, -1, 1));
+        const x = Math.cos(longitude), z = Math.sin(longitude);
+        const weather = cloudNoise(x * 3, latitudeAngle * 11, z * 3);
+        const wisps = cloudNoise(x * 12, latitudeAngle * 65 + weather, z * 12);
+        const filaments = cloudNoise(x * 27, latitudeAngle * 140, z * 27);
+        const turbulence = weather * 0.021 + wisps * 0.004;
+        const beltLatitude = latitudeAngle + turbulence;
+        const broadBelts =
+            Math.sin(beltLatitude * 15 + Math.sin(beltLatitude * 8) * 0.9) * 0.44 +
+            Math.sin(beltLatitude * 34 + 1.2) * 0.2 +
+            cloudNoise(0, beltLatitude * 24, 0) * 0.36;
+        const fineClouds =
+            Math.sin(beltLatitude * 97 + weather * 1.3) * 0.035 +
+            Math.sin(beltLatitude * 183 + wisps) * 0.018 +
+            wisps * 0.065 + filaments * 0.025;
+        const equatorialHaze = Math.exp(-((latitudeAngle / 0.19) ** 2)) * 0.16;
+        const polarHaze = THREE.MathUtils.smoothstep(Math.abs(latitude), 0.7, 1) * 0.22;
+        const shade = THREE.MathUtils.clamp(
+            0.48 + broadBelts * 0.36 + fineClouds + equatorialHaze - polarHaze,
+            0,
+            1,
+        );
+        // Deep plum belts, amethyst midtones, and pale lavender cloud tops.
+        if (shade < 0.5) atmosphere.copy(dark).lerp(middle, shade * 2);
+        else atmosphere.copy(middle).lerp(light, (shade - 0.5) * 2);
+        colors[index * 3] = atmosphere.r;
+        colors[index * 3 + 1] = atmosphere.g;
+        colors[index * 3 + 2] = atmosphere.b;
     }
     surface.setAttribute("color", new THREE.BufferAttribute(colors, 3));
     surface.deleteAttribute("uv");
     surface.scale(1, 0.9, 1);
     const coreMaterial = new THREE.MeshPhysicalMaterial({
-        name: "Matte banded atmosphere — zero specular",
+        name: "Purple Saturn cloud belts — matte atmosphere",
         vertexColors: true,
         metalness: 0,
         roughness: 1,
         specularIntensity: 0,
     });
+    refineSaturnAtmosphere(coreMaterial, { lowPower });
     const core = new THREE.Mesh(surface, coreMaterial);
     core.name = "Solid spherical core";
     globe.add(core);
@@ -90,7 +131,7 @@ export function createSaturnBrandModel({ lowPower = false } = {}) {
             z: Math.sin(angle) * radius,
         };
     };
-    const count = lowPower ? 14000 : 48000;
+    const count = lowPower ? 22000 : 76000;
     const grains = new Float32Array(count * 3);
     const grainColors = new Float32Array(count * 3);
     for (let index = 0; index < count; index++) {
@@ -106,7 +147,7 @@ export function createSaturnBrandModel({ lowPower = false } = {}) {
     const material = new THREE.PointsMaterial({
         name: "Mineral ring grains",
         vertexColors: true,
-        size: lowPower ? 0.009 : 0.0075,
+        size: lowPower ? 0.012 : 0.0105,
         sizeAttenuation: true,
         depthWrite: false,
     });
@@ -124,7 +165,7 @@ export function createSaturnBrandModel({ lowPower = false } = {}) {
     field.add(points);
 
     // A second, instanced layer gives the nearby grains genuine solid volume in close-up.
-    const rockCount = lowPower ? 360 : 1200;
+    const rockCount = lowPower ? 540 : 1800;
     const rockGeometry = new THREE.IcosahedronGeometry(1, 0);
     rockGeometry.deleteAttribute("uv");
     const rockMaterial = new THREE.MeshStandardMaterial({
@@ -143,7 +184,7 @@ export function createSaturnBrandModel({ lowPower = false } = {}) {
     const color = new THREE.Color();
     for (let index = 0; index < rockCount; index++) {
         const grain = sampleGrain();
-        const size = 0.003 + random() * 0.0045;
+        const size = 0.004 + random() * 0.0055;
         transform.position.set(grain.x, grain.y, grain.z);
         transform.rotation.set(
             random() * Math.PI,

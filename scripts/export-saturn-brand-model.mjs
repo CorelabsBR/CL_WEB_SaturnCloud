@@ -60,7 +60,7 @@ const referenceRingAxis = axis
     .clone()
     .applyEuler(new THREE.Euler(0.34, 0, 0.35))
     .applyEuler(new THREE.Euler(0, (75 * Math.PI) / 180, 0));
-let firstSatellite, lastSatellite;
+let firstSatellite, lastSatellite, firstCloud, lastCloud;
 for (let time = 0; time <= 360; time += 0.5) {
     applySaturnBrandPose(motionModel, time, (time % 7) / 6);
     assert.equal(
@@ -76,6 +76,9 @@ for (let time = 0; time <= 360; time += 0.5) {
         worldAxis.distanceTo(axis) < 1e-10,
         "The planet must stay upright throughout the animation",
     );
+    const cloud = new THREE.Vector3(1, 0, 0).applyMatrix4(globe.matrixWorld);
+    if (time === 0) firstCloud = cloud;
+    if (time === 5) lastCloud = cloud;
     const orbits = motionModel.getObjectByName("Orbital framework");
     orbits.getWorldQuaternion(quaternion);
     assert(
@@ -90,6 +93,10 @@ for (let time = 0; time <= 360; time += 0.5) {
     if (time === 30) lastSatellite = satellite;
 }
 assert(
+    firstCloud.distanceTo(lastCloud) > 0.8,
+    "The globe must visibly rotate around its own axis within five seconds",
+);
+assert(
     firstSatellite.distanceTo(lastSatellite) > 0.5,
     "The rings must actually rotate within their fixed plane",
 );
@@ -101,7 +108,7 @@ assert(
 const particles = model.getObjectByName("Saturn ring particles");
 assert(
     particles.isPoints &&
-        particles.geometry.attributes.position.count === 48000,
+        particles.geometry.attributes.position.count === 76000,
 );
 assert.equal(
     model.getObjectByName("Tubular longitude and latitude grid"),
@@ -144,12 +151,12 @@ gltf.scene.traverse((object) => {
 });
 assert.equal(
     loadedParticles,
-    48000,
+    76000,
     "The GLB must preserve every ring particle",
 );
 assert.equal(
     loadedInstances,
-    1200,
+    1800,
     "The GLB must preserve the solid mineral fragments",
 );
 const bytes = Buffer.from(binary);

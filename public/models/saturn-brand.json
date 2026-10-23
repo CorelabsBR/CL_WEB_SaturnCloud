@@ -1,10 +1,10 @@
 {
   "source": "Procedural Saturn, original geometry",
   "meshes": 2,
-  "triangles": 89280,
-  "bytes": 2806256,
+  "triangles": 183072,
+  "bytes": 6364120,
   "textures": 0,
-  "particles": 48000,
-  "rockInstances": 1200,
+  "particles": 76000,
+  "rockInstances": 1800,
   "volumetric": true
 }

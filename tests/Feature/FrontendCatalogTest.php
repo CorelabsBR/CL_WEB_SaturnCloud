@@ -32,11 +32,11 @@ class FrontendCatalogTest extends TestCase
             ->assertDontSee('99.9%');
     }
 
-    public function test_home_has_a_static_fallback_without_javascript(): void
+    public function test_home_reserves_the_scene_without_a_placeholder_logo(): void
     {
         $this->get('/')
             ->assertOk()
-            ->assertSee('img/saturno_branco_quadrado.svg', false)
+            ->assertDontSee('class="saturn-artwork"', false)
             ->assertSee('data-saturn-scene', false)
             ->assertDontSee('Ativar animação')
             ->assertSee(route('pages.show', 'sobre'), false);

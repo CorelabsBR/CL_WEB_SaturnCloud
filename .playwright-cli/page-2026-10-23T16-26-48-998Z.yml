@@ -1,0 +1,282 @@
+- generic [active] [ref=f3e1]:
+  - link "Pular para o conteúdo" [ref=f3e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f3e3]:
+    - navigation [ref=f3e5]:
+      - link "Saturn Cloud — página inicial" [ref=f3e6] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000
+        - generic [ref=f3e7]:
+          - text: Saturn
+          - strong [ref=f3e8]: Cloud
+      - list [ref=f3e9]:
+        - listitem [ref=f3e10]:
+          - link "Início" [ref=f3e11] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000
+        - listitem [ref=f3e12]:
+          - link "Hospedagem Web" [ref=f3e13] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/web
+        - listitem [ref=f3e14]:
+          - link "Servidores VPS" [ref=f3e15] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/vps
+        - listitem [ref=f3e16]:
+          - link "Infraestrutura" [ref=f3e17] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/infraestrutura
+        - listitem [ref=f3e18]:
+          - link "Sobre" [ref=f3e19] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/sobre
+        - listitem [ref=f3e20]:
+          - link "Suporte" [ref=f3e21] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/ajuda
+      - generic [ref=f3e22]:
+        - link "Entrar" [ref=f3e23] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/login
+        - link "Começar agora" [ref=f3e24] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/registro
+  - main [ref=f3e25]:
+    - region [ref=f3e26]:
+      - generic [ref=f3e27]:
+        - paragraph [ref=f3e28]: Saturn Cloud · Infraestrutura digital
+        - heading "INFRAESTRUTURA SEM LIMITES." [level=1] [ref=f3e30]:
+          - generic [ref=f3e31]: INFRAESTRUTURA
+          - generic [ref=f3e32]: SEM LIMITES.
+      - img "Saturno tridimensional com faixas atmosféricas e anéis de partículas"
+      - button "▷ Ativar modelo 3D" [ref=f3e33] [cursor=pointer]
+      - generic [ref=f3e34]:
+        - generic [ref=f3e35]:
+          - paragraph [ref=f3e36]: Potência, estabilidade e liberdade para construir o que vem depois.
+          - generic [ref=f3e37]:
+            - link "Explorar servidores" [ref=f3e38] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/vps
+              - text: Explorar servidores
+              - generic [aria-hidden] [ref=f3e39]: ↗
+            - link "Conhecer a Saturn" [ref=f3e40] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/sobre
+        - link "Existe um universo de possibilidades." [ref=f3e41] [cursor=pointer]:
+          - /url: "#solucoes"
+          - generic [aria-hidden] [ref=f3e42]: ↓
+          - text: Existe um universo de possibilidades.
+    - region "Recursos disponíveis conforme o plano" [ref=f3e43]:
+      - generic [ref=f3e44]:
+        - generic [ref=f3e45]: Hospedagem web
+        - generic [ref=f3e47]: Servidores VPS
+        - generic [ref=f3e49]: Painel do cliente
+        - generic [ref=f3e51]: Suporte com histórico
+    - generic [ref=f3e53]:
+      - generic [ref=f3e54]:
+        - generic [ref=f3e55]:
+          - paragraph [ref=f3e56]: Escolha seu caminho
+          - heading "Infraestrutura no tamanho do seu projeto." [level=2] [ref=f3e57]
+        - paragraph [ref=f3e58]: Comece com a praticidade da hospedagem compartilhada ou assuma o controle de um servidor virtual.
+      - generic [ref=f3e59]:
+        - link "01 Hospedagem de sites Para sites, lojas e projetos que precisam de uma operação mais simples. Planos anuais Painel de gestão" [ref=f3e60] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/web
+          - generic [ref=f3e61]: "01"
+          - generic [ref=f3e66]:
+            - strong [ref=f3e67]: Hospedagem de sites
+            - generic [ref=f3e68]: Para sites, lojas e projetos que precisam de uma operação mais simples.
+          - generic [ref=f3e69]:
+            - generic [ref=f3e70]: Planos anuais
+            - generic [ref=f3e71]: Painel de gestão
+          - generic [aria-hidden] [ref=f3e72]: ↗
+        - link "02 Servidores VPS Ambientes virtuais para aplicações, automações e operações com mais autonomia. Recursos dedicados* Configuração por plano" [ref=f3e73] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/vps
+          - generic [ref=f3e74]: "02"
+          - generic [ref=f3e80]:
+            - strong [ref=f3e81]: Servidores VPS
+            - generic [ref=f3e82]: Ambientes virtuais para aplicações, automações e operações com mais autonomia.
+          - generic [ref=f3e83]:
+            - generic [ref=f3e84]: Recursos dedicados*
+            - generic [ref=f3e85]: Configuração por plano
+          - generic [aria-hidden] [ref=f3e86]: ↗
+      - paragraph [ref=f3e87]: "* Confira a especificação de cada oferta antes da contratação."
+    - generic [ref=f3e89]:
+      - generic [ref=f3e90]:
+        - generic [ref=f3e91]:
+          - paragraph [ref=f3e92]: Planos em destaque
+          - heading "Escolha com clareza. Evolua quando precisar." [level=2] [ref=f3e93]: Escolha com clareza.Evolua quando precisar.
+        - group "Atalhos de planos" [ref=f3e94]:
+          - link "VPS" [ref=f3e95] [cursor=pointer]:
+            - /url: "#vps-plans"
+          - link "Hospedagem web" [ref=f3e96] [cursor=pointer]:
+            - /url: "#web-plans"
+      - generic [ref=f3e97]:
+        - generic [ref=f3e98]:
+          - heading "Servidores VPS" [level=3] [ref=f3e99]
+          - link "Ver todos" [ref=f3e100] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/vps
+            - text: Ver todos →
+        - article [ref=f3e102]:
+          - paragraph [ref=f3e103]: Sob medida
+          - heading "Configuração sob consulta" [level=3] [ref=f3e104]
+          - paragraph [ref=f3e105]: Converse com a equipe para dimensionar um ambiente sem assumir recursos ou valores que ainda não foram publicados.
+          - link "Falar com a equipe" [ref=f3e106] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/login
+      - generic [ref=f3e107]:
+        - generic [ref=f3e108]:
+          - heading "Hospedagem de sites" [level=3] [ref=f3e109]
+          - link "Ver todos" [ref=f3e110] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/web
+            - text: Ver todos →
+        - article [ref=f3e112]:
+          - paragraph [ref=f3e113]: Em breve
+          - heading "Novos planos a caminho" [level=3] [ref=f3e114]
+          - paragraph [ref=f3e115]: Nenhum plano de hospedagem está disponível para contratação neste momento.
+      - paragraph [ref=f3e116]:
+        - text: Preços, recursos e disponibilidade são exibidos diretamente a partir dos produtos cadastrados. Consulte também a
+        - link "Política de Reembolso" [ref=f3e117] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/reembolso
+        - text: .
+    - generic [ref=f3e119]:
+      - generic [ref=f3e120]:
+        - paragraph [ref=f3e121]: Uma operação mais simples
+        - heading "Do pedido ao acompanhamento, sem caminhos obscuros." [level=2] [ref=f3e122]
+        - paragraph [ref=f3e123]: O fluxo comercial e a gestão dos serviços convivem na mesma conta. Você acompanha cada etapa sem depender de conversas espalhadas.
+        - link "Criar minha conta" [ref=f3e124] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/registro
+          - text: Criar minha conta
+          - generic [aria-hidden] [ref=f3e125]: →
+      - list [ref=f3e126]:
+        - listitem [ref=f3e127]:
+          - generic [ref=f3e128]: "01"
+          - generic [ref=f3e129]:
+            - strong [ref=f3e130]: Compare
+            - paragraph [ref=f3e131]: Veja preço e recursos publicados em cada plano.
+        - listitem [ref=f3e132]:
+          - generic [ref=f3e133]: "02"
+          - generic [ref=f3e134]:
+            - strong [ref=f3e135]: Contrate
+            - paragraph [ref=f3e136]: Finalize o pedido pelo checkout da plataforma.
+        - listitem [ref=f3e137]:
+          - generic [ref=f3e138]: "03"
+          - generic [ref=f3e139]:
+            - strong [ref=f3e140]: Acompanhe
+            - paragraph [ref=f3e141]: Consulte pedidos, serviços e suporte na área do cliente.
+    - region [ref=f3e142]:
+      - generic [ref=f3e143]:
+        - paragraph [ref=f3e144]: A base para o seu próximo passo
+        - generic [ref=f3e145]:
+          - heading "Ideias grandes. Uma base à altura." [level=2] [ref=f3e146]: Ideias grandes.Uma base à altura.
+          - paragraph [ref=f3e147]: Da primeira publicação à próxima aplicação. Hospedagem, servidores e atendimento conectados para você seguir construindo.
+          - link "Infraestrutura sem caixa-preta" [ref=f3e148] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/infraestrutura
+            - text: Infraestrutura sem caixa-preta
+            - generic [aria-hidden] [ref=f3e149]: ↗
+    - generic [ref=f3e155]:
+      - generic [ref=f3e156]:
+        - paragraph [ref=f3e157]: Dúvidas frequentes
+        - heading "Antes de colocar seu projeto em órbita." [level=2] [ref=f3e158]
+        - paragraph [ref=f3e159]:
+          - text: Não encontrou o que procura? Consulte a
+          - link "Central de Ajuda" [ref=f3e160] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/ajuda
+          - text: .
+      - generic [ref=f3e161]:
+        - group [ref=f3e162]:
+          - generic "Qual é a diferença entre hospedagem web e VPS?" [ref=f3e163] [cursor=pointer]
+        - group [ref=f3e164]:
+          - generic "Como sei quais recursos estão incluídos?" [ref=f3e165] [cursor=pointer]
+        - group [ref=f3e166]:
+          - generic "Posso pagar via Pix?" [ref=f3e167] [cursor=pointer]
+        - group [ref=f3e168]:
+          - generic "Onde acompanho meu serviço?" [ref=f3e169] [cursor=pointer]
+        - group [ref=f3e170]:
+          - generic "Existe política de reembolso?" [ref=f3e171] [cursor=pointer]
+    - generic [ref=f3e173]:
+      - generic [ref=f3e174]:
+        - paragraph [ref=f3e175]: Seu próximo passo
+        - heading "Pronto para tirar seu projeto do papel?" [level=2] [ref=f3e176]
+      - generic [ref=f3e177]:
+        - paragraph [ref=f3e178]: Compare os planos disponíveis e escolha a infraestrutura adequada para agora.
+        - link "Ver planos" [ref=f3e179] [cursor=pointer]:
+          - /url: "#planos"
+          - text: Ver planos
+          - generic [aria-hidden] [ref=f3e180]: ↗
+  - contentinfo [ref=f3e181]:
+    - generic [ref=f3e182]:
+      - generic [ref=f3e183]:
+        - paragraph [ref=f3e184]: Seu próximo projetocomeça com uma boa base.
+        - link "Explorar servidores" [ref=f3e185] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/vps
+          - text: ↗
+      - generic [ref=f3e186]:
+        - generic [ref=f3e187]:
+          - generic [ref=f3e189]:
+            - text: Saturn
+            - strong [ref=f3e190]: Cloud
+          - paragraph [ref=f3e191]: Hospedagem e infraestrutura digital com informações comerciais claras e gestão pela área do cliente.
+          - link "contato@corelabs.dev.br" [ref=f3e192] [cursor=pointer]:
+            - /url: mailto:contato@corelabs.dev.br
+        - generic [ref=f3e193]:
+          - heading "Serviços" [level=4] [ref=f3e194]
+          - list [ref=f3e195]:
+            - listitem [ref=f3e196]:
+              - link "Servidores VPS" [ref=f3e197] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/vps
+            - listitem [ref=f3e198]:
+              - link "VPS Linux" [ref=f3e199] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/vps/linux
+            - listitem [ref=f3e200]:
+              - link "VPS Windows" [ref=f3e201] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/vps/windows
+            - listitem [ref=f3e202]:
+              - link "Hospedagem Web" [ref=f3e203] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/web
+            - listitem [ref=f3e204]:
+              - link "Conteúdos técnicos" [ref=f3e205] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/conteudos
+            - listitem [ref=f3e206]:
+              - link "Revenda" [ref=f3e207] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/revenda
+            - listitem [ref=f3e208]:
+              - link "Domínios" [ref=f3e209] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/dominios
+        - generic [ref=f3e210]:
+          - heading "Suporte" [level=4] [ref=f3e211]
+          - list [ref=f3e212]:
+            - listitem [ref=f3e213]:
+              - link "Painel" [ref=f3e214] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/login
+            - listitem [ref=f3e215]:
+              - link "Login" [ref=f3e216] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/login
+            - listitem [ref=f3e217]:
+              - link "Criar Conta" [ref=f3e218] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/registro
+            - listitem [ref=f3e219]:
+              - link "FAQ" [ref=f3e220] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/faq
+            - listitem [ref=f3e221]:
+              - link "Central de Ajuda" [ref=f3e222] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/ajuda
+            - listitem [ref=f3e223]:
+              - link "Contato" [ref=f3e224] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/contato
+        - generic [ref=f3e225]:
+          - heading "Legal" [level=4] [ref=f3e226]
+          - list [ref=f3e227]:
+            - listitem [ref=f3e228]:
+              - link "Termos de Serviço" [ref=f3e229] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/termos
+            - listitem [ref=f3e230]:
+              - link "Política de Privacidade" [ref=f3e231] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/politica-privacidade
+            - listitem [ref=f3e232]:
+              - link "Política de Reembolso" [ref=f3e233] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/reembolso
+            - listitem [ref=f3e234]:
+              - link "SLA" [ref=f3e235] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/sla
+        - generic [ref=f3e236]:
+          - heading "Empresa" [level=4] [ref=f3e237]
+          - list [ref=f3e238]:
+            - listitem [ref=f3e239]:
+              - link "Sobre a Saturn Cloud" [ref=f3e240] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/sobre
+            - listitem [ref=f3e241]:
+              - link "Infraestrutura" [ref=f3e242] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/infraestrutura
+      - generic [ref=f3e243]:
+        - generic [ref=f3e244]: © 2026 Saturn Cloud. Todos os direitos reservados.
+        - generic [ref=f3e245]:
+          - generic [ref=f3e246]: PIX
+          - generic [ref=f3e247]: Cartão
