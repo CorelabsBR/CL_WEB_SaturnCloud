@@ -1,0 +1,118 @@
+@font-face {
+    font-family: "Manrope Error";
+    src: url("../fonts/manrope-regular.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+.error503,
+.error503 * {
+    box-sizing: border-box;
+}
+.error503 {
+    margin: 0;
+    background: #050505;
+    color: #f2f0f5;
+    font-family: "Manrope Error", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+.error503__header {
+    border-bottom: 1px solid #202023;
+    padding: 8px max(24px, calc((100vw - 1136px) / 2));
+    min-height: 89px;
+    display: flex;
+    align-items: center;
+}
+.error503__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #f2f0f5;
+    text-decoration: none;
+}
+.error503__brand img {
+    filter: brightness(0) invert(1);
+}
+.error503__main {
+    display: grid;
+    min-height: calc(100svh - 89px);
+    align-items: center;
+}
+.error503__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 32px;
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding: 48px clamp(24px, 5vw, 72px);
+}
+.error503__code {
+    margin: 0 0 24px;
+    color: #bba5d6;
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+.error503 h1 {
+    margin: 0;
+    font-size: clamp(2.3rem, 4vw, 3.6rem);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.045em;
+}
+.error503__description {
+    max-width: 390px;
+    margin: 24px 0 32px;
+    color: #a9a3b1;
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+.error503__retry {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 12px 20px;
+    border: 1px solid #8751e2;
+    border-radius: 6px;
+    background: #7c3aed;
+    color: #fff;
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+.error503__retry:hover {
+    background: #8b4cf0;
+}
+.error503 a:focus-visible {
+    outline: 2px solid #d5b8ff;
+    outline-offset: 5px;
+}
+.error503__station {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+@media (max-width: 760px) {
+    .error503__layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+        padding: 40px 24px 28px;
+        text-align: center;
+    }
+    .error503 h1 {
+        font-size: clamp(1.9rem, 7.6vw, 2.8rem);
+    }
+    .error503__code {
+        font-size: 0.75rem;
+        margin-bottom: 20px;
+    }
+    .error503__description {
+        margin: 20px auto 24px;
+        font-size: 0.875rem;
+    }
+    .error503__station {
+        max-width: 400px;
+        margin-inline: auto;
+    }
+}

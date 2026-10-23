@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Product;
 use Illuminate\Support\ViewErrorBag;
 use Tests\TestCase;
 
@@ -10,14 +9,16 @@ class FrontendCatalogTest extends TestCase
 {
     public function test_vps_view_preserves_product_values_and_purchase_contract(): void
     {
-        $product = new Product([
+        $product = (object) [
             'nome' => 'Configuração de teste',
             'preco' => '87.43',
             'ram' => '7 GB de teste',
             'armazenamento' => '43 GB de teste',
             'processamento' => '3 vCPU de teste',
             'ddos_protection' => false,
-        ]);
+            'featured' => false,
+            'descricao' => null,
+        ];
         $product->id = 987;
 
         $this->view('vps.index', ['produtos' => collect([$product]), 'errors' => new ViewErrorBag])
@@ -66,10 +67,13 @@ class FrontendCatalogTest extends TestCase
         }
     }
 
-    public function test_authenticated_commercial_routes_keep_their_access_checks(): void
+    public function test_former_application_routes_are_not_available(): void
     {
-        foreach (['/carrinho', '/checkout', '/painel', '/suporte'] as $uri) {
-            $this->get($uri)->assertRedirect(route('login'));
+        foreach (['/login', '/registro', '/checkout', '/painel', '/admin', '/suporte', '/recuperar-senha', '/auth/google/redirect'] as $uri) {
+            $this->get($uri)->assertNotFound();
+        }
+        foreach (['/login', '/checkout/pagar', '/webhooks/mercadopago', '/marketing/events'] as $uri) {
+            $this->post($uri)->assertNotFound();
         }
     }
 }

@@ -15,11 +15,11 @@
 <section class="editorial-closing"><div class="container"><h2>A configuração certa.<br>O seu próximo passo.</h2><a class="btn btn-primary btn-lg" href="{{ route('vps.index') }}">Comparar servidores</a></div></section>
 @else
 <section class="institutional-hero"><div class="container"><p class="scene-caption">Saturn Cloud / {{ $content[0] }}</p><h1>{{ $content[1] }}</h1><p>{{ $content[2] }}</p><div class="institutional-actions">
-@if($page === 'dominios')<a class="btn btn-primary" href="https://registro.br/tecnologia/ferramentas/whois/" target="_blank" rel="noopener">Consultar no Registro.br</a>@else<a class="btn btn-primary" href="{{ auth()->check() ? route('ticket.index') : route('registro') }}">{{ auth()->check() ? 'Abrir chamado' : 'Criar conta' }}</a>@endif
+@if($page === 'dominios')<a class="btn btn-primary" href="https://registro.br/tecnologia/ferramentas/whois/" target="_blank" rel="noopener">Consultar no Registro.br</a>@else<a class="btn btn-primary" href="{{ route('pages.show', 'contato') }}">Falar com a equipe</a>@endif
 <a class="btn btn-ghost" href="{{ route('help.index') }}">Central de Ajuda</a></div></div></section>
 <section class="institutional-body"><div class="container"><div class="institutional-grid">@foreach($content[3] as $item)<article><h2>{{ $item }}</h2></article>@endforeach</div>
 @if($page === 'contato')<div class="institutional-contact"><p>Atendimento comercial</p><a href="mailto:contato@corelabs.dev.br">contato@corelabs.dev.br</a></div>@endif
-@if($page === 'faq')<div class="support-paths"><a href="{{ route('help.index') }}"><h2>Encontre uma resposta.</h2><p>Guias sobre hospedagem, VPS, DNS e pagamentos.</p><span>Consultar documentação ↗</span></a><a href="{{ auth()->check() ? route('ticket.index') : route('login') }}"><h2>Converse com a equipe.</h2><p>Acesse sua conta para abrir e acompanhar chamados.</p><span>Acessar atendimento ↗</span></a></div>@endif
+@if($page === 'faq')<div class="support-paths"><a href="{{ route('help.index') }}"><h2>Encontre uma resposta.</h2><p>Guias sobre hospedagem, VPS, DNS e pagamentos.</p><span>Consultar documentação ↗</span></a><a href="{{ route('pages.show', 'contato') }}"><h2>Converse com a equipe.</h2><p>Entre em contato com a equipe para receber orientação.</p><span>Acessar atendimento ↗</span></a></div>@endif
 </div></section>
 @endif
 @endsection

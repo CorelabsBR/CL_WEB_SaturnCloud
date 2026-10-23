@@ -2,22 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CategoriaProd;
-use App\Models\Product;
+use App\Services\Catalog;
 
 class WebHostingController extends Controller
 {
-    public function index()
+    public function index(Catalog $catalog)
     {
-        $categoria = CategoriaProd::firstOrCreate([
-            'nome' => 'Hospedagem Web',
-        ]);
-
-        $produtos = Product::where('categoria_id', $categoria->id)
-            ->orderBy('sort_order')
-            ->orderBy('preco')
-            ->get();
-
-        return view('web.index', compact('produtos'));
+        return view('web.index', ['produtos' => $catalog->products('web')]);
     }
 }

@@ -1,0 +1,239 @@
+/* Estrutura independente: não depende do layout, autenticação ou widgets. */
+@font-face {
+    font-family: "Manrope Error";
+    src: url("../fonts/manrope-regular.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+.error500,
+.error500 * {
+    box-sizing: border-box;
+}
+.error500 {
+    margin: 0;
+    font-family: "Manrope Error", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+.error500 a {
+    text-decoration: none;
+}
+.error500__top {
+    border-bottom: 1px solid #202023;
+}
+.error500__navigation {
+    max-width: 1280px;
+    min-height: 88px;
+    margin-inline: auto;
+    padding: 8px clamp(24px, 5vw, 72px);
+    display: flex;
+    align-items: center;
+}
+.error500__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #f2f0f5;
+    font-size: 1rem;
+}
+.error500__brand img {
+    width: 60px;
+    height: 60px;
+    filter: brightness(0) invert(1);
+}
+.error500__brand:focus-visible {
+    outline: 2px solid #d5b8ff;
+    outline-offset: 5px;
+}
+
+/* Página 500: texto e engenheiro espacial em uma composição sem efeitos decorativos. */
+.error500 {
+    background: #050505;
+    color: #f2f0f5;
+}
+
+.error500__main {
+    display: grid;
+    min-height: calc(100svh - 89px);
+}
+
+.error500__scene {
+    display: grid;
+    overflow: hidden;
+    background: #050505;
+}
+
+.error500 .error500__layout {
+    display: grid;
+    width: 100%;
+    max-width: 1280px;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(32px, 5vw, 80px);
+    margin-inline: auto;
+    padding: clamp(36px, 5vh, 64px) clamp(24px, 5vw, 72px);
+}
+
+.error500__copy {
+    min-width: 0;
+    padding-bottom: 12px;
+}
+
+.error500__code {
+    margin: 0 0 24px;
+    color: #bba5d6;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.error500 .error500__copy h1 {
+    margin: 0;
+    color: #f2f0f5;
+    font-size: clamp(2.5rem, 4.1vw, 3.6rem);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+}
+
+.error500__title-line {
+    display: block;
+}
+
+.error500__description {
+    max-width: 370px;
+    margin: 24px 0 0;
+    color: #a9a3b1;
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+
+.error500__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+.error500__home,
+.error500__help {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+    transition:
+        background 0.2s,
+        border-color 0.2s;
+}
+
+.error500__home {
+    border-color: #8751e2;
+    background: #7c3aed;
+    color: #fff;
+}
+
+.error500__home:hover {
+    background: #8b4cf0;
+}
+
+.error500__help {
+    border-color: #332d3c;
+    background: transparent;
+    color: #d9d3e1;
+}
+
+.error500__help:hover {
+    border-color: #71617f;
+    background: #15101c;
+    color: #fff;
+}
+
+.error500__actions a:focus-visible {
+    outline: 2px solid #d5b8ff;
+    outline-offset: 5px;
+}
+
+.error500__illustration {
+    display: flex;
+    min-width: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.error500__engineer {
+    display: block;
+    width: auto;
+    height: min(65svh, 620px);
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* Mensagem e ações aparecem primeiro em telas menores. */
+@media (max-width: 760px) {
+    .error500__main {
+        min-height: calc(100svh - 89px);
+    }
+
+    .error500 .error500__layout {
+        grid-template-columns: minmax(0, 1fr);
+        align-content: center;
+        gap: 32px;
+        padding: 40px 24px 28px;
+        text-align: center;
+    }
+
+    .error500__copy {
+        padding-bottom: 0;
+    }
+
+    .error500__code {
+        margin-bottom: 20px;
+        font-size: 0.75rem;
+    }
+
+    .error500 .error500__copy h1 {
+        font-size: clamp(1.9rem, 7.6vw, 2.8rem);
+        line-height: 1.16;
+    }
+
+    .error500__description {
+        max-width: 330px;
+        margin: 20px auto 0;
+        font-size: 0.875rem;
+        line-height: 1.75;
+    }
+
+    .error500__actions {
+        justify-content: center;
+        gap: 10px;
+        margin-top: 24px;
+    }
+
+    .error500__home,
+    .error500__help {
+        padding-inline: 16px;
+        font-size: 0.8rem;
+    }
+
+    .error500__engineer {
+        height: clamp(250px, 35svh, 340px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .error500__home,
+    .error500__help {
+        transition: none;
+    }
+}

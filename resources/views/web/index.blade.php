@@ -60,13 +60,10 @@
                             </div>
                         </div>
                         <form method="POST" action="{{ route('cart.addProduct', $produto->id) }}" class="plan-checkout-form">
-                            @csrf
-
-                            <input type="hidden" name="items[0][plan_id]" value="{{ $produto->id }}">
-                            <input type="hidden" name="items[0][quantity]" value="1">
+                            @csrfid }}">
 
                             <button type="submit" class="btn btn-primary">
-                                Contratar agora
+                                Adicionar ao carrinho
                             </button>
                         </form>
                     </div>

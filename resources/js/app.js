@@ -99,7 +99,7 @@ document.querySelectorAll("[data-saturn-scene]").forEach((host) => {
     button.addEventListener("click", load);
 });
 
-// Keep native validation and existing commercial POST contracts.
+// Mostra o progresso ao adicionar um plano ao carrinho.
 document
     .querySelectorAll(
         ".vtx-plan-card form, .vps-plan form, .plan-checkout-form",

@@ -16,5 +16,5 @@
             <li><span>Proteção DDoS</span><code>{{ $product->ddos_protection ? 'Incluída' : 'Conforme plano' }}</code></li>
         @endif
     </ul>
-    <form method="POST" action="{{ route('cart.addProduct', $product->id) }}">@csrf<button class="btn btn-primary" type="submit">Contratar</button></form>
+    <form method="POST" action="{{ route('cart.addProduct', $product->id) }}">@csrf<button class="btn btn-primary" type="submit">Adicionar ao carrinho</button></form>
 </article>

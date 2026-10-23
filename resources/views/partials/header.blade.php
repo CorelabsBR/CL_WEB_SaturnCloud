@@ -11,9 +11,7 @@
 
             @php
                 $current = request()->path();
-                $cartCount = auth()->check()
-                    ? \App\Models\CartItem::where('user_id', auth()->id())->sum('quantidade')
-                    : 0;
+                $cartCount = array_sum(session('cart', []));
 
                 $navActive = static function (array $paths = []): string {
                     foreach ($paths as $path) {
@@ -51,74 +49,12 @@
             </ul>
 
             <div class="site-header__nav-actions">
-                @auth
-                    <a
-                        class="site-header__nav-cart {{ $navActive(['carrinho', 'carrinho/*']) }}"
-                        href="{{ url('/carrinho') }}"
-                        aria-label="Ir para o carrinho{{ $cartCount > 0 ? ' com ' . $cartCount . ' ' . ($cartCount === 1 ? 'item' : 'itens') : '' }}"
-                        title="Carrinho"
-                    >
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M6.2 6h15l-1.7 8.2a2 2 0 0 1-2 1.6H9a2 2 0 0 1-2-1.6L5.2 3.8H2.8" />
-                            <circle cx="9.5" cy="20" r="1.4" />
-                            <circle cx="17.5" cy="20" r="1.4" />
-                        </svg>
-                        <span class="site-header__nav-cart-label">Carrinho</span>
-                        @if($cartCount > 0)
-                            <span class="site-header__nav-cart-count" aria-hidden="true">
-                                {{ $cartCount > 99 ? '99+' : $cartCount }}
-                            </span>
-                        @endif
-                    </a>
-
-                    <div class="site-header__profile-dropdown">
-                        <button class="site-header__profile-btn" id="profile-btn" type="button" aria-label="Menu do perfil" aria-expanded="false" aria-controls="profile-menu">
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
-                            </svg>
-                        </button>
-                        <div class="site-header__profile-menu" id="profile-menu" role="menu" aria-labelledby="profile-btn" hidden>
-                            <div class="site-header__profile-menu-head"><span>{{ auth()->user()?->nome ?? 'Cliente Saturn Cloud' }}</span><small>{{ auth()->user()?->email }}</small></div>
-                            <a href="{{ url('/painel') }}" class="site-header__profile-menu-item" role="menuitem">
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M3 13h2v8H3zm4-8h2v16H7zm4-2h2v18h-2zm4-2h2v20h-2zm4 4h2v16h-2z" />
-                                </svg>
-                                Painel
-                            </a>
-                            <a href="{{ route('perfil.edit') }}" class="site-header__profile-menu-item" role="menuitem">
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M12 12c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4zm0 2c-2.7 0-8 1.4-8 4v2h16v-2c0-2.6-5.3-4-8-4z" />
-                                </svg>
-                                Editar perfil
-                            </a>
-                            @if(auth()->user()?->tipo_usuario === 'root')
-                                <a href="{{ route('admin.index') }}" class="site-header__profile-menu-item" role="menuitem">
-                                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M12 2l8 4v6c0 5-3.4 9.4-8 10-4.6-.6-8-5-8-10V6l8-4zm0 4.2L7 8.7V12c0 3.2 2 6.1 5 6.8 3-.7 5-3.6 5-6.8V8.7l-5-2.5z" />
-                                    </svg>
-                                    Admin
-                                </a>
-                            @endif
-                            <form action="{{ route('logout') }}" method="POST" class="site-header__profile-menu-form">
-                                @csrf
-                                <button type="submit" class="site-header__profile-menu-item site-header__logout-btn" role="menuitem">
-                                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
-                                    </svg>
-                                    Deslogar
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                @else
-                    <a class="btn btn-ghost btn-sm" href="{{ url('/login') }}">
-                        Entrar
-                    </a>
-
-                    <a class="btn btn-primary btn-sm" href="{{ url('/registro') }}">
-                        Começar agora
-                    </a>
-                @endauth
+                <a class="site-header__nav-cart" href="{{ route('cart.index') }}" aria-label="Carrinho com {{ $cartCount }} itens">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.2 6h15l-1.7 8.2a2 2 0 0 1-2 1.6H9a2 2 0 0 1-2-1.6L5.2 3.8H2.8"/><circle cx="9.5" cy="20" r="1.4"/><circle cx="17.5" cy="20" r="1.4"/></svg>
+                    <span class="site-header__nav-cart-label">Carrinho</span>
+                    @if($cartCount > 0)<span class="site-header__nav-cart-count">{{ $cartCount }}</span>@endif
+                </a>
+                @if(config('portal.url'))<a class="btn btn-ghost btn-sm" href="{{ config('portal.url') }}">Portal do cliente</a>@endif
             </div>
 
             <button class="site-header__hamburger" id="hamburger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-nav">
@@ -151,50 +87,8 @@
             <a href="{{ route('pages.show', 'sobre') }}">Sobre a Saturn</a>
             <a href="{{ route('help.index') }}" class="{{ $navActive(['ajuda', 'ajuda/*']) }}">Suporte</a>
 
-            @auth
-                <a
-                    href="{{ url('/painel') }}"
-                    class="{{ $navActive(['painel']) }}"
-                >
-                    Painel
-                </a>
-
-                @if(auth()->user()?->tipo_usuario === 'root')
-                    <a
-                        href="{{ route('admin.index') }}"
-                        class="{{ $navActive(['admin', 'admin/*']) }}"
-                    >
-                        Admin
-                    </a>
-                @endif
-
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="site-header__mobile-logout-btn">
-                        Deslogar
-                    </button>
-                </form>
-
-                <a
-                    href="{{ url('/carrinho') }}"
-                    class="site-header__mobile-cart {{ $navActive(['carrinho', 'carrinho/*']) }}"
-                >
-                    Carrinho
-                    @if($cartCount > 0)
-                        <span class="site-header__mobile-cart-count">
-                            {{ $cartCount > 99 ? '99+' : $cartCount }}
-                        </span>
-                    @endif
-                </a>
-            @else
-                <a href="{{ url('/login') }}">
-                    Entrar
-                </a>
-
-                <a href="{{ url('/registro') }}">
-                    Criar conta
-                </a>
-            @endauth
+            <a href="{{ route('cart.index') }}">Carrinho ({{ $cartCount }})</a>
+            @if(config('portal.url'))<a href="{{ config('portal.url') }}">Portal do cliente</a>@endif
         </nav>
     </div>
 </header>

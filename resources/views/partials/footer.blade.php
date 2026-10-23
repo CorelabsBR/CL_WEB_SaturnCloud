@@ -32,9 +32,6 @@
             <div class="footer-col">
                 <h4>Suporte</h4>
                 <ul class="footer-links">
-                    <li><a href="{{ auth()->check() ? route('dashboard.index') : route('login') }}">Painel</a></li>
-                    <li><a href="{{ url('/login') }}">Login</a></li>
-                    <li><a href="{{ url('/registro') }}">Criar Conta</a></li>
                     <li><a href="{{ route('pages.show', 'faq') }}">FAQ</a></li>
                     <li><a href="{{ route('help.index') }}">Central de Ajuda</a></li>
                     <li><a href="{{ route('pages.show', 'contato') }}">Contato</a></li>

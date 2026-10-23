@@ -22,14 +22,7 @@
     @php
         $pageStyles = request()->routeIs('home') ? ['index']
             : (request()->routeIs('vps.index') ? ['vps'] : ['index', 'responsive']);
-        if (request()->routeIs('login', 'registro*', 'password.*', 'cadastro.*', 'perfil.*')) {
-            $pageStyles = array_merge($pageStyles, ['auth', 'register']);
-        }
         if (request()->routeIs('web')) $pageStyles[] = 'web';
-        if (request()->routeIs('dashboard.*', 'pterodactyl.*', 'ptero.*', 'hestia.*')) $pageStyles[] = 'dash';
-        if (request()->routeIs('checkout.*')) $pageStyles[] = 'checkout';
-        // The support widget also appears on public pages.
-        $pageStyles[] = 'suporte';
     @endphp
     @foreach(array_unique($pageStyles) as $style)
         <link rel="stylesheet" href="{{ asset('css/'.$style.'.css') }}?v={{ filemtime(public_path('css/'.$style.'.css')) }}">
@@ -54,12 +47,6 @@
     @include('partials.header')
 @endif
 
-@if(session('timeout_notice') || (auth()->check() && auth()->user()->isTimedOut()))
-    <div class="timeout-notice">
-        {{ session('timeout_notice') ?: 'Sua conta esta em timeout temporario: ' . auth()->user()->timeoutLabel() . '.' }}
-    </div>
-@endif
-
 <main id="main-content" class="@yield('main_class')" tabindex="-1">
     @yield('content')
 </main>
@@ -68,14 +55,13 @@
     @include('partials.footer')
 @endif
 
-@if (!View::hasSection('hide_header') && !request()->routeIs('dashboard.*', 'admin.*', 'checkout.*', 'cart.*'))
+@if (!View::hasSection('hide_header') && !request()->routeIs('cart.*'))
     <a class="mobile-buy-bar" href="{{ route('vps.index') }}">Contratar agora</a>
     @if(config('services.whatsapp.number'))
         <a class="whatsapp-fab" href="https://wa.me/{{ preg_replace('/\D+/', '', config('services.whatsapp.number')) }}" target="_blank" rel="noopener" aria-label="Falar com a Saturn Cloud pelo WhatsApp">WA</a>
     @endif
 @endif
 
-@include('partials.support-widget')
 
 <script src="{{ asset('js/notifications.js') }}?v={{ filemtime(public_path('js/notifications.js')) }}"></script>
 

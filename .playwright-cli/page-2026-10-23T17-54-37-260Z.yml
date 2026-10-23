@@ -1,0 +1,124 @@
+- generic [active] [ref=e1]:
+  - link "Pular para o conteúdo" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e3]:
+    - navigation [ref=e5]:
+      - link "Saturn Cloud — página inicial" [ref=e6] [cursor=pointer]:
+        - /url: http://localhost:8000
+        - generic [ref=e7]:
+          - text: Saturn
+          - strong [ref=e8]: Cloud
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "Início" [ref=e11] [cursor=pointer]:
+            - /url: http://localhost:8000
+        - listitem [ref=e12]:
+          - link "Hospedagem Web" [ref=e13] [cursor=pointer]:
+            - /url: http://localhost:8000/web
+        - listitem [ref=e14]:
+          - link "Servidores VPS" [ref=e15] [cursor=pointer]:
+            - /url: http://localhost:8000/vps
+        - listitem [ref=e16]:
+          - link "Infraestrutura" [ref=e17] [cursor=pointer]:
+            - /url: http://localhost:8000/infraestrutura
+        - listitem [ref=e18]:
+          - link "Sobre" [ref=e19] [cursor=pointer]:
+            - /url: http://localhost:8000/sobre
+        - listitem [ref=e20]:
+          - link "Suporte" [ref=e21] [cursor=pointer]:
+            - /url: http://localhost:8000/ajuda
+      - link "Carrinho com 0 itens" [ref=e23] [cursor=pointer]:
+        - /url: http://localhost:8000/carrinho
+        - generic [ref=e28]: Carrinho
+  - main [ref=e29]:
+    - region [ref=e30]:
+      - heading "Seu carrinho" [level=1] [ref=e31]
+      - paragraph [ref=e32]: Escolha seus planos aqui. A contratação e o pagamento serão feitos no portal do cliente.
+      - generic [ref=e33]:
+        - heading "Seu carrinho está vazio" [level=2] [ref=e34]
+        - paragraph [ref=e35]: Explore os planos disponíveis para escolher os recursos do seu projeto.
+      - generic [ref=e36]:
+        - link "Ver hospedagem" [ref=e37] [cursor=pointer]:
+          - /url: http://localhost:8000/web
+        - link "Ver servidores VPS" [ref=e38] [cursor=pointer]:
+          - /url: http://localhost:8000/vps
+  - contentinfo [ref=e39]:
+    - generic [ref=e40]:
+      - generic [ref=e41]:
+        - paragraph [ref=e42]: Seu próximo projetocomeça com uma boa base.
+        - link "Explorar servidores" [ref=e43] [cursor=pointer]:
+          - /url: http://localhost:8000/vps
+          - text: ↗
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - generic [ref=e47]:
+            - text: Saturn
+            - strong [ref=e48]: Cloud
+          - paragraph [ref=e49]: Hospedagem e infraestrutura digital com informações comerciais claras e gestão pela área do cliente.
+          - link "contato@corelabs.dev.br" [ref=e50] [cursor=pointer]:
+            - /url: mailto:contato@corelabs.dev.br
+        - generic [ref=e51]:
+          - heading "Serviços" [level=4] [ref=e52]
+          - list [ref=e53]:
+            - listitem [ref=e54]:
+              - link "Servidores VPS" [ref=e55] [cursor=pointer]:
+                - /url: http://localhost:8000/vps
+            - listitem [ref=e56]:
+              - link "VPS Linux" [ref=e57] [cursor=pointer]:
+                - /url: http://localhost:8000/vps/linux
+            - listitem [ref=e58]:
+              - link "VPS Windows" [ref=e59] [cursor=pointer]:
+                - /url: http://localhost:8000/vps/windows
+            - listitem [ref=e60]:
+              - link "Hospedagem Web" [ref=e61] [cursor=pointer]:
+                - /url: http://localhost:8000/web
+            - listitem [ref=e62]:
+              - link "Conteúdos técnicos" [ref=e63] [cursor=pointer]:
+                - /url: http://localhost:8000/conteudos
+            - listitem [ref=e64]:
+              - link "Revenda" [ref=e65] [cursor=pointer]:
+                - /url: http://localhost:8000/revenda
+            - listitem [ref=e66]:
+              - link "Domínios" [ref=e67] [cursor=pointer]:
+                - /url: http://localhost:8000/dominios
+        - generic [ref=e68]:
+          - heading "Suporte" [level=4] [ref=e69]
+          - list [ref=e70]:
+            - listitem [ref=e71]:
+              - link "FAQ" [ref=e72] [cursor=pointer]:
+                - /url: http://localhost:8000/faq
+            - listitem [ref=e73]:
+              - link "Central de Ajuda" [ref=e74] [cursor=pointer]:
+                - /url: http://localhost:8000/ajuda
+            - listitem [ref=e75]:
+              - link "Contato" [ref=e76] [cursor=pointer]:
+                - /url: http://localhost:8000/contato
+        - generic [ref=e77]:
+          - heading "Legal" [level=4] [ref=e78]
+          - list [ref=e79]:
+            - listitem [ref=e80]:
+              - link "Termos de Serviço" [ref=e81] [cursor=pointer]:
+                - /url: http://localhost:8000/termos
+            - listitem [ref=e82]:
+              - link "Política de Privacidade" [ref=e83] [cursor=pointer]:
+                - /url: http://localhost:8000/politica-privacidade
+            - listitem [ref=e84]:
+              - link "Política de Reembolso" [ref=e85] [cursor=pointer]:
+                - /url: http://localhost:8000/reembolso
+            - listitem [ref=e86]:
+              - link "SLA" [ref=e87] [cursor=pointer]:
+                - /url: http://localhost:8000/sla
+        - generic [ref=e88]:
+          - heading "Empresa" [level=4] [ref=e89]
+          - list [ref=e90]:
+            - listitem [ref=e91]:
+              - link "Sobre a Saturn Cloud" [ref=e92] [cursor=pointer]:
+                - /url: http://localhost:8000/sobre
+            - listitem [ref=e93]:
+              - link "Infraestrutura" [ref=e94] [cursor=pointer]:
+                - /url: http://localhost:8000/infraestrutura
+      - generic [ref=e95]:
+        - generic [ref=e96]: © 2026 Saturn Cloud. Todos os direitos reservados.
+        - generic [ref=e97]:
+          - generic [ref=e98]: PIX
+          - generic [ref=e99]: Cartão

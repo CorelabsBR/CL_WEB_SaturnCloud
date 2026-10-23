@@ -2,26 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CategoriaProd;
-use App\Models\Product;
+use App\Services\Catalog;
 
 class VpsController extends Controller
 {
-    public function index()
+    public function index(Catalog $catalog)
     {
-        try {
-            $categoria = CategoriaProd::where('nome', 'VPS')->first();
-            $produtos = $categoria
-                ? Product::where('categoria_id', $categoria->id)
-                    ->orderBy('sort_order')
-                    ->orderBy('preco')
-                    ->get()
-                : collect();
-        } catch (\Throwable $exception) {
-            report($exception);
-            $produtos = collect();
-        }
-
-        return view('vps.index', compact('produtos'));
+        return view('vps.index', ['produtos' => $catalog->products('vps')]);
     }
 }

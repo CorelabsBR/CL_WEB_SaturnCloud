@@ -109,7 +109,7 @@
                 <section id="cookies">
                     <h2>5. Cookies e tecnologias semelhantes</h2>
                     <p>
-                        Utilizamos cookies e tecnologias semelhantes para manter sessões de login,
+                        Neste site, utilizamos cookies para manter o carrinho anônimo. No portal do cliente, cookies podem manter sessões de login,
                         lembrar preferências, melhorar a experiência do usuário e proteger contra
                         acessos não autorizados.
                     </p>

@@ -36,7 +36,7 @@
                 <form method="POST" action="{{ route('cart.addProduct', $produto->id) }}">@csrf<button class="btn btn-primary" type="submit">Escolher {{ $produto->nome }} <span aria-hidden="true">→</span></button></form>
             </article>
         @empty
-            <div class="vps-empty"><div class="empty-orbit" aria-hidden="true"><span></span></div><p class="vps-kicker">Atendimento comercial</p><h3>Planos públicos em preparação.</h3><p>Ainda não há configurações VPS cadastradas para contratação direta. Fale com a equipe para avaliar a necessidade do seu projeto sem assumir recursos ou preços inexistentes.</p><a class="btn btn-primary" href="{{ auth()->check() ? route('ticket.index') : route('login') }}">Falar com a equipe <span aria-hidden="true">→</span></a></div>
+            <div class="vps-empty"><div class="empty-orbit" aria-hidden="true"><span></span></div><p class="vps-kicker">Atendimento comercial</p><h3>Planos públicos em preparação.</h3><p>Ainda não há configurações VPS cadastradas para contratação direta. Fale com a equipe para avaliar a necessidade do seu projeto sem assumir recursos ou preços inexistentes.</p><a class="btn btn-primary" href="{{ route('pages.show', 'contato') }}">Falar com a equipe <span aria-hidden="true">→</span></a></div>
         @endforelse
     </div>
     @if($produtos->isNotEmpty())

@@ -1,138 +1,48 @@
-@extends('layouts.cart')
-
-@section('title', 'Carrinho')
-
+@extends('layouts.app')
+@section('title', 'Carrinho | Saturn Cloud')
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/cart.css') }}">
+@endpush
 @section('content')
-<section class="cart-page container py-5">
-
-    <div class="cart-header">
-        <div>
-            <h1 class="cart-title">Carrinho</h1>
-            <p class="cart-subtitle">Revise seus serviços antes de finalizar a compra.</p>
-        </div>
-    </div>
-
-    @if(session('success'))
-        <div class="flash flash-success">{{ session('success') }}</div>
-    @endif
-
-    @if(session('error'))
-        <div class="flash flash-error">{{ session('error') }}</div>
-    @endif
-
-    @if($items->isEmpty())
-        <div class="cart-empty">
-            <h2>Seu carrinho está vazio.</h2>
-            <p>Escolha um plano para continuar.</p>
-
-            <a href="{{ route('web') }}" class="btn btn-primary">
-                Ver planos
-            </a>
-        </div>
-    @else
-        <div class="cart-layout">
-
-            <div class="cart-list">
-                @foreach($items as $item)
-                    <article class="cart-item">
-                        <div class="cart-item-main">
-                            <div class="cart-product-icon">
-                                VH
-                            </div>
-
-                            <div class="cart-product-info">
-                                <h3>{{ $item->product->nome }}</h3>
-
-                                <p class="cart-product-price">
-                                    R$ {{ number_format($item->product->preco, 2, ',', '.') }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="cart-item-actions">
-                            <form method="POST" action="{{ route('cart.update', $item->id) }}" class="cart-qty-form">
-                                @csrf
-                                @method('PATCH')
-
-                                <label for="quantidade-{{ $item->id }}">Qtd.</label>
-
-                                <input
-                                    id="quantidade-{{ $item->id }}"
-                                    type="number"
-                                    name="quantidade"
-                                    value="{{ $item->quantidade }}"
-                                    min="1"
-                                    max="99"
-                                >
-
-                                <button type="submit" class="btn btn-sm btn-outline">
-                                    Atualizar
-                                </button>
-                            </form>
-
-                            <form method="POST" action="{{ route('cart.remove', $item->id) }}">
-                                @csrf
-                                @method('DELETE')
-
-                                <button type="submit" class="btn btn-sm btn-danger">
-                                    Remover
-                                </button>
-                            </form>
-                        </div>
-
-                        <div class="cart-item-footer">
-                            <span>Subtotal</span>
-
-                            <strong>
-                                R$ {{ number_format($item->product->preco * $item->quantidade, 2, ',', '.') }}
-                            </strong>
-                        </div>
-                    </article>
-                @endforeach
-
-                <div class="cart-list-footer">
-                    <a href="{{ route('web') }}" class="btn btn-ghost cart-continue-btn">
-                        Voltar a comprar
-                    </a>
-                </div>
-            </div>
-
-            <aside class="cart-summary">
-                <h2>Resumo</h2>
-
-                <div class="summary-row">
-                    <span>Itens</span>
-                    <strong>{{ $items->count() }}</strong>
-                </div>
-
-                <div class="summary-row total">
-                    <span>{{ $adminExempt ? 'Total administrativo' : 'Total' }}</span>
-                    <strong>R$ {{ number_format($total, 2, ',', '.') }}</strong>
-                </div>
-
-                @if($adminExempt)
-                    <div class="summary-row">
-                        <span>Valor original</span>
-                        <strong>R$ {{ number_format($subtotal, 2, ',', '.') }}</strong>
-                    </div>
-                    <p class="cart-admin-note">Root/admin não paga para finalizar compras.</p>
-                @endif
-
-                <a href="{{ route('checkout.index') }}" class="btn btn-primary btn-full">
-                    {{ $adminExempt ? 'Finalizar como admin' : 'Finalizar compra' }}
-                </a>
-
-                <form method="POST" action="{{ route('cart.clear') }}">
-                    @csrf
-                    @method('DELETE')
-
-                    <button type="submit" class="btn btn-danger btn-full">
-                        Limpar carrinho
-                    </button>
+<section class="site-cart container" aria-labelledby="cart-title">
+    <h1 id="cart-title">Seu carrinho</h1>
+    <p>Escolha seus planos aqui. A contratação e o pagamento serão feitos no portal do cliente.</p>
+    @if($errors->any())<p role="alert">Informe uma quantidade entre 1 e 99.</p>@endif
+    @forelse($items as $item)
+        <article class="site-cart__item">
+            <div><h2>{{ $item->product->nome }}</h2><p>R$ {{ number_format($item->product->preco, 2, ',', '.') }} / {{ $item->product->type === 'web' ? 'ano' : 'mês' }}</p></div>
+            <form method="POST" action="{{ route('cart.update', $item->product->id) }}">
+                @csrf @method('PATCH')
+                <label for="quantity-{{ $loop->index }}">Quantidade</label>
+                <input id="quantity-{{ $loop->index }}" name="quantidade" type="number" min="1" max="99" value="{{ $item->quantity }}" required>
+                <button class="btn btn-ghost" type="submit">Atualizar</button>
+            </form>
+            <form method="POST" action="{{ route('cart.remove', $item->product->id) }}">
+                @csrf @method('DELETE')
+                <button class="btn btn-ghost" type="submit" aria-label="Remover {{ $item->product->nome }}">Remover</button>
+            </form>
+        </article>
+    @empty
+        <div class="site-cart__empty"><h2>Seu carrinho está vazio</h2><p>Explore os planos disponíveis para escolher os recursos do seu projeto.</p></div>
+    @endforelse
+    <div class="site-cart__actions">
+        <a class="btn btn-ghost" href="{{ route('web') }}">Ver hospedagem</a>
+        <a class="btn btn-ghost" href="{{ route('vps.index') }}">Ver servidores VPS</a>
+        @if($items->isNotEmpty())
+            @if($portalCartUrl)
+                <form method="POST" action="{{ $portalCartUrl }}">
+                    <input type="hidden" name="version" value="1">
+                    @foreach($items->values() as $item)
+                        <input type="hidden" name="items[{{ $loop->index }}][id]" value="{{ $item->product->id }}">
+                        <input type="hidden" name="items[{{ $loop->index }}][quantity]" value="{{ $item->quantity }}">
+                    @endforeach
+                    <button class="btn btn-primary" type="submit">Continuar no portal</button>
                 </form>
-            </aside>
-
-        </div>
-    @endif
+            @else
+                <p class="site-cart__notice" role="status">A finalização pelo portal estará disponível em breve. Nenhum pedido ou pagamento foi criado.</p>
+            @endif
+            <form method="POST" action="{{ route('cart.clear') }}">@csrf @method('DELETE')<button class="btn btn-ghost" type="submit">Limpar carrinho</button></form>
+        @endif
+    </div>
 </section>
 @endsection

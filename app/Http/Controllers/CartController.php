@@ -2,125 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CartItem;
-use App\Models\Product;
-use App\Models\Plan;
+use App\Services\Catalog;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function index()
+    public function index(Request $request, Catalog $catalog)
     {
-        $items = CartItem::with('product')
-            ->where('user_id', Auth::id())
-            ->get();
-
-        $subtotal = $items->sum(fn ($item) => $item->product->preco * $item->quantidade);
-        $adminExempt = $this->isAdminExempt();
-        $total = $adminExempt ? 0 : $subtotal;
-
-        return view('cart.index', compact('items', 'total', 'subtotal', 'adminExempt'));
-    }
-
-    public function addPlan($plan)
-    {
-        $plan = Plan::where('plan', $plan)->firstOrFail();
-
-        $product = Product::firstOrCreate(
-            ['plan' => $plan->plan],
-            [
-                'nome' => $plan->name,
-                'descricao' => 'Servidor de jogo',
-                'preco' => $plan->price / 100,
-                'categoria_id' => 2,
-                'jogo_id' => $plan->jogo_id,
-                'local_id' => $plan->location_id,
-                'ram' => $plan->ramFormatada(),
-                'armazenamento' => $plan->discoFormatado(),
-                'processamento' => $plan->cpuFormatada(),
-                'ddos_protection' => true,
-                'featured' => false,
-                'sort_order' => $plan->plan,
-            ]
-        );
-
-        $this->addProductToCart($product, 1);
-
-        return redirect()
-            ->route('cart.index')
-            ->with('success', 'Plano adicionado ao carrinho.');
-    }
-
-    public function addProduct(Request $request, Product $product)
-    {
-        $quantidade = (int) $request->input('quantidade', 1);
-
-        if ($quantidade < 1) {
-            $quantidade = 1;
+        $cart = $request->session()->get('cart', []);
+        $items = $catalog->products()->filter(fn ($product) => isset($cart[$product->id]))
+            ->map(fn ($product) => (object) ['product' => $product, 'quantity' => $cart[$product->id]]);
+        $portalCartUrl = config('portal.cart_url');
+        if (! filter_var($portalCartUrl, FILTER_VALIDATE_URL) || parse_url($portalCartUrl, PHP_URL_SCHEME) !== 'https') {
+            $portalCartUrl = null;
         }
 
-        $this->addProductToCart($product, $quantidade);
-
-        return redirect()
-            ->route('cart.index')
-            ->with('success', 'Produto adicionado ao carrinho.');
+        return view('cart.index', compact('items', 'portalCartUrl'));
     }
 
-    private function addProductToCart(Product $product, int $quantidade = 1): void
+    public function addProduct(Request $request, Catalog $catalog, string $product)
     {
-        abort_if(!$product->id, 404);
-
-        $item = CartItem::where('user_id', Auth::id())
-            ->where('product_id', $product->id)
-            ->first();
-
-        if ($item) {
-            $item->quantidade += $quantidade;
-            $item->save();
-            return;
-        }
-
-        CartItem::create([
-            'user_id' => Auth::id(),
-            'product_id' => $product->id,
-            'quantidade' => $quantidade,
-        ]);
-    }
-
-    public function update(Request $request, CartItem $cartItem)
-    {
-        abort_if($cartItem->user_id !== Auth::id(), 403);
-
-        $request->validate([
-            'quantidade' => 'required|integer|min:1|max:99',
-        ]);
-
-        $cartItem->update([
-            'quantidade' => $request->quantidade,
-        ]);
+        $catalog->find($product);
+        $data = $request->validate(['quantidade' => 'sometimes|required|integer|min:1|max:99']);
+        $cart = $request->session()->get('cart', []);
+        $cart[$product] = min(99, ($cart[$product] ?? 0) + ($data['quantidade'] ?? 1));
+        $request->session()->put('cart', $cart);
 
         return redirect()->route('cart.index');
     }
 
-    public function remove(CartItem $cartItem)
+    public function update(Request $request, Catalog $catalog, string $product)
     {
-        abort_if($cartItem->user_id !== Auth::id(), 403);
-
-        $cartItem->delete();
+        $catalog->find($product);
+        $data = $request->validate(['quantidade' => 'required|integer|min:1|max:99']);
+        $cart = $request->session()->get('cart', []);
+        abort_unless(isset($cart[$product]), 404);
+        $cart[$product] = (int) $data['quantidade'];
+        $request->session()->put('cart', $cart);
 
         return redirect()->route('cart.index');
     }
 
-    public function clear()
+    public function remove(Request $request, string $product)
     {
-        CartItem::where('user_id', Auth::id())->delete();
+        $cart = $request->session()->get('cart', []);
+        unset($cart[$product]);
+        $request->session()->put('cart', $cart);
 
         return redirect()->route('cart.index');
     }
 
-    private function isAdminExempt(): bool
+    public function clear(Request $request)
     {
-        return Auth::check() && Auth::user()->tipo_usuario === 'root';
+        $request->session()->forget('cart');
+
+        return redirect()->route('cart.index');
     }
 }

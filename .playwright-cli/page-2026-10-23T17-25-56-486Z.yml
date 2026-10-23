@@ -1,0 +1,22 @@
+- generic [active] [ref=f19e1]:
+  - navigation "Navegação" [ref=f19e3]:
+    - link "Saturn Cloud — início" [ref=f19e4] [cursor=pointer]:
+      - /url: http://127.0.0.1:8000
+      - generic [ref=f19e5]:
+        - text: Saturn
+        - strong [ref=f19e6]: Cloud
+  - main [ref=f19e7]:
+    - region [ref=f19e8]:
+      - generic [ref=f19e9]:
+        - generic [ref=f19e10]:
+          - paragraph [ref=f19e11]: Erro 500 · Falha no servidor
+          - heading "Houston, temos um problema." [level=1] [ref=f19e12]:
+            - generic [ref=f19e13]: Houston, temos
+            - generic [ref=f19e14]: um problema.
+          - paragraph [ref=f19e15]: O servidor não conseguiu concluir sua solicitação. Tente novamente em instantes ou volte ao início.
+          - generic [ref=f19e16]:
+            - link "Tentar novamente" [ref=f19e17] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000
+            - link "Voltar ao início" [ref=f19e18] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000
+        - img "Engenheiro espacial usando uma ferramenta para consertar um servidor aberto." [ref=f19e20]

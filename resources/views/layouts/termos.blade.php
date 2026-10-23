@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="{{ asset('css/serviceterms.css') }}">
     <link rel="stylesheet" href="{{ asset('css/privacidade.css') }}">
     <link rel="stylesheet" href="{{ asset('css/reembolso.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/suporte.css') }}?v={{ filemtime(public_path('css/suporte.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/notifications.css') }}?v={{ filemtime(public_path('css/notifications.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/system.css') }}?v={{ filemtime(public_path('css/system.css')) }}">
@@ -41,7 +40,6 @@
     @include('partials.footer')
 @endif
 
-@include('partials.support-widget')
 
 <script src="{{ asset('js/notifications.js') }}?v={{ filemtime(public_path('js/notifications.js')) }}"></script>
 
