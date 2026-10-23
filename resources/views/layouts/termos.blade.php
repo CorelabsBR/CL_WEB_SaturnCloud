@@ -7,7 +7,7 @@
     <meta name="description" content="@yield('meta_description', 'Políticas e termos aplicáveis aos serviços da Saturn Cloud.')">
     <title>@yield('title', 'Saturn Cloud')</title>
 
-    <link rel="icon" type="image/png" sizes="128x128" href="{{ asset('img/logo-128.png') }}">
+    <link rel="icon" type="image/png" sizes="128x128" href="{{ asset('img/saturno.svg') }}">
 
     <link rel="stylesheet" href="{{ asset('css/base.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">

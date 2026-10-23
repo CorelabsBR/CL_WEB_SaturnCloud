@@ -1,0 +1,24 @@
+- generic [active] [ref=f14e1]:
+  - link "Pular para o conteúdo" [ref=f14e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f14e3]:
+    - navigation [ref=f14e5]:
+      - link "Saturn Cloud — página inicial" [ref=f14e6] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000
+        - generic [ref=f14e7]:
+          - text: Saturn
+          - strong [ref=f14e8]: Cloud
+      - button "Abrir menu" [ref=f14e9] [cursor=pointer]
+  - main [ref=f14e13]:
+    - region [ref=f14e14]:
+      - generic [ref=f14e15]:
+        - generic [ref=f14e16]:
+          - paragraph [ref=f14e17]: Erro 404 · Página não encontrada
+          - heading "Tentando estabelecer Contato com a nave" [level=1] [ref=f14e18]: Tentando estabelecerContato com a nave
+          - paragraph [ref=f14e19]: A página que você procura não está por aqui. Vamos voltar para um lugar conhecido?
+          - generic [ref=f14e20]:
+            - link "Voltar ao início" [ref=f14e21] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000
+            - link "Encontrar ajuda" [ref=f14e24] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/ajuda
+        - img "Astronauta com a bandeira do Brasil no braço e reflexos violetas no traje, tocando o capacete como quem tenta restabelecer contato." [ref=f14e26]

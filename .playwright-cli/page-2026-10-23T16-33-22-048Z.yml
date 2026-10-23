@@ -1,0 +1,26 @@
+- generic [active] [ref=f6e1]:
+  - banner [ref=f6e2]:
+    - generic [ref=f6e3]:
+      - heading "Saturno, em três dimensões." [level=1] [ref=f6e4]
+      - paragraph [ref=f6e5]: Atmosfera em faixas e anéis formados por partículas e fragmentos.
+    - link "Voltar ao site" [ref=f6e6] [cursor=pointer]:
+      - /url: http://127.0.0.1:8000
+  - main [ref=f6e7]:
+    - group "Ângulo do modelo" [ref=f6e8]:
+      - button "Perspectiva" [pressed] [ref=f6e9] [cursor=pointer]
+      - button "Lateral" [ref=f6e10] [cursor=pointer]
+      - button "Traseira" [ref=f6e11] [cursor=pointer]
+      - button "Superior" [ref=f6e12] [cursor=pointer]
+      - link "Baixar modelo GLB" [ref=f6e13] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000/models/saturn-brand.glb
+    - generic "Prévia interativa do modelo 3D" [ref=f6e14]
+    - status [ref=f6e16]: Modelo carregado. Arraste para girar. Use a roda do mouse ou gesto de pinça para aproximar.
+    - generic [ref=f6e17]:
+      - generic [ref=f6e18]:
+        - img "SVG original da Saturn Cloud" [ref=f6e19]
+        - generic [ref=f6e20]:
+          - strong [ref=f6e21]: Saturn Cloud
+          - paragraph [ref=f6e22]: Planeta e anéis procedurais
+      - generic [ref=f6e23]:
+        - strong [ref=f6e24]: Geometria real, sem imagem aplicada.
+        - paragraph [ref=f6e25]: 8 malhas · 200.928 triângulos · 0 texturas76.000 partículas · 1.800 fragmentos 3DArquivo GLB com materiais, pronto para abrir no Blender.

@@ -35,9 +35,9 @@
 }
 
 .terms-updated {
-    margin-top: .75rem !important;
+    margin-top: 0.75rem !important;
     color: var(--dim) !important;
-    font-size: .875rem !important;
+    font-size: 0.875rem !important;
 }
 
 /* CONTENT */
@@ -59,24 +59,26 @@
     max-height: calc(100vh - 3rem);
     overflow-y: auto;
 
-    padding: .75rem;
+    padding: 0.75rem;
     border: 1px solid var(--border);
     border-radius: var(--r);
-    background: rgba(255,255,255,0.025);
+    background: rgba(255, 255, 255, 0.025);
     box-shadow: var(--shadow-sm);
 }
 
 .terms-sidebar a {
     display: block;
-    padding: .65rem .8rem;
+    padding: 0.65rem 0.8rem;
     border-radius: var(--r-sm);
 
     color: var(--muted);
-    font-size: .82rem;
+    font-size: 0.82rem;
     font-weight: 700;
     line-height: 1.25;
 
-    transition: background var(--ease), color var(--ease);
+    transition:
+        background var(--ease),
+        color var(--ease);
 }
 
 .terms-sidebar a:hover {
@@ -93,8 +95,7 @@
     border: 1px solid var(--border);
     border-radius: var(--r-lg);
 
-    background:
-        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.018));
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.018));
     box-shadow: var(--shadow);
 
     overflow: hidden;
@@ -114,7 +115,7 @@
 }
 
 .terms-card h2 {
-    margin-bottom: .9rem;
+    margin-bottom: 0.9rem;
 
     color: var(--text);
     font-size: clamp(1.25rem, 2.5vw, 1.7rem);
@@ -126,7 +127,7 @@
 .terms-card p {
     margin-bottom: 1rem;
     color: var(--muted);
-    font-size: .98rem;
+    font-size: 0.98rem;
     line-height: 1.75;
 }
 
@@ -138,7 +139,7 @@
 /* LISTAS */
 .terms-card ul {
     display: grid;
-    gap: .75rem;
+    gap: 0.75rem;
     margin-top: 1rem;
     padding-left: 0;
     list-style: none;
@@ -149,7 +150,7 @@
     padding-left: 1.35rem;
 
     color: var(--white-menos);
-    font-size: .95rem;
+    font-size: 0.95rem;
     line-height: 1.65;
 }
 
@@ -157,7 +158,7 @@
     content: "";
     position: absolute;
     left: 0;
-    top: .65em;
+    top: 0.65em;
 
     width: 7px;
     height: 7px;
@@ -169,7 +170,7 @@
 
 /* BOTÃO DENTRO DO CARD */
 .terms-card .btn {
-    margin-top: .5rem;
+    margin-top: 0.5rem;
 }
 
 /* SCROLLBAR DA SIDEBAR */
@@ -199,11 +200,11 @@
 
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: .35rem;
+        gap: 0.35rem;
     }
 
     .terms-sidebar a {
-        background: rgba(255,255,255,0.025);
+        background: rgba(255, 255, 255, 0.025);
         border: 1px solid var(--border);
     }
 }

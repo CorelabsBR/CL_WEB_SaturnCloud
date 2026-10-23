@@ -16,7 +16,7 @@
 .complete-profile-body,
 .complete-profile-body .register-main {
     background:
-        radial-gradient(circle at 50% -20%, rgb(var(--brand-rgb) / .075), transparent 38%),
+        radial-gradient(circle at 50% -20%, rgb(var(--brand-rgb) / 0.075), transparent 38%),
         var(--bg);
 }
 
@@ -27,17 +27,17 @@
     z-index: 50;
     color: #a1a1aa;
     text-decoration: none;
-    font-size: .85rem;
+    font-size: 0.85rem;
     font-weight: 700;
-    padding: .55rem .9rem;
+    padding: 0.55rem 0.9rem;
     border-radius: 999px;
-    background: rgba(255,255,255,.05);
-    border: 1px solid rgba(255,255,255,.08);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .register-back:hover {
     color: #fff;
-    background: rgba(255,255,255,.1);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .register-split {
@@ -52,9 +52,8 @@
     justify-content: center;
     padding: 3rem;
     background:
-        radial-gradient(circle at center, rgb(var(--brand-rgb) / .08), transparent 55%),
-        #0d0d0d;
-    border-right: 1px solid rgba(255,255,255,.08);
+        radial-gradient(circle at center, rgb(var(--brand-rgb) / 0.08), transparent 55%), #0d0d0d;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .register-panel-inner {
@@ -70,19 +69,19 @@
     display: block;
     width: 190px;
     margin: 0 auto 1.5rem;
-    filter: drop-shadow(0 0 18px rgb(var(--brand-rgb) / .3));
+    filter: drop-shadow(0 0 18px rgb(var(--brand-rgb) / 0.3));
 }
 
 .register-panel-title {
     font-size: 1.9rem;
     line-height: 1.2;
-    margin: 0 0 .8rem;
+    margin: 0 0 0.8rem;
     font-weight: 900;
 }
 
 .register-panel-sub {
     color: #a1a1aa;
-    font-size: .95rem;
+    font-size: 0.95rem;
     line-height: 1.7;
     margin-bottom: 2rem;
 }
@@ -91,8 +90,8 @@
     display: flex;
     justify-content: center;
     gap: 1rem;
-    background: rgb(var(--brand-rgb) / .04);
-    border: 1px solid rgb(var(--brand-rgb) / .12);
+    background: rgb(var(--brand-rgb) / 0.04);
+    border: 1px solid rgb(var(--brand-rgb) / 0.12);
     border-radius: 14px;
     padding: 1rem;
 }
@@ -100,7 +99,7 @@
 .register-stats div {
     display: flex;
     flex-direction: column;
-    gap: .25rem;
+    gap: 0.25rem;
 }
 
 .register-stats strong {
@@ -110,7 +109,7 @@
 
 .register-stats span {
     color: #a1a1aa;
-    font-size: .7rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
 }
 
@@ -152,23 +151,23 @@
     width: 58px;
     height: 58px;
     place-items: center;
-    border: 1px solid rgb(var(--brand-rgb) / .18);
+    border: 1px solid rgb(var(--brand-rgb) / 0.18);
     border-radius: 14px;
     background: var(--bg);
 }
 
 .complete-profile-logo {
     width: 180px;
-    filter: drop-shadow(0 0 14px rgb(var(--brand-rgb) / .22));
+    filter: drop-shadow(0 0 14px rgb(var(--brand-rgb) / 0.22));
 }
 
 .complete-profile-eyebrow {
     display: block;
-    margin-bottom: .55rem;
+    margin-bottom: 0.55rem;
     color: var(--accent);
-    font-size: .7rem;
+    font-size: 0.7rem;
     font-weight: 850;
-    letter-spacing: .14em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
 }
 
@@ -179,24 +178,24 @@
 
 .complete-profile-header .register-subtitle {
     max-width: 600px;
-    margin: .55rem 0 0;
+    margin: 0.55rem 0 0;
     line-height: 1.55;
 }
 
 .complete-profile-progress {
-    padding: .6rem .8rem;
-    border: 1px solid rgba(255, 255, 255, .08);
+    padding: 0.6rem 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
-    background: rgba(255, 255, 255, .025);
+    background: rgba(255, 255, 255, 0.025);
     color: #71877a;
-    font-size: .72rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: .04em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
 }
 
 .complete-profile-progress strong {
-    margin-left: .35rem;
+    margin-left: 0.35rem;
     color: var(--accent-hover);
 }
 
@@ -208,19 +207,19 @@
 .profile-section {
     min-width: 0;
     margin: 0 0 1.35rem;
-    padding: 1.75rem 1.75rem .7rem;
-    border: 1px solid rgba(255, 255, 255, .075);
-    border-top-color: rgb(var(--brand-rgb) / .28);
+    padding: 1.75rem 1.75rem 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    border-top-color: rgb(var(--brand-rgb) / 0.28);
     border-radius: 12px;
     background: var(--bg);
-    box-shadow: 0 18px 50px rgba(0, 0, 0, .2);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
 }
 
 .profile-section legend {
     display: flex;
     align-items: baseline;
-    gap: .65rem;
-    padding: 0 .2rem;
+    gap: 0.65rem;
+    padding: 0 0.2rem;
     color: var(--text);
 }
 
@@ -231,7 +230,7 @@
 
 .profile-section legend small {
     color: var(--accent);
-    font-size: .76rem;
+    font-size: 0.76rem;
     font-weight: 500;
 }
 
@@ -241,39 +240,57 @@
     column-gap: 1rem;
 }
 
-.profile-field-name { grid-column: span 12; }
+.profile-field-name {
+    grid-column: span 12;
+}
 .profile-field-document,
 .profile-field-phone,
-.profile-field-birth { grid-column: span 4; }
+.profile-field-birth {
+    grid-column: span 4;
+}
 
 .profile-cep-group {
     grid-column: span 3;
     max-width: none;
 }
 
-.profile-field-street { grid-column: span 9; }
-.profile-field-district { grid-column: span 5; }
-.profile-field-number { grid-column: span 3; }
-.profile-field-complement { grid-column: span 4; }
-.profile-field-city { grid-column: span 6; }
-.profile-field-state { grid-column: span 2; }
-.profile-field-country { grid-column: span 4; }
+.profile-field-street {
+    grid-column: span 9;
+}
+.profile-field-district {
+    grid-column: span 5;
+}
+.profile-field-number {
+    grid-column: span 3;
+}
+.profile-field-complement {
+    grid-column: span 4;
+}
+.profile-field-city {
+    grid-column: span 6;
+}
+.profile-field-state {
+    grid-column: span 2;
+}
+.profile-field-country {
+    grid-column: span 4;
+}
 
 .complete-profile-body .register-label {
-    font-size: .69rem;
-    letter-spacing: .08em;
+    font-size: 0.69rem;
+    letter-spacing: 0.08em;
 }
 
 .complete-profile-body .register-input {
     min-height: 50px;
-    padding: .8rem .9rem;
-    border-color: rgba(255, 255, 255, .09) !important;
+    padding: 0.8rem 0.9rem;
+    border-color: rgba(255, 255, 255, 0.09) !important;
     border-radius: 7px !important;
     background-color: var(--bg) !important;
 }
 
 .complete-profile-body .register-input:hover {
-    border-color: rgb(var(--brand-rgb) / .2) !important;
+    border-color: rgb(var(--brand-rgb) / 0.2) !important;
     background-color: var(--bg) !important;
 }
 
@@ -285,23 +302,36 @@
 .cep-status {
     min-height: 1.25em;
     color: #71877a;
-    font-size: .76rem;
+    font-size: 0.76rem;
     line-height: 1.4;
 }
 
-.cep-status[data-state="loading"] { color: #b7c8bd; }
-.cep-status[data-state="success"] { color: #75e9a4; }
-.cep-status[data-state="error"] { color: #ff9b9b; }
+.cep-status[data-state="loading"] {
+    color: #b7c8bd;
+}
+.cep-status[data-state="success"] {
+    color: #75e9a4;
+}
+.cep-status[data-state="error"] {
+    color: #ff9b9b;
+}
 
 .register-input.is-loading {
     padding-right: 2.75rem;
-    background-image: linear-gradient(90deg, transparent, rgb(var(--brand-rgb) / .08), transparent) !important;
+    background-image: linear-gradient(
+        90deg,
+        transparent,
+        rgb(var(--brand-rgb) / 0.08),
+        transparent
+    ) !important;
     background-size: 200% 100% !important;
     animation: cep-loading 1.15s linear infinite;
 }
 
 @keyframes cep-loading {
-    to { background-position: -200% 0; }
+    to {
+        background-position: -200% 0;
+    }
 }
 
 .profile-submit-row {
@@ -309,13 +339,13 @@
     align-items: center;
     justify-content: space-between;
     gap: 2rem;
-    padding-top: .35rem;
+    padding-top: 0.35rem;
 }
 
 .profile-submit-row p {
     max-width: 480px;
     color: #71877a;
-    font-size: .78rem;
+    font-size: 0.78rem;
     line-height: 1.55;
 }
 
@@ -324,24 +354,24 @@
     min-width: 220px;
     margin: 0;
     border-radius: 8px;
-    padding: .95rem 1.35rem;
+    padding: 0.95rem 1.35rem;
 }
 
 .profile-submit-row .register-submit span {
-    margin-left: .45rem;
+    margin-left: 0.45rem;
     font-size: 1.1em;
 }
 
 .register-title {
     font-size: 2rem;
     font-weight: 900;
-    margin: 0 0 .4rem;
+    margin: 0 0 0.4rem;
 }
 
 .register-subtitle {
     color: #a1a1aa;
     margin: 0 0 1.7rem;
-    font-size: .95rem;
+    font-size: 0.95rem;
 }
 
 .register-form {
@@ -357,7 +387,7 @@
 .register-group {
     display: flex;
     flex-direction: column;
-    gap: .4rem;
+    gap: 0.4rem;
     margin-bottom: 1rem;
 }
 
@@ -366,32 +396,32 @@
 }
 
 .register-label {
-    color: rgb(var(--brand-rgb) / .72);
-    font-size: .72rem;
+    color: rgb(var(--brand-rgb) / 0.72);
+    font-size: 0.72rem;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: .07em;
+    letter-spacing: 0.07em;
 }
 
 .register-input {
     width: 100%;
     box-sizing: border-box;
-    padding: .95rem 1.05rem;
+    padding: 0.95rem 1.05rem;
     border-radius: 9px;
-    background: rgba(255,255,255,.055);
-    border: 1px solid rgba(255,255,255,.1);
+    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: #fff;
-    font-size: .95rem;
+    font-size: 0.95rem;
     outline: none;
 }
 
 .register-input:hover {
-    background: rgba(255,255,255,.08);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .register-input:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgb(var(--brand-rgb) / .12);
+    box-shadow: 0 0 0 3px rgb(var(--brand-rgb) / 0.12);
 }
 
 .register-input::placeholder {
@@ -408,14 +438,14 @@
 
 .register-password-toggle {
     position: absolute;
-    right: .8rem;
+    right: 0.8rem;
     top: 50%;
     transform: translateY(-50%);
     border: 0;
     background: transparent;
     color: #a1a1aa;
     cursor: pointer;
-    font-size: .9rem;
+    font-size: 0.9rem;
 }
 
 .register-submit {
@@ -423,12 +453,12 @@
     border: 0;
     border-radius: 999px;
     padding: 1rem;
-    margin-top: .4rem;
+    margin-top: 0.4rem;
     background: var(--accent);
     color: var(--bg);
     font-weight: 900;
     cursor: pointer;
-    font-size: .95rem;
+    font-size: 0.95rem;
 }
 
 .register-submit:hover {
@@ -439,7 +469,7 @@
     text-align: center;
     margin-top: 1.4rem;
     color: #a1a1aa;
-    font-size: .9rem;
+    font-size: 0.9rem;
 }
 
 .register-note a {
@@ -459,7 +489,7 @@
     border: 0;
     background: transparent;
     color: var(--accent);
-    font-size: .9rem;
+    font-size: 0.9rem;
     font-weight: 800;
     cursor: pointer;
     text-align: center;
@@ -477,7 +507,7 @@
     .register-panel {
         padding: 4rem 2rem 2rem;
         border-right: 0;
-        border-bottom: 1px solid rgba(255,255,255,.08);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .register-form-side {
@@ -507,7 +537,7 @@
 
     .complete-profile-header {
         grid-template-columns: auto 1fr;
-        gap: .9rem;
+        gap: 0.9rem;
     }
 
     .complete-profile-brand {
@@ -515,20 +545,22 @@
         height: 50px;
     }
 
-    .complete-profile-logo { width: 160px; }
+    .complete-profile-logo {
+        width: 160px;
+    }
 
     .complete-profile-progress {
         display: none;
     }
 
     .profile-section {
-        padding: 1.25rem 1rem .3rem;
+        padding: 1.25rem 1rem 0.3rem;
     }
 
     .profile-section legend {
         align-items: flex-start;
         flex-direction: column;
-        gap: .15rem;
+        gap: 0.15rem;
     }
 
     .profile-personal-grid,
@@ -554,7 +586,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .register-input.is-loading { animation: none; }
+    .register-input.is-loading {
+        animation: none;
+    }
 }
 .register-alert {
     margin-bottom: 1.5rem;
@@ -563,12 +597,12 @@
     border-radius: 14px;
     border: 1px solid var(--border);
 
-    font-size: .92rem;
+    font-size: 0.92rem;
     line-height: 1.6;
 }
 
 .register-alert ul {
-    margin-top: .5rem;
+    margin-top: 0.5rem;
     padding-left: 1rem;
 }
 
@@ -579,21 +613,21 @@
 }
 
 .register-alert-success {
-    background: rgba(61,255,160,.08);
-    border-color: rgba(61,255,160,.22);
+    background: rgba(61, 255, 160, 0.08);
+    border-color: rgba(61, 255, 160, 0.22);
     color: #9fffcf;
 }
 
 .register-error {
     display: block;
-    margin-top: .45rem;
+    margin-top: 0.45rem;
 
     color: #ff8e8e;
-    font-size: .82rem;
+    font-size: 0.82rem;
     font-weight: 600;
 }
 
 .register-input.is-invalid {
-    border-color: rgba(255, 70, 70, .5);
-    box-shadow: 0 0 0 4px rgba(255, 70, 70, .08);
+    border-color: rgba(255, 70, 70, 0.5);
+    box-shadow: 0 0 0 4px rgba(255, 70, 70, 0.08);
 }

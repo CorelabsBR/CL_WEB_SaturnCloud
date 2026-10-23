@@ -1,0 +1,26 @@
+- generic [active] [ref=f16e1]:
+  - link "Pular para o conteúdo" [ref=f16e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f16e3]:
+    - navigation [ref=f16e5]:
+      - link "Saturn Cloud — página inicial" [ref=f16e6] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000
+        - generic [ref=f16e7]:
+          - text: Saturn
+          - strong [ref=f16e8]: Cloud
+      - button "Abrir menu" [ref=f16e9] [cursor=pointer]
+  - main [ref=f16e13]:
+    - region [ref=f16e14]:
+      - generic [ref=f16e15]:
+        - generic [ref=f16e16]:
+          - paragraph [ref=f16e17]: Erro 403 · Acesso não autorizado
+          - heading "acesso negado, area restrita da estação" [level=1] [ref=f16e18]:
+            - generic [ref=f16e19]: acesso negado,
+            - generic [ref=f16e20]: area restrita da estação
+          - paragraph [ref=f16e21]: Você não tem permissão para acessar esta área. Volte ao início ou encontre ajuda para continuar.
+          - generic [ref=f16e22]:
+            - link "Voltar ao início" [ref=f16e23] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000
+            - link "Encontrar ajuda" [ref=f16e26] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/ajuda
+        - img "Militar da estação com armadura escura e os antebraços cruzados em X, sinalizando acesso negado." [ref=f16e28]

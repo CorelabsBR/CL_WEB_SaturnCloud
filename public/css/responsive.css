@@ -142,16 +142,38 @@ table {
 
 /* ── Tablet largo / desktop pequeno (até 1024px) ────── */
 @media (max-width: 1024px) {
-    .plans-grid          { grid-template-columns: 1fr 1fr; }
-    .footer-grid         { grid-template-columns: 1fr 1fr; gap: 2rem; }
-    .feature-block       { grid-template-columns: 1fr; gap: 2rem; }
-    .feature-block.reverse { direction: ltr; }
-    .faq-grid            { grid-template-columns: 1fr; }
-    .page-hero-inner     { grid-template-columns: 1fr; }
-    .admin-stats         { grid-template-columns: 1fr 1fr; }
-    .admin-form-grid     { grid-template-columns: 1fr 1fr; }
-    .services-grid       { grid-template-columns: 1fr 1fr; } /* 3 → 2 colunas */
-    .mini-stats-bar      { gap: 2rem; }
+    .plans-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+    .feature-block {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    .feature-block.reverse {
+        direction: ltr;
+    }
+    .faq-grid {
+        grid-template-columns: 1fr;
+    }
+    .page-hero-inner {
+        grid-template-columns: 1fr;
+    }
+    .admin-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+    .admin-form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .services-grid {
+        grid-template-columns: 1fr 1fr;
+    } /* 3 → 2 colunas */
+    .mini-stats-bar {
+        gap: 2rem;
+    }
     .checkout-layout,
     .cart-layout,
     .dashboard-hero,
@@ -175,17 +197,44 @@ table {
 
 /* ── Tablet estreito (até 768px) ────────────────────── */
 @media (max-width: 768px) {
-    section              { padding-block: 3rem; }
-    .hero                { min-height: 80vh; padding: 3rem 0 4rem; }
-    .plans-grid          { grid-template-columns: 1fr; }
-    .footer-grid         { grid-template-columns: 1fr; gap: 2rem; }
-    .footer-bottom       { flex-direction: column; text-align: center; }
-    .account-grid        { grid-template-columns: 1fr; }
-    .admin-form-grid     { grid-template-columns: 1fr; }
-    .admin-stats         { grid-template-columns: 1fr 1fr; }
-    .account-head        { flex-direction: column; }
-    .edit-dropdown       { width: 280px; right: auto; left: 0; }
-    .faq-grid            { gap: 2rem; }
+    section {
+        padding-block: 3rem;
+    }
+    .hero {
+        min-height: 80vh;
+        padding: 3rem 0 4rem;
+    }
+    .plans-grid {
+        grid-template-columns: 1fr;
+    }
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+    .account-grid {
+        grid-template-columns: 1fr;
+    }
+    .admin-form-grid {
+        grid-template-columns: 1fr;
+    }
+    .admin-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+    .account-head {
+        flex-direction: column;
+    }
+    .edit-dropdown {
+        width: 280px;
+        right: auto;
+        left: 0;
+    }
+    .faq-grid {
+        gap: 2rem;
+    }
     .hero > .container,
     .section-head,
     .games-picker-head,
@@ -230,7 +279,9 @@ table {
 
 /* ── Mobile (até 560px) ─────────────────────────────── */
 @media (max-width: 560px) {
-    .services-grid       { grid-template-columns: 1fr; } /* 2 → 1 coluna */
+    .services-grid {
+        grid-template-columns: 1fr;
+    } /* 2 → 1 coluna */
     .container {
         padding-inline: 1rem;
     }
@@ -256,22 +307,30 @@ table {
 
 /* ── Mobile pequeno (até 480px) ─────────────────────── */
 @media (max-width: 480px) {
-    .hero-cta            { flex-direction: column; }
-    .admin-stats         { grid-template-columns: 1fr; }
-    .billing-switcher    { gap: .375rem; }
-    .admin-form-grid     { grid-template-columns: 1fr; }
+    .hero-cta {
+        flex-direction: column;
+    }
+    .admin-stats {
+        grid-template-columns: 1fr;
+    }
+    .billing-switcher {
+        gap: 0.375rem;
+    }
+    .admin-form-grid {
+        grid-template-columns: 1fr;
+    }
     .btn-lg {
         padding-inline: 1.1rem;
     }
 
     .support-chat {
         width: calc(100vw - 1rem) !important;
-        right: .5rem !important;
-        left: .5rem !important;
+        right: 0.5rem !important;
+        left: 0.5rem !important;
     }
 
     .support-widget {
-        right: .75rem !important;
-        bottom: .75rem !important;
+        right: 0.75rem !important;
+        bottom: 0.75rem !important;
     }
 }

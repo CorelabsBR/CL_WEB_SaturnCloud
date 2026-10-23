@@ -5,12 +5,15 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "model:saturn": "node scripts/export-saturn-brand-model.mjs"
+        "model:saturn": "node scripts/export-saturn-brand-model.mjs",
+        "format:css": "prettier --write \"public/css/**/*.css\" \"resources/css/**/*.css\"",
+        "check:css": "prettier --check \"public/css/**/*.css\" \"resources/css/**/*.css\""
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^3.0.0",
+        "prettier": "^3.9.10",
         "tailwindcss": "^4.0.0",
         "vite": "^8.0.0"
     },

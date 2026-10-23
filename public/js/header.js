@@ -1,7 +1,7 @@
 (() => {
     const closeProfileMenu = (dropdown, returnFocus = false) => {
-        const button = dropdown.querySelector('.profile-btn');
-        const menu = dropdown.querySelector('.profile-menu');
+        const button = dropdown.querySelector('.site-header__profile-btn');
+        const menu = dropdown.querySelector('.site-header__profile-menu');
         if (!button || !menu) return;
         menu.hidden = true;
         menu.classList.remove('is-open');
@@ -24,14 +24,14 @@
         menu.style.right = `${Math.round(right)}px`;
     };
 
-    document.querySelectorAll('.profile-dropdown').forEach((dropdown) => {
-        const button = dropdown.querySelector('.profile-btn');
-        const menu = dropdown.querySelector('.profile-menu');
+    document.querySelectorAll('.site-header__profile-dropdown').forEach((dropdown) => {
+        const button = dropdown.querySelector('.site-header__profile-btn');
+        const menu = dropdown.querySelector('.site-header__profile-menu');
         if (!button || !menu || button.dataset.headerBound) return;
         button.dataset.headerBound = '1';
 
         const openMenu = () => {
-            document.querySelectorAll('.profile-dropdown').forEach((other) => {
+            document.querySelectorAll('.site-header__profile-dropdown').forEach((other) => {
                 if (other !== dropdown) closeProfileMenu(other);
             });
             menu.hidden = false;
@@ -67,12 +67,12 @@
     });
 
     document.addEventListener('click', (event) => {
-        document.querySelectorAll('.profile-dropdown').forEach((dropdown) => {
+        document.querySelectorAll('.site-header__profile-dropdown').forEach((dropdown) => {
             if (!dropdown.contains(event.target)) closeProfileMenu(dropdown);
         });
     });
-    window.addEventListener('resize', () => document.querySelectorAll('.profile-dropdown').forEach((dropdown) => closeProfileMenu(dropdown)));
-    window.addEventListener('scroll', () => document.querySelectorAll('.profile-dropdown').forEach((dropdown) => closeProfileMenu(dropdown)), { passive: true });
+    window.addEventListener('resize', () => document.querySelectorAll('.site-header__profile-dropdown').forEach((dropdown) => closeProfileMenu(dropdown)));
+    window.addEventListener('scroll', () => document.querySelectorAll('.site-header__profile-dropdown').forEach((dropdown) => closeProfileMenu(dropdown)), { passive: true });
 
     const hamburger = document.getElementById('hamburger');
     const mobileNav = document.getElementById('mobile-nav');

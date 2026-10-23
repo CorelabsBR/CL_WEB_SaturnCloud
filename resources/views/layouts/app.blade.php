@@ -15,7 +15,7 @@
     <link rel="canonical" href="{{ url()->current() }}">
     <title>@yield('title', 'Saturn Cloud')</title>
 
-    <link rel="icon" type="image/png" sizes="128x128" href="{{ asset('img/logo-128.png') }}">
+    <link rel="icon" type="image/png" sizes="128x128" href="{{ asset('img/saturno.svg') }}">
 
     <link rel="stylesheet" href="{{ asset('css/base.css') }}?v={{ filemtime(public_path('css/base.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}?v={{ filemtime(public_path('css/footer.css')) }}">

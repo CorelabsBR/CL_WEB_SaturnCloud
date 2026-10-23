@@ -1,0 +1,27 @@
+- generic [active] [ref=f7e1]:
+  - link "Pular para o conteúdo" [ref=f7e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f7e3]:
+    - navigation [ref=f7e5]:
+      - link "Saturn Cloud — página inicial" [ref=f7e6] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000
+        - generic [ref=f7e7]:
+          - text: Saturn
+          - strong [ref=f7e8]: Cloud
+      - button "Abrir menu" [ref=f7e9] [cursor=pointer]
+  - main [ref=f7e13]:
+    - region [ref=f7e14]:
+      - generic [ref=f7e15]:
+        - generic [ref=f7e16]:
+          - paragraph [ref=f7e17]: Erro 404 · Página não encontrada
+          - heading "Até ele se perdeu." [level=1] [ref=f7e18]: Até elese perdeu.
+          - paragraph [ref=f7e19]: A página que você procura não está por aqui. Vamos voltar para um lugar conhecido?
+          - generic [ref=f7e20]:
+            - link "Voltar ao início" [ref=f7e21] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000
+            - link "Encontrar ajuda" [ref=f7e24] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/ajuda
+        - generic [ref=f7e25]:
+          - generic [aria-hidden] [ref=f7e26]: "404"
+          - generic [aria-hidden] [ref=f7e27]: "?"
+          - img "Alienígena roxo confuso, coçando a cabeça e tentando entender onde foi parar." [ref=f7e28]

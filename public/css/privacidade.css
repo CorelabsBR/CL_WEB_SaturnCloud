@@ -31,7 +31,7 @@
 
 .privacy-updated {
     color: var(--dim) !important;
-    font-size: .875rem !important;
+    font-size: 0.875rem !important;
 }
 
 .privacy-content {
@@ -50,22 +50,24 @@
     top: 1.5rem;
     max-height: calc(100vh - 3rem);
     overflow-y: auto;
-    padding: .8rem;
+    padding: 0.8rem;
     border: 1px solid var(--border);
     border-radius: var(--r);
-    background: rgba(255,255,255,.025);
+    background: rgba(255, 255, 255, 0.025);
     box-shadow: var(--shadow-sm);
 }
 
 .privacy-sidebar a {
     display: block;
-    padding: .65rem .8rem;
+    padding: 0.65rem 0.8rem;
     border-radius: var(--r-sm);
     color: var(--muted);
-    font-size: .82rem;
+    font-size: 0.82rem;
     font-weight: 700;
     line-height: 1.3;
-    transition: background var(--ease), color var(--ease);
+    transition:
+        background var(--ease),
+        color var(--ease);
 }
 
 .privacy-sidebar a:hover {
@@ -78,7 +80,7 @@
     padding: clamp(1.25rem, 3vw, 2.5rem);
     border: 1px solid var(--border);
     border-radius: var(--r-lg);
-    background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015));
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015));
     box-shadow: var(--shadow);
 }
 
@@ -96,7 +98,7 @@
 }
 
 .privacy-card h2 {
-    margin-bottom: .9rem;
+    margin-bottom: 0.9rem;
     color: var(--text);
     font-size: clamp(1.25rem, 2.5vw, 1.7rem);
     font-weight: 900;
@@ -107,7 +109,7 @@
 .privacy-card p {
     margin-bottom: 1rem;
     color: var(--muted);
-    font-size: .98rem;
+    font-size: 0.98rem;
     line-height: 1.75;
 }
 
@@ -117,7 +119,7 @@
 
 .privacy-card ul {
     display: grid;
-    gap: .75rem;
+    gap: 0.75rem;
     margin-top: 1rem;
     padding-left: 0;
     list-style: none;
@@ -127,7 +129,7 @@
     position: relative;
     padding-left: 1.35rem;
     color: var(--white-menos);
-    font-size: .95rem;
+    font-size: 0.95rem;
     line-height: 1.65;
 }
 
@@ -135,7 +137,7 @@
     content: "";
     position: absolute;
     left: 0;
-    top: .65em;
+    top: 0.65em;
     width: 7px;
     height: 7px;
     border-radius: 999px;
@@ -144,7 +146,7 @@
 }
 
 .privacy-card .btn {
-    margin-top: .5rem;
+    margin-top: 0.5rem;
 }
 
 .privacy-sidebar::-webkit-scrollbar {
@@ -170,12 +172,12 @@
         max-height: none;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
-        gap: .35rem;
+        gap: 0.35rem;
     }
 
     .privacy-sidebar a {
         border: 1px solid var(--border);
-        background: rgba(255,255,255,.02);
+        background: rgba(255, 255, 255, 0.02);
     }
 }
 

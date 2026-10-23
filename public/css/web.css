@@ -11,12 +11,12 @@
 
 /* Glow decorativo de fundo */
 .hosting-section::before {
-    content: '';
+    content: "";
     position: absolute;
     width: 600px;
     height: 600px;
     border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(139, 92, 246,.06) 0%, transparent 70%);
+    background: radial-gradient(ellipse, rgba(139, 92, 246, 0.06) 0%, transparent 70%);
     top: -100px;
     right: -100px;
     pointer-events: none;
@@ -32,28 +32,79 @@
     font-size: clamp(1.8rem, 4vw, 2.8rem);
     font-weight: 900;
     letter-spacing: -0.03em;
-    margin-bottom: .75rem;
+    margin-bottom: 0.75rem;
 }
 
 .hosting-header .section-sub {
-    font-size: .9rem;
+    font-size: 0.9rem;
     color: var(--muted);
     max-width: 680px;
     margin: 0;
     line-height: 1.6;
 }
 
-.hosting-header .eyebrow { margin-bottom:1rem; }
-.hosting-assurances { display:grid; grid-template-columns:repeat(4,1fr); margin:-1.5rem 0 2.5rem; border:1px solid var(--border); background:#07100a; }
-.hosting-assurances span { padding:.9rem 1rem; border-right:1px solid var(--border); color:var(--muted); font-size:.76rem; font-weight:700; text-align:center; }
-.hosting-assurances span:last-child { border:0; }
-.hosting-platform { padding:clamp(4.5rem,8vw,7rem) 0; border-top:1px solid var(--border); background:#07100a; }
-.hosting-platform-grid { display:grid; grid-template-columns:.85fr 1.15fr; gap:clamp(3rem,9vw,8rem); }
-.hosting-platform h2 { margin:0; font-size:clamp(2rem,4vw,3.4rem); line-height:1.06; letter-spacing:-.045em; }
-.hosting-platform-list { border-top:1px solid var(--border-s); }
-.hosting-platform-list article { display:grid; grid-template-columns:2.5rem 1fr; gap:1rem; padding:1.4rem 0; border-bottom:1px solid var(--border); }
-.hosting-platform-list strong { color:var(--accent); font:700 .7rem ui-monospace,monospace; }
-.hosting-platform-list span { color:var(--muted); line-height:1.55; }.hosting-platform-list b { display:block; margin-bottom:.3rem; color:var(--text); }
+.hosting-header .eyebrow {
+    margin-bottom: 1rem;
+}
+.hosting-assurances {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: -1.5rem 0 2.5rem;
+    border: 1px solid var(--border);
+    background: #07100a;
+}
+.hosting-assurances span {
+    padding: 0.9rem 1rem;
+    border-right: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-align: center;
+}
+.hosting-assurances span:last-child {
+    border: 0;
+}
+.hosting-platform {
+    padding: clamp(4.5rem, 8vw, 7rem) 0;
+    border-top: 1px solid var(--border);
+    background: #07100a;
+}
+.hosting-platform-grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(3rem, 9vw, 8rem);
+}
+.hosting-platform h2 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1.06;
+    letter-spacing: -0.045em;
+}
+.hosting-platform-list {
+    border-top: 1px solid var(--border-s);
+}
+.hosting-platform-list article {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 1rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--border);
+}
+.hosting-platform-list strong {
+    color: var(--accent);
+    font:
+        700 0.7rem ui-monospace,
+        monospace;
+}
+.hosting-platform-list span {
+    color: var(--muted);
+    line-height: 1.55;
+}
+.hosting-platform-list b {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--text);
+}
 
 /* ── Plans Grid ─────────────────────────────────────── */
 .plans-grid {
@@ -69,7 +120,7 @@
 .plan-card {
     min-width: 0;
     min-height: 100%;
-    background: rgba(255,255,255,.02);
+    background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 1.75rem;
@@ -77,11 +128,14 @@
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+    transition:
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .plan-card::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -89,13 +143,15 @@
     height: 2px;
     background: linear-gradient(90deg, transparent, var(--accent), transparent);
     opacity: 0;
-    transition: opacity .2s ease;
+    transition: opacity 0.2s ease;
 }
 
 .plan-card:hover {
-    border-color: rgba(139, 92, 246,.4);
+    border-color: rgba(139, 92, 246, 0.4);
     transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(0,0,0,.4), 0 0 20px rgba(139, 92, 246,.05);
+    box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(139, 92, 246, 0.05);
 }
 
 .plan-card:hover::before {
@@ -104,9 +160,9 @@
 
 /* Card destaque */
 .plan-card.plan-highlighted {
-    border-color: rgba(139, 92, 246,.4);
-    background: rgba(139, 92, 246,.025);
-    box-shadow: 0 0 50px rgba(139, 92, 246,.08);
+    border-color: rgba(139, 92, 246, 0.4);
+    background: rgba(139, 92, 246, 0.025);
+    box-shadow: 0 0 50px rgba(139, 92, 246, 0.08);
 }
 
 .plan-card.plan-highlighted::before {
@@ -125,9 +181,9 @@
 .plan-icon {
     width: 48px;
     height: 48px;
-    border-radius: .5rem;
+    border-radius: 0.5rem;
     background: var(--accent-d);
-    border: 1px solid rgba(139, 92, 246,.2);
+    border: 1px solid rgba(139, 92, 246, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -139,27 +195,27 @@
     object-fit: contain;
     background: transparent;
     padding: 0;
-    filter: drop-shadow(0 2px 6px rgba(139, 92, 246,.16));
+    filter: drop-shadow(0 2px 6px rgba(139, 92, 246, 0.16));
 }
 
 .plan-label {
     display: inline-flex;
     align-items: center;
-    gap: .35rem;
-    font-size: .55rem;
+    gap: 0.35rem;
+    font-size: 0.55rem;
     font-weight: 800;
-    letter-spacing: .18em;
+    letter-spacing: 0.18em;
     color: var(--dim);
     text-transform: uppercase;
     background: transparent;
     border: 0;
     border-radius: 0;
-    padding: .15rem 0;
+    padding: 0.15rem 0;
     white-space: nowrap;
 }
 
 .plan-label::before {
-    content: '';
+    content: "";
     width: 5px;
     height: 5px;
     border-radius: 50%;
@@ -181,7 +237,7 @@
     font-size: 1.05rem;
     font-weight: 800;
     letter-spacing: -0.01em;
-    margin-bottom: .55rem;
+    margin-bottom: 0.55rem;
     color: var(--White-title, #fff);
 }
 
@@ -202,7 +258,7 @@
     margin-bottom: 1.25rem;
     padding: 0;
     background: transparent;
-    border: 1px solid rgba(255,255,255,.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 8px;
     overflow: hidden;
 }
@@ -210,14 +266,14 @@
 .plan-features li {
     min-width: 0;
     font-size: 0.75rem;
-    color: rgba(200,255,220,.7);
+    color: rgba(200, 255, 220, 0.7);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: .75rem;
-    padding: .5rem .75rem;
-    background: rgba(255,255,255,.02);
-    border-bottom: 1px solid rgba(255,255,255,.04);
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .plan-features li:last-child {
@@ -225,10 +281,10 @@
 }
 
 .plan-features li strong {
-    color: rgba(255,255,255,.45);
+    color: rgba(255, 255, 255, 0.45);
     font-weight: 600;
     font-size: 0.68rem;
-    letter-spacing: .04em;
+    letter-spacing: 0.04em;
     flex-shrink: 0;
 }
 
@@ -239,7 +295,7 @@
 /* ── Divider ────────────────────────────────────────── */
 .plan-divider {
     border: none;
-    border-top: 1px solid rgba(255,255,255,.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
     margin-bottom: 1.25rem;
 }
 
@@ -248,7 +304,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: .9rem;
+    gap: 0.9rem;
     flex-wrap: wrap;
     margin-top: auto;
 }
@@ -256,7 +312,7 @@
 .plan-pricing {
     display: flex;
     flex-direction: column;
-    gap: .1rem;
+    gap: 0.1rem;
     min-width: 0;
     flex: 1 1 150px;
 }
@@ -264,14 +320,14 @@
 .plan-pricing-label {
     font-size: 0.6rem;
     color: var(--dim);
-    letter-spacing: .05em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
 }
 
 .plan-pricing-value {
     display: flex;
     align-items: baseline;
-    gap: .2rem;
+    gap: 0.2rem;
 }
 
 .plan-pricing-value .amount {
@@ -301,10 +357,18 @@
         border-radius: 12px;
         padding: 1.35rem;
     }
-    .hosting-assurances { grid-template-columns:1fr 1fr; }
-    .hosting-assurances span:nth-child(2) { border-right:0; }
-    .hosting-assurances span:nth-child(-n+2) { border-bottom:1px solid var(--border); }
-    .hosting-platform-grid { grid-template-columns:1fr; }
+    .hosting-assurances {
+        grid-template-columns: 1fr 1fr;
+    }
+    .hosting-assurances span:nth-child(2) {
+        border-right: 0;
+    }
+    .hosting-assurances span:nth-child(-n + 2) {
+        border-bottom: 1px solid var(--border);
+    }
+    .hosting-platform-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 420px) {
@@ -337,10 +401,10 @@
 .plans-empty h3 {
     font-size: 1.1rem;
     font-weight: 700;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
     color: var(--White-title, #fff);
 }
 
 .plans-empty p {
-    font-size: .85rem;
+    font-size: 0.85rem;
 }

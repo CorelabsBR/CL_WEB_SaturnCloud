@@ -7,7 +7,7 @@
 <section class="cosmic-hero" aria-labelledby="home-title">
     <div class="container cosmic-heading">
         <p class="scene-caption"><span></span> Saturn Cloud · Infraestrutura digital</p>
-        <h1 id="home-title"><span>INFRAESTRUTURA</span><span>SEM LIMITES.</span></h1>
+        <h1 id="home-title"><span>INFRAESTRUTURA</span><span class="sem-limites">SEM LIMITES.</span></h1>
     </div>
     @include('partials.saturn-scene', ['sceneClass' => 'saturn-home-scene', 'priority' => true])
     <div class="container cosmic-bottom">

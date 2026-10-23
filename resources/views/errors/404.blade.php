@@ -1,31 +1,49 @@
 @extends('layouts.app')
 
-@section('title', 'Pagina nao encontrada - Saturn Cloud')
-@section('main_class', 'not-found-main')
+@section('title', 'Página não encontrada | Saturn Cloud')
+@section('meta_description', 'Parece que saímos de órbita. Volte ao início da Saturn Cloud ou encontre ajuda.')
+@section('body_class', 'error404')
+@section('main_class', 'error404__main')
+@section('hide_footer', true)
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/error404.css') }}?v={{ filemtime(public_path('css/error404.css')) }}">
+@endpush
 
 @section('content')
-<section class="not-found-page">
-    <div class="not-found-bg" aria-hidden="true"></div>
-
-    <div class="container">
-        <div class="not-found-panel">
-            <div class="not-found-copy">
-                <span class="not-found-code">404</span>
-                <h1>Página Não Encontrada</h1>
-                <p>
-                    O endereço que você tentou acessar pode ter sido alterado, expirado ou não estar mais disponível. Retorne para uma área segura da Saturn Cloud.
+    <section class="error404__scene" aria-labelledby="error404-title">
+        <div class="container error404__layout">
+            <div class="error404__copy">
+                <p class="error404__code">Erro 404 · Página não encontrada</p>
+                <h1 id="error404-title">
+                    <span class="error404__title-line">Tentando estabelecer</span>
+                    <span class="error404__title-line">Contato com a nave</span>
+                </h1>
+                <p class="error404__description">
+                    A página que você procura não está por aqui.
+                    Vamos voltar para um lugar conhecido?
                 </p>
-
-                <div class="not-found-actions">
-                    <a class="btn btn-primary btn-lg" href="{{ route('home') }}">Ir para o ínicio</a>
+                <div class="error404__actions">
+                    <a class="error404__home" href="{{ route('home') }}">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <path d="m14 6-6 6 6 6M8 12h12" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        Voltar ao início
+                    </a>
+                    <a class="error404__help" href="{{ route('help.index') }}">Encontrar ajuda</a>
                 </div>
             </div>
-
-            <div class="not-found-brand" aria-hidden="true">
-                <img src="{{ asset('img/saturn-cloud-mark.svg') }}" alt="">
-                <div class="not-found-orbit"></div>
+            <div class="error404__illustration">
+                <img
+                    class="error404__astronaut"
+                    src="{{ asset('img/astronaut-brazil-cutout-404.png') }}"
+                    alt="Astronauta com a bandeira do Brasil no braço, tocando o capacete como quem tenta restabelecer contato."
+                    width="1024"
+                    height="1536"
+                    fetchpriority="high"
+                    decoding="async"
+                >
             </div>
         </div>
-    </div>
-</section>
+    </section>
 @endsection

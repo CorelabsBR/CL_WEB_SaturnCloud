@@ -6,29 +6,91 @@
            info-list, info-item, role-badge
 ============================================================ */
 
-.account-page { padding-block:3rem; }
-.account-head {
-    display:flex; justify-content:space-between; align-items:flex-start;
-    gap:1.5rem; margin-bottom:2.5rem; padding-bottom:2rem;
-    border-bottom:1px solid var(--border); flex-wrap:wrap;
+.account-page {
+    padding-block: 3rem;
 }
-.account-name { font-size:2.25rem; font-weight:900; margin-bottom:.35rem; }
-.account-meta { color:var(--muted); font-size:.85rem; display:flex; gap:1.5rem; flex-wrap:wrap; }
-.account-grid { display:grid; grid-template-columns:1fr 2fr; gap:1.5rem; align-items:start; }
+.account-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+.account-name {
+    font-size: 2.25rem;
+    font-weight: 900;
+    margin-bottom: 0.35rem;
+}
+.account-meta {
+    color: var(--muted);
+    font-size: 0.85rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+.account-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1.5rem;
+    align-items: start;
+}
 
 .info-card {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:var(--r); padding:1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 1.5rem;
 }
 .info-card h3 {
-    font-size:.7rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
-    color:var(--dim); margin-bottom:1.25rem; padding-bottom:.875rem; border-bottom:1px solid var(--border);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.875rem;
+    border-bottom: 1px solid var(--border);
 }
-.info-list { display:flex; flex-direction:column; gap:.875rem; }
-.info-item { display:flex; flex-direction:column; gap:.15rem; }
-.info-item-lbl { font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--dim); }
-.info-item-val { font-size:.9rem; font-weight:600; }
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+.info-item-lbl {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+}
+.info-item-val {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
 
-.role-badge { display:inline-flex; padding:.2rem .625rem; border-radius:999px; font-size:.72rem; font-weight:700; text-transform:uppercase; }
-.role-root   { background:rgba(255,200,0,.1); color:#ffd700; border:1px solid rgba(255,200,0,.22); }
-.role-client { background:var(--accent-d); color:var(--accent); border:1px solid rgba(139, 92, 246,.22); }
+.role-badge {
+    display: inline-flex;
+    padding: 0.2rem 0.625rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.role-root {
+    background: rgba(255, 200, 0, 0.1);
+    color: #ffd700;
+    border: 1px solid rgba(255, 200, 0, 0.22);
+}
+.role-client {
+    background: var(--accent-d);
+    color: var(--accent);
+    border: 1px solid rgba(139, 92, 246, 0.22);
+}

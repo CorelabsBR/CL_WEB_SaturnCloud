@@ -2,11 +2,11 @@
     <header class="site-header">
 
     <div class="container">
-        <nav class="nav-inner">
+        <nav class="site-header__nav-inner">
 
-            <a class="brand" href="{{ url('/') }}" aria-label="Saturn Cloud — página inicial">
-                <img src="{{ asset('img/logo-128.png') }}" alt="" class="site-logo" width="44" height="44" decoding="async">
-                    <span class="saturn-brand-wordmark">Saturn <strong>Cloud</strong></span>
+            <a class="site-header__brand" href="{{ url('/') }}" aria-label="Saturn Cloud — página inicial">
+                <img src="{{ asset('img/saturno_branco_quadrado.svg') }}?v={{ filemtime(public_path('img/saturno_branco_quadrado.svg')) }}" alt="" class="site-header__logo" width="70" height="70" decoding="async">
+                    <span class="site-header__wordmark"><span class="brandhighlight">Saturn</span> <strong>Cloud</strong></span>
             </a>
 
             @php
@@ -25,7 +25,7 @@
                 };
             @endphp
 
-            <ul class="nav-links">
+            <ul class="site-header__nav-links">
                 <li>
                     <a
                         href="{{ url('/') }}"
@@ -50,10 +50,10 @@
                 </li>
             </ul>
 
-            <div class="nav-actions">
+            <div class="site-header__nav-actions">
                 @auth
                     <a
-                        class="nav-cart {{ $navActive(['carrinho', 'carrinho/*']) }}"
+                        class="site-header__nav-cart {{ $navActive(['carrinho', 'carrinho/*']) }}"
                         href="{{ url('/carrinho') }}"
                         aria-label="Ir para o carrinho{{ $cartCount > 0 ? ' com ' . $cartCount . ' ' . ($cartCount === 1 ? 'item' : 'itens') : '' }}"
                         title="Carrinho"
@@ -63,45 +63,45 @@
                             <circle cx="9.5" cy="20" r="1.4" />
                             <circle cx="17.5" cy="20" r="1.4" />
                         </svg>
-                        <span class="nav-cart-label">Carrinho</span>
+                        <span class="site-header__nav-cart-label">Carrinho</span>
                         @if($cartCount > 0)
-                            <span class="nav-cart-count" aria-hidden="true">
+                            <span class="site-header__nav-cart-count" aria-hidden="true">
                                 {{ $cartCount > 99 ? '99+' : $cartCount }}
                             </span>
                         @endif
                     </a>
 
-                    <div class="profile-dropdown">
-                        <button class="profile-btn" id="profile-btn" type="button" aria-label="Menu do perfil" aria-expanded="false" aria-controls="profile-menu">
+                    <div class="site-header__profile-dropdown">
+                        <button class="site-header__profile-btn" id="profile-btn" type="button" aria-label="Menu do perfil" aria-expanded="false" aria-controls="profile-menu">
                             <svg viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
                             </svg>
                         </button>
-                        <div class="profile-menu" id="profile-menu" role="menu" aria-labelledby="profile-btn" hidden>
-                            <div class="profile-menu-head"><span>{{ auth()->user()?->nome ?? 'Cliente Saturn Cloud' }}</span><small>{{ auth()->user()?->email }}</small></div>
-                            <a href="{{ url('/painel') }}" class="profile-menu-item" role="menuitem">
+                        <div class="site-header__profile-menu" id="profile-menu" role="menu" aria-labelledby="profile-btn" hidden>
+                            <div class="site-header__profile-menu-head"><span>{{ auth()->user()?->nome ?? 'Cliente Saturn Cloud' }}</span><small>{{ auth()->user()?->email }}</small></div>
+                            <a href="{{ url('/painel') }}" class="site-header__profile-menu-item" role="menuitem">
                                 <svg viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M3 13h2v8H3zm4-8h2v16H7zm4-2h2v18h-2zm4-2h2v20h-2zm4 4h2v16h-2z" />
                                 </svg>
                                 Painel
                             </a>
-                            <a href="{{ route('perfil.edit') }}" class="profile-menu-item" role="menuitem">
+                            <a href="{{ route('perfil.edit') }}" class="site-header__profile-menu-item" role="menuitem">
                                 <svg viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M12 12c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4zm0 2c-2.7 0-8 1.4-8 4v2h16v-2c0-2.6-5.3-4-8-4z" />
                                 </svg>
                                 Editar perfil
                             </a>
                             @if(auth()->user()?->tipo_usuario === 'root')
-                                <a href="{{ route('admin.index') }}" class="profile-menu-item" role="menuitem">
+                                <a href="{{ route('admin.index') }}" class="site-header__profile-menu-item" role="menuitem">
                                     <svg viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M12 2l8 4v6c0 5-3.4 9.4-8 10-4.6-.6-8-5-8-10V6l8-4zm0 4.2L7 8.7V12c0 3.2 2 6.1 5 6.8 3-.7 5-3.6 5-6.8V8.7l-5-2.5z" />
                                     </svg>
                                     Admin
                                 </a>
                             @endif
-                            <form action="{{ route('logout') }}" method="POST" class="profile-menu-form">
+                            <form action="{{ route('logout') }}" method="POST" class="site-header__profile-menu-form">
                                 @csrf
-                                <button type="submit" class="profile-menu-item logout-btn" role="menuitem">
+                                <button type="submit" class="site-header__profile-menu-item site-header__logout-btn" role="menuitem">
                                     <svg viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
                                     </svg>
@@ -121,13 +121,13 @@
                 @endauth
             </div>
 
-            <button class="hamburger" id="hamburger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-nav">
+            <button class="site-header__hamburger" id="hamburger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-nav">
                 <span></span><span></span><span></span>
             </button>
 
         </nav>
 
-        <nav class="mobile-nav" id="mobile-nav" aria-label="Navegação mobile" inert>
+        <nav class="site-header__mobile-nav" id="mobile-nav" aria-label="Navegação mobile" inert>
             <a
                 href="{{ url('/') }}"
                 class="{{ request()->is('/') ? 'active' : '/' }}"
@@ -170,18 +170,18 @@
 
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="mobile-logout-btn">
+                    <button type="submit" class="site-header__mobile-logout-btn">
                         Deslogar
                     </button>
                 </form>
 
                 <a
                     href="{{ url('/carrinho') }}"
-                    class="mobile-cart {{ $navActive(['carrinho', 'carrinho/*']) }}"
+                    class="site-header__mobile-cart {{ $navActive(['carrinho', 'carrinho/*']) }}"
                 >
                     Carrinho
                     @if($cartCount > 0)
-                        <span class="mobile-cart-count">
+                        <span class="site-header__mobile-cart-count">
                             {{ $cartCount > 99 ? '99+' : $cartCount }}
                         </span>
                     @endif

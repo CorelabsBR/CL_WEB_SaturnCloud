@@ -42,6 +42,30 @@ class FrontendCatalogTest extends TestCase
             ->assertSee(route('pages.show', 'sobre'), false);
     }
 
+    public function test_header_logo_uses_an_available_public_asset(): void
+    {
+        $this->assertFileExists(public_path('img/saturno_branco_quadrado.svg'));
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('img/saturno_branco_quadrado.svg', false)
+            ->assertSee('class="site-header__logo"', false)
+            ->assertDontSee('</Saturn>', false);
+    }
+
+    public function test_production_manifest_references_existing_assets(): void
+    {
+        $manifest = json_decode(file_get_contents(public_path('build/manifest.json')), true, 512, JSON_THROW_ON_ERROR);
+
+        foreach ($manifest as $entry => $chunk) {
+            $this->assertFileExists(public_path('build/'.$chunk['file']), $entry);
+
+            foreach (array_merge($chunk['imports'] ?? [], $chunk['dynamicImports'] ?? []) as $dependency) {
+                $this->assertArrayHasKey($dependency, $manifest, $entry);
+            }
+        }
+    }
+
     public function test_authenticated_commercial_routes_keep_their_access_checks(): void
     {
         foreach (['/carrinho', '/checkout', '/painel', '/suporte'] as $uri) {

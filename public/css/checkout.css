@@ -142,7 +142,10 @@
     border: 1px solid rgba(139, 92, 246, 0.1);
     border-radius: var(--r-sm);
     background: rgba(255, 255, 255, 0.026);
-    transition: border-color var(--ease), background var(--ease), transform var(--ease);
+    transition:
+        border-color var(--ease),
+        background var(--ease),
+        transform var(--ease);
 }
 
 .checkout-item:hover {

@@ -62,69 +62,38 @@ if (!reducedMotion.matches) {
         .forEach((el) => reveals.observe(el));
 }
 
-// The brand model loads after the page is ready. Mobile stays opt-in.
-const manualModel =
-    matchMedia("(max-width: 760px)").matches ||
-    (navigator.hardwareConcurrency || 4) <= 4 ||
-    navigator.connection?.saveData ||
-    (navigator.deviceMemory !== undefined && navigator.deviceMemory < 4) ||
-    ["slow-2g", "2g", "3g"].includes(navigator.connection?.effectiveType) ||
-    reducedMotion.matches;
+// Load the visible planet on every device; reduced motion only pauses its spin.
 document.querySelectorAll("[data-saturn-scene]").forEach((host) => {
     const button = host.nextElementSibling;
-    button.hidden = reducedMotion.matches;
-    reducedMotion.addEventListener("change", () => {
-        if (host.dataset.renderMode !== "webgl")
-            button.hidden = reducedMotion.matches;
-    });
-    let loading = false,
-        scheduled = false;
+    let loading = false;
     const load = async () => {
-        if (
-            loading ||
-            reducedMotion.matches ||
-            host.dataset.renderMode === "webgl"
-        )
-            return;
+        if (loading || host.dataset.renderMode === "webgl") return;
         loading = true;
         button.disabled = true;
         button.textContent = "Preparando modelo…";
         button.setAttribute("aria-busy", "true");
         try {
             const { mountSaturn } = await import("./saturn-scene.js");
-            if (!reducedMotion.matches) mountSaturn(host, reducedMotion);
-        } catch {
+            mountSaturn(host, reducedMotion);
+            if (host.dataset.renderMode !== "webgl") {
+                throw new Error("Não foi possível iniciar o WebGL.");
+            }
+            button.removeEventListener("click", load);
+        } catch (error) {
             host.dataset.renderMode = "static";
+            button.hidden = false;
+            button.textContent = "Tentar carregar modelo 3D";
+            console.warn("Falha ao carregar Saturno:", error);
         } finally {
             loading = false;
             button.disabled = false;
             button.removeAttribute("aria-busy");
-            button.removeEventListener("click", load);
-            if (host.dataset.renderMode !== "webgl") button.hidden = true;
         }
     };
-    const observer = new IntersectionObserver(([entry]) => {
-        if (!entry.isIntersecting || manualModel || scheduled) return;
-        scheduled = true;
-        const schedule = () =>
-            setTimeout(() => {
-                const whenIdle = () => {
-                    const rect = host.getBoundingClientRect();
-                    if (
-                        !document.hidden &&
-                        rect.bottom > 0 &&
-                        rect.top < innerHeight
-                    ) {
-                        observer.disconnect();
-                        load();
-                    } else scheduled = false;
-                };
-                if ("requestIdleCallback" in window)
-                    requestIdleCallback(whenIdle, { timeout: 2500 });
-                else setTimeout(whenIdle, 200);
-            }, 1200);
-        if (document.readyState === "complete") schedule();
-        else window.addEventListener("load", schedule, { once: true });
+    const observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        load();
     });
     observer.observe(host);
     button.addEventListener("click", load);

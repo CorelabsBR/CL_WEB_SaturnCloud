@@ -1,0 +1,190 @@
+/* Página 404: texto e astronauta em uma composição sem efeitos decorativos. */
+.error404 {
+    background: #050505;
+    color: #f2f0f5;
+}
+
+.error404__main {
+    display: grid;
+    min-height: calc(100svh - 89px);
+}
+
+.error404__scene {
+    display: grid;
+    overflow: hidden;
+    background: #050505;
+}
+
+.error404 .error404__layout {
+    display: grid;
+    width: 100%;
+    max-width: 1280px;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(32px, 5vw, 80px);
+    margin-inline: auto;
+    padding: clamp(36px, 5vh, 64px) clamp(24px, 5vw, 72px);
+}
+
+.error404__copy {
+    min-width: 0;
+    padding-bottom: 12px;
+}
+
+.error404__code {
+    margin: 0 0 24px;
+    color: #bba5d6;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.error404 .error404__copy h1 {
+    margin: 0;
+    color: #f2f0f5;
+    font-size: clamp(2.5rem, 4.1vw, 3.6rem);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+}
+
+.error404__title-line {
+    display: block;
+}
+
+.error404__description {
+    max-width: 370px;
+    margin: 24px 0 0;
+    color: #a9a3b1;
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+
+.error404__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+.error404__home,
+.error404__help {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+    transition:
+        background 0.2s,
+        border-color 0.2s;
+}
+
+.error404__home {
+    border-color: #8751e2;
+    background: #7c3aed;
+    color: #fff;
+}
+
+.error404__home:hover {
+    background: #8b4cf0;
+}
+
+.error404__help {
+    border-color: #332d3c;
+    background: transparent;
+    color: #d9d3e1;
+}
+
+.error404__help:hover {
+    border-color: #71617f;
+    background: #15101c;
+    color: #fff;
+}
+
+.error404__actions a:focus-visible {
+    outline: 2px solid #d5b8ff;
+    outline-offset: 5px;
+}
+
+.error404__illustration {
+    display: flex;
+    min-width: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.error404__astronaut {
+    display: block;
+    width: auto;
+    height: min(65svh, 620px);
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* Mensagem e ações aparecem primeiro em telas menores. */
+@media (max-width: 760px) {
+    .error404__main {
+        min-height: calc(100svh - 83px);
+    }
+
+    .error404 .error404__layout {
+        grid-template-columns: minmax(0, 1fr);
+        align-content: center;
+        gap: 32px;
+        padding: 40px 24px 28px;
+        text-align: center;
+    }
+
+    .error404__copy {
+        padding-bottom: 0;
+    }
+
+    .error404__code {
+        margin-bottom: 20px;
+        font-size: 0.75rem;
+    }
+
+    .error404 .error404__copy h1 {
+        font-size: clamp(1.9rem, 7.6vw, 2.8rem);
+        line-height: 1.16;
+    }
+
+    .error404__description {
+        max-width: 330px;
+        margin: 20px auto 0;
+        font-size: 0.875rem;
+        line-height: 1.75;
+    }
+
+    .error404__actions {
+        justify-content: center;
+        gap: 10px;
+        margin-top: 24px;
+    }
+
+    .error404__home,
+    .error404__help {
+        padding-inline: 16px;
+        font-size: 0.8rem;
+    }
+
+    .error404__astronaut {
+        height: clamp(250px, 35svh, 340px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .error404__home,
+    .error404__help {
+        transition: none;
+    }
+}

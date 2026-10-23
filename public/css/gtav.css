@@ -2,9 +2,9 @@
    VARIÁVEIS E FONTES
    ========================================= */
 @font-face {
-    font-family: 'GTA-Font';
+    font-family: "GTA-Font";
     /* Substitua pelo caminho correto da sua fonte baixada */
-    src: url('../ttf/Pricedown Bl.otf') format('opentype'); 
+    src: url("../ttf/Pricedown Bl.otf") format("opentype");
     font-weight: normal;
     font-style: normal;
 }
@@ -14,8 +14,8 @@
     --gta-pure-black: #000000;
     --gta-dark-grey: #0a0a0a;
     --gta-white: #ffffff;
-    --font-gta: 'GTA-Font', sans-serif;
-    --font-ui: 'Segoe UI', system-ui, sans-serif;
+    --font-gta: "GTA-Font", sans-serif;
+    --font-ui: "Segoe UI", system-ui, sans-serif;
 }
 
 * {
@@ -24,7 +24,8 @@
     font-weight: 400;
 }
 
-html, body {
+html,
+body {
     overflow-x: hidden; /* Corta qualquer coisa que tente passar da tela para a direita/esquerda */
     max-width: 100vw;
     margin: 0;
@@ -81,8 +82,8 @@ body {
     margin: 0 0 4rem;
     padding: 8rem 2rem 8rem;
     background:
-        linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,.32)),
-        url('../img/games/game-gta-v-card-banner.webp') center / cover no-repeat;
+        linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.32)),
+        url("../img/games/game-gta-v-card-banner.webp") center / cover no-repeat;
     border: 0;
     box-shadow: none;
 }
@@ -172,7 +173,7 @@ body {
 .gta5-card {
     /* O segredo do cálculo: */
     /* (100% / 3) menos um pouco do gap para caberem 3 por linha */
-    flex: 0 1 calc(33.333% - 20px); 
+    flex: 0 1 calc(33.333% - 20px);
     min-width: 300px; /* Impede que fiquem finos demais */
     background: var(--gta-dark-grey);
     border: 1px solid #333;
@@ -201,9 +202,6 @@ body {
     box-shadow: 0 0 20px rgba(240, 200, 80, 0.1);
     transform: translateY(-5px);
 }
-
-
-
 
 /* Especificações separadas por linhas finas */
 .gta5-plan-specs {

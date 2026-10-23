@@ -1,0 +1,26 @@
+- generic [active] [ref=f12e1]:
+  - link "Pular para o conteúdo" [ref=f12e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f12e3]:
+    - navigation [ref=f12e5]:
+      - link "Saturn Cloud — página inicial" [ref=f12e6] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000
+        - generic [ref=f12e7]:
+          - text: Saturn
+          - strong [ref=f12e8]: Cloud
+      - button "Abrir menu" [ref=f12e9] [cursor=pointer]
+  - main [ref=f12e13]:
+    - region [ref=f12e14]:
+      - generic [ref=f12e15]:
+        - generic [ref=f12e16]:
+          - paragraph [ref=f12e17]: Erro 404 · Página não encontrada
+          - heading "Até ele se perdeu." [level=1] [ref=f12e18]: Até elese perdeu.
+          - paragraph [ref=f12e19]: A página que você procura não está por aqui. Vamos voltar para um lugar conhecido?
+          - generic [ref=f12e20]:
+            - link "Voltar ao início" [ref=f12e21] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000
+            - link "Encontrar ajuda" [ref=f12e24] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/ajuda
+        - generic [ref=f12e25]:
+          - generic [aria-hidden] [ref=f12e26]: "404"
+          - img "Astronauta com traje escuro e reflexos violetas, tocando o capacete como quem tenta restabelecer contato." [ref=f12e27]

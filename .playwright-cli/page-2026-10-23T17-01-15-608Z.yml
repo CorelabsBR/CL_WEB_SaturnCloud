@@ -1,0 +1,49 @@
+- generic [active] [ref=f11e1]:
+  - link "Pular para o conteúdo" [ref=f11e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f11e3]:
+    - navigation [ref=f11e5]:
+      - link "Saturn Cloud — página inicial" [ref=f11e6] [cursor=pointer]:
+        - /url: http://127.0.0.1:8000
+        - generic [ref=f11e7]:
+          - text: Saturn
+          - strong [ref=f11e8]: Cloud
+      - list [ref=f11e9]:
+        - listitem [ref=f11e10]:
+          - link "Início" [ref=f11e11] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000
+        - listitem [ref=f11e12]:
+          - link "Hospedagem Web" [ref=f11e13] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/web
+        - listitem [ref=f11e14]:
+          - link "Servidores VPS" [ref=f11e15] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/vps
+        - listitem [ref=f11e16]:
+          - link "Infraestrutura" [ref=f11e17] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/infraestrutura
+        - listitem [ref=f11e18]:
+          - link "Sobre" [ref=f11e19] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/sobre
+        - listitem [ref=f11e20]:
+          - link "Suporte" [ref=f11e21] [cursor=pointer]:
+            - /url: http://127.0.0.1:8000/ajuda
+      - generic [ref=f11e22]:
+        - link "Entrar" [ref=f11e23] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/login
+        - link "Começar agora" [ref=f11e24] [cursor=pointer]:
+          - /url: http://127.0.0.1:8000/registro
+  - main [ref=f11e25]:
+    - region [ref=f11e26]:
+      - generic [ref=f11e27]:
+        - generic [ref=f11e28]:
+          - paragraph [ref=f11e29]: Erro 404 · Página não encontrada
+          - heading "Até ele se perdeu." [level=1] [ref=f11e30]: Até elese perdeu.
+          - paragraph [ref=f11e31]: A página que você procura não está por aqui. Vamos voltar para um lugar conhecido?
+          - generic [ref=f11e32]:
+            - link "Voltar ao início" [ref=f11e33] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000
+            - link "Encontrar ajuda" [ref=f11e36] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/ajuda
+        - generic [ref=f11e37]:
+          - generic [aria-hidden] [ref=f11e38]: "404"
+          - img "Alienígena de pele violeta e olhos negros, com a mão na têmpora e uma expressão intrigada." [ref=f11e39]

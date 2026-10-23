@@ -5,22 +5,22 @@
 
 /* --- 1. FONTE PERSONALIZADA GERAL --- */
 @font-face {
-    font-family: 'Minecraft';
-    src: url('/ttf/Minecraftia-Regular.ttf') format('truetype');
+    font-family: "Minecraft";
+    src: url("/ttf/Minecraftia-Regular.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
 
 * {
-    font-family: 'Minecraft', monospace !important;
+    font-family: "Minecraft", monospace !important;
     box-sizing: border-box;
 }
 
 :root {
     --mc-black: #000000;
     --mc-dark-gray: #555555;
-    --mc-gray: #AAAAAA;
-    --mc-white: #FFFFFF;
+    --mc-gray: #aaaaaa;
+    --mc-white: #ffffff;
     --text-shadow: 2px 2px 0 #3f3f3f;
     --ui-border-light: #ffffff;
     --ui-border-dark: #555555;
@@ -28,7 +28,8 @@
 }
 
 /* Reset global para evitar margens indesejadas */
-html, body {
+html,
+body {
     overflow-x: hidden;
     max-width: 100%;
     background-color: var(--mc-black);
@@ -44,13 +45,15 @@ html, body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: .5rem;
+    gap: 0.5rem;
     padding: 0.5rem 1rem; /* Garante que o texto não cole nas bordas */
     background-color: #8b8b8b;
     color: var(--mc-white);
     border: 2px solid var(--mc-black);
     /* Reduzido de 3px para 2px para ficar mais delicado e não bugar botões pequenos */
-    box-shadow: inset 2px 2px 0 var(--ui-border-light), inset -2px -2px 0 var(--ui-border-dark);
+    box-shadow:
+        inset 2px 2px 0 var(--ui-border-light),
+        inset -2px -2px 0 var(--ui-border-dark);
     cursor: pointer;
     text-transform: none;
     font-size: 0.9rem;
@@ -62,28 +65,44 @@ html, body {
 .btn:hover {
     background-color: #9d9d9d;
     color: var(--mc-white);
-    box-shadow: inset 2px 2px 0 var(--ui-border-light), inset -2px -2px 0 var(--ui-border-dark), 0 0 0 2px var(--mc-white);
+    box-shadow:
+        inset 2px 2px 0 var(--ui-border-light),
+        inset -2px -2px 0 var(--ui-border-dark),
+        0 0 0 2px var(--mc-white);
 }
 
 .btn:active {
-    box-shadow: inset 2px 2px 0 var(--ui-border-dark), inset -2px -2px 0 var(--ui-border-light);
+    box-shadow:
+        inset 2px 2px 0 var(--ui-border-dark),
+        inset -2px -2px 0 var(--ui-border-light);
     padding-top: calc(0.5rem + 2px); /* Efeito tátil empurrando o texto */
     padding-bottom: calc(0.5rem - 2px);
     color: var(--mc-white);
 }
 
-.btn-sm { padding: .3rem .6rem; font-size: .8rem; }
+.btn-sm {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+}
 
 .btn-primary {
     background-color: #5b874b;
-    box-shadow: inset 2px 2px 0 #85b072, inset -2px -2px 0 #3a5c2d;
+    box-shadow:
+        inset 2px 2px 0 #85b072,
+        inset -2px -2px 0 #3a5c2d;
 }
-.btn-primary:hover { background-color: #6a9c58; }
-.btn-primary:active { box-shadow: inset 2px 2px 0 #3a5c2d, inset -2px -2px 0 #85b072; }
+.btn-primary:hover {
+    background-color: #6a9c58;
+}
+.btn-primary:active {
+    box-shadow:
+        inset 2px 2px 0 #3a5c2d,
+        inset -2px -2px 0 #85b072;
+}
 
 /* --- 4. SEÇÃO PRINCIPAL (Zerar espaços mortos) --- */
 .minecraftjava-section {
-    padding: 0 !important; 
+    padding: 0 !important;
     margin: 0 !important;
     display: flex;
     flex-direction: column;
@@ -96,7 +115,7 @@ html, body {
     max-width: var(--mw);
     margin: 0 auto;
     width: 100%;
-    padding: 0 1rem; 
+    padding: 0 1rem;
 }
 
 /* --- 5. BANNER DO TITULO (Imagem 100%) --- */
@@ -104,15 +123,15 @@ html, body {
     text-align: center;
     margin: 0 0 4rem 0;
     /* Adicionado espaçamento superior para o texto não ficar embaixo do menu */
-    padding: 8rem 2rem 8rem 2rem; 
-    width: 100%; 
-    
-    background-image: url('/img/games/minecraft/game-minecraft-bedrock-page-background.jpg');
+    padding: 8rem 2rem 8rem 2rem;
+    width: 100%;
+
+    background-image: url("/img/games/minecraft/game-minecraft-bedrock-page-background.jpg");
     background-size: cover;
     background-position: center top;
-    
+
     border: none;
-    box-shadow: none; 
+    box-shadow: none;
     background-color: transparent;
 
     display: flex;
@@ -122,8 +141,8 @@ html, body {
 
 .minecraftjava-title {
     color: var(--mc-white);
-    font-size: clamp(2.5rem, 6vw, 4rem); 
-    text-shadow: 3px 3px 0 #000; 
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    text-shadow: 3px 3px 0 #000;
     margin-bottom: 1rem;
     margin-top: 0;
 }
@@ -141,14 +160,14 @@ html, body {
 .minecraftjava-plans-grid {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: 1fr; 
-    gap: 1.5rem; 
+    grid-auto-columns: 1fr;
+    gap: 1.5rem;
     width: 100%;
     margin-top: 1rem;
-    
+
     /* Prevenção para telas pequenas (Mobile) */
-    overflow-x: auto; 
-    padding-top: 1rem;    /* <-- ADICIONE ESTA LINHA: Evita o corte na parte de cima */
+    overflow-x: auto;
+    padding-top: 1rem; /* <-- ADICIONE ESTA LINHA: Evita o corte na parte de cima */
     padding-bottom: 1rem; /* Dá um espacinho para a barra de rolagem não cortar embaixo */
 }
 
@@ -162,27 +181,27 @@ html, body {
 
 /* Card 1: Preto (Detalhes em cinza médio para contrastar com o fundo preto) */
 .minecraftjava-card:nth-child(1) {
-    --theme-color: #555555; 
+    --theme-color: #555555;
 }
 
 /* Card 2: Prata / Ferro */
 .minecraftjava-card:nth-child(2) {
-    --theme-color: #cccccc; 
+    --theme-color: #cccccc;
 }
 
 /* Card 3: Ouro */
 .minecraftjava-card:nth-child(3) {
-    --theme-color: #ffaa00; 
+    --theme-color: #ffaa00;
 }
 
 /* Card 4: Diamante */
 .minecraftjava-card:nth-child(4) {
-    --theme-color: #55ffff; 
+    --theme-color: #55ffff;
 }
 
 /* Card 5: Preto mais fraco (Netherite/Pedra) */
 .minecraftjava-card:nth-child(5) {
-    --theme-color: #888888; 
+    --theme-color: #888888;
     background-color: #1e1e1e; /* Fundo visivelmente mais claro/fraco que os outros */
 }
 
@@ -209,23 +228,26 @@ html, body {
    ========================================= */
 .minecraftjava-card {
     /* O cálculo mágico do GTA V para 3 por linha */
-    flex: 0 1 calc(33.333% - 20px); 
+    flex: 0 1 calc(33.333% - 20px);
     min-width: 300px; /* Impede de ficarem finos demais */
     padding: 40px 30px; /* Mesmo preenchimento interno enorme do GTA V */
-    
+
     /* Mantendo o visual característico do Minecraft: */
-    --theme-color: var(--mc-dark-gray); 
-    background-color: #0a0a0a; 
-    font-family: 'Minecraft', sans-serif;
-    -webkit-font-smoothing: none; 
+    --theme-color: var(--mc-dark-gray);
+    background-color: #0a0a0a;
+    font-family: "Minecraft", sans-serif;
+    -webkit-font-smoothing: none;
     font-smooth: never;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px solid var(--mc-dark-gray); 
-    border-top: 3px solid var(--theme-color); 
-    border-radius: 12px; 
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    border: 1px solid var(--mc-dark-gray);
+    border-top: 3px solid var(--theme-color);
+    border-radius: 12px;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
 }
 
 /* ... mantenha os hover e outras propriedades do card logo abaixo ... */
@@ -252,7 +274,7 @@ html, body {
     width: 48px;
     height: 48px;
     margin: 0 auto 1rem auto;
-    background-color: rgba(255, 255, 255, 0.03); 
+    background-color: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--theme-color); /* Borda com a cor do card */
     border-radius: 8px;
     display: flex;
@@ -264,7 +286,7 @@ html, body {
 }
 
 .minecraftjava-card:hover .minecraftjava-icon-fallback {
-    transform: scale(1.08); 
+    transform: scale(1.08);
 }
 
 .minecraftjava-icon-fallback img {
@@ -272,22 +294,22 @@ html, body {
     height: 100%;
     object-fit: contain;
     display: block;
-    image-rendering: pixelated; 
+    image-rendering: pixelated;
 }
 
 /* Textos */
 .minecraftjava-plan-tag {
     color: var(--theme-color); /* A tag usa a cor do tema do card */
-    font-size: 0.6rem; 
+    font-size: 0.6rem;
     text-transform: uppercase;
-    letter-spacing: 1px; 
+    letter-spacing: 1px;
     margin-bottom: 0.4rem;
 }
 
 .minecraftjava-plan-name {
     color: var(--mc-white);
-    font-size: 1.1rem; 
-    font-weight: normal; 
+    font-size: 1.1rem;
+    font-weight: normal;
     margin-bottom: 1.25rem;
     text-align: center;
 }
@@ -297,7 +319,7 @@ html, body {
     width: 100%;
     margin-bottom: 1.5rem;
     padding: 0.8rem;
-    background-color: rgba(255, 255, 255, 0.02); 
+    background-color: rgba(255, 255, 255, 0.02);
     border-radius: 8px;
     list-style: none;
 }
@@ -307,8 +329,8 @@ html, body {
     justify-content: space-between;
     align-items: center;
     padding: 0.4rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
-    font-size: 0.7rem; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.7rem;
 }
 
 .minecraftjava-plan-specs li:last-child {
@@ -320,12 +342,12 @@ html, body {
     padding-top: 0;
 }
 
-.spec-label { 
-    color: var(--mc-gray); 
+.spec-label {
+    color: var(--mc-gray);
 }
 
-.spec-value { 
-    color: var(--mc-white); 
+.spec-value {
+    color: var(--mc-white);
 }
 
 /* Divisor */
@@ -342,7 +364,7 @@ html, body {
     display: flex;
     width: 100%;
     justify-content: center;
-    margin-top: auto; 
+    margin-top: auto;
 }
 
 .minecraftjava-card-footer .btn {
@@ -351,11 +373,12 @@ html, body {
     /* ou use width: 80%; se quiser que ele ainda seja largo, mas com margens */
 }
 
-
-
-
 /* RESPONSIVO */
 @media (max-width: 768px) {
-    .minecraftjava-header { padding: 6rem 1rem 3rem 1rem; }
-    .minecraftjava-title { font-size: 2.2rem; }
+    .minecraftjava-header {
+        padding: 6rem 1rem 3rem 1rem;
+    }
+    .minecraftjava-title {
+        font-size: 2.2rem;
+    }
 }

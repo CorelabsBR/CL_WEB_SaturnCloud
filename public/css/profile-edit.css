@@ -2,8 +2,7 @@
     min-height: calc(100vh - 120px);
     padding: clamp(2rem, 5vw, 4rem) 0;
     background:
-        radial-gradient(circle at top left, rgba(139, 92, 246, 0.12), transparent 32%),
-        #031108;
+        radial-gradient(circle at top left, rgba(139, 92, 246, 0.12), transparent 32%), #031108;
 }
 
 .profile-edit-page .container {
@@ -41,7 +40,7 @@
 .profile-field span {
     display: block;
     margin-bottom: 0.45rem;
-    color: #8B5CF6;
+    color: #8b5cf6;
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.06em;
@@ -89,7 +88,10 @@
     color: #f4fff8;
     font: inherit;
     font-weight: 600;
-    transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
 }
 
 .profile-field input:hover {
@@ -97,7 +99,7 @@
 }
 
 .profile-field input:focus {
-    border-color: #8B5CF6;
+    border-color: #8b5cf6;
     background: rgba(6, 18, 10, 0.92);
     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
 }

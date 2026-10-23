@@ -1,22 +1,22 @@
 /* Shared layout rules for custom game pages */
 
 @font-face {
-    font-family: 'Minecraft';
-    src: url('/ttf/Minecraftia-Regular.ttf') format('truetype');
+    font-family: "Minecraft";
+    src: url("/ttf/Minecraftia-Regular.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Terraria';
-    src: url('/ttf/Terraria.TTF') format('truetype');
+    font-family: "Terraria";
+    src: url("/ttf/Terraria.TTF") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'GTA-Font';
-    src: url('/ttf/Pricedown Bl.otf') format('opentype');
+    font-family: "GTA-Font";
+    src: url("/ttf/Pricedown Bl.otf") format("opentype");
     font-weight: normal;
     font-style: normal;
 }
@@ -102,7 +102,7 @@
     max-width: 100%;
     margin: 0 0 1rem;
     font-size: clamp(3rem, 7vw, 6rem);
-    line-height: .95;
+    line-height: 0.95;
     text-align: center;
 }
 
@@ -227,7 +227,13 @@
     border: 0 !important;
     box-shadow: none !important;
     background:
-        linear-gradient(180deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,.22) 45%, rgba(0,0,0,.7) 88%, #000 100%),
+        linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.18) 0%,
+            rgba(0, 0, 0, 0.22) 45%,
+            rgba(0, 0, 0, 0.7) 88%,
+            #000 100%
+        ),
         var(--game-hero-bg) center / cover no-repeat !important;
 }
 
@@ -253,15 +259,15 @@
     padding: 0 !important;
     color: #ffffff !important;
     font-size: clamp(3rem, 7vw, 6.2rem) !important;
-    line-height: .94 !important;
+    line-height: 0.94 !important;
     letter-spacing: 0 !important;
     text-align: center !important;
     text-transform: uppercase !important;
     background: transparent !important;
     border: 0 !important;
     text-shadow:
-        0 2px 2px rgba(0,0,0,.92),
-        0 8px 22px rgba(0,0,0,.52) !important;
+        0 2px 2px rgba(0, 0, 0, 0.92),
+        0 8px 22px rgba(0, 0, 0, 0.52) !important;
     transform: none !important;
 }
 
@@ -269,7 +275,6 @@
 .terraria-title {
     font-size: clamp(2.35rem, 5.6vw, 4.6rem) !important;
 }
-
 
 .minecraftjava-sub,
 .gta5-sub,
@@ -321,7 +326,10 @@
     outline: 0 !important;
     box-shadow: none !important;
     transform: none;
-    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease !important;
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease !important;
     overflow: hidden !important;
 }
 
@@ -339,7 +347,7 @@
 .game-card:hover {
     transform: translateY(-4px) !important;
     border-color: #4a4a4a !important;
-    box-shadow: 0 0 24px rgba(255, 212, 0, .08) !important;
+    box-shadow: 0 0 24px rgba(255, 212, 0, 0.08) !important;
 }
 
 .minecraftjava-card:nth-child(1) {
@@ -364,27 +372,27 @@
 
 .minecraftjava-card:nth-child(1):hover {
     border-color: #4a4a4a !important;
-    box-shadow: 0 0 18px rgba(90, 90, 90, .12) !important;
+    box-shadow: 0 0 18px rgba(90, 90, 90, 0.12) !important;
 }
 
 .minecraftjava-card:nth-child(2):hover {
     border-color: #a9b0b4 !important;
-    box-shadow: 0 0 18px rgba(169, 176, 180, .12) !important;
+    box-shadow: 0 0 18px rgba(169, 176, 180, 0.12) !important;
 }
 
 .minecraftjava-card:nth-child(3):hover {
     border-color: #c0a14c !important;
-    box-shadow: 0 0 18px rgba(158, 130, 53, .13) !important;
+    box-shadow: 0 0 18px rgba(158, 130, 53, 0.13) !important;
 }
 
 .minecraftjava-card:nth-child(4):hover {
     border-color: #58b0b5 !important;
-    box-shadow: 0 0 18px rgba(62, 146, 151, .13) !important;
+    box-shadow: 0 0 18px rgba(62, 146, 151, 0.13) !important;
 }
 
 .minecraftjava-card:nth-child(5):hover {
     border-color: #504b5b !important;
-    box-shadow: 0 0 18px rgba(80, 75, 91, .14) !important;
+    box-shadow: 0 0 18px rgba(80, 75, 91, 0.14) !important;
 }
 
 .terraria-card:nth-child(1) {
@@ -409,27 +417,27 @@
 
 .terraria-card:nth-child(1):hover {
     border-color: #62a9c6 !important;
-    box-shadow: 0 0 18px rgba(63, 143, 176, .13) !important;
+    box-shadow: 0 0 18px rgba(63, 143, 176, 0.13) !important;
 }
 
 .terraria-card:nth-child(2):hover {
     border-color: #3e744f !important;
-    box-shadow: 0 0 18px rgba(46, 95, 63, .13) !important;
+    box-shadow: 0 0 18px rgba(46, 95, 63, 0.13) !important;
 }
 
 .terraria-card:nth-child(3):hover {
     border-color: #3d304a !important;
-    box-shadow: 0 0 18px rgba(61, 48, 74, .14) !important;
+    box-shadow: 0 0 18px rgba(61, 48, 74, 0.14) !important;
 }
 
 .terraria-card:nth-child(4):hover {
     border-color: #9aa29e !important;
-    box-shadow: 0 0 18px rgba(119, 127, 123, .12) !important;
+    box-shadow: 0 0 18px rgba(119, 127, 123, 0.12) !important;
 }
 
 .terraria-card:nth-child(5):hover {
     border-color: #739c5b !important;
-    box-shadow: 0 0 18px rgba(91, 133, 70, .13) !important;
+    box-shadow: 0 0 18px rgba(91, 133, 70, 0.13) !important;
 }
 
 .gta5-card:nth-child(1) {
@@ -454,27 +462,27 @@
 
 .gta5-card:nth-child(1):hover {
     border-color: #d0ba72 !important;
-    box-shadow: 0 0 18px rgba(187, 164, 91, .13) !important;
+    box-shadow: 0 0 18px rgba(187, 164, 91, 0.13) !important;
 }
 
 .gta5-card:nth-child(2):hover {
     border-color: #8d68ad !important;
-    box-shadow: 0 0 18px rgba(118, 83, 150, .13) !important;
+    box-shadow: 0 0 18px rgba(118, 83, 150, 0.13) !important;
 }
 
 .gta5-card:nth-child(3):hover {
     border-color: #405b99 !important;
-    box-shadow: 0 0 18px rgba(48, 71, 127, .13) !important;
+    box-shadow: 0 0 18px rgba(48, 71, 127, 0.13) !important;
 }
 
 .gta5-card:nth-child(4):hover {
     border-color: #5792c1 !important;
-    box-shadow: 0 0 18px rgba(67, 123, 168, .13) !important;
+    box-shadow: 0 0 18px rgba(67, 123, 168, 0.13) !important;
 }
 
 .gta5-card:nth-child(5):hover {
     border-color: #c7baa1 !important;
-    box-shadow: 0 0 18px rgba(181, 168, 143, .12) !important;
+    box-shadow: 0 0 18px rgba(181, 168, 143, 0.12) !important;
 }
 
 .sa-card:nth-child(1) {
@@ -499,27 +507,27 @@
 
 .sa-card:nth-child(1):hover {
     border-color: #3e744f !important;
-    box-shadow: 0 0 18px rgba(46, 95, 63, .13) !important;
+    box-shadow: 0 0 18px rgba(46, 95, 63, 0.13) !important;
 }
 
 .sa-card:nth-child(2):hover {
     border-color: #82659f !important;
-    box-shadow: 0 0 18px rgba(110, 85, 138, .13) !important;
+    box-shadow: 0 0 18px rgba(110, 85, 138, 0.13) !important;
 }
 
 .sa-card:nth-child(3):hover {
     border-color: #c0aa50 !important;
-    box-shadow: 0 0 18px rgba(168, 148, 60, .13) !important;
+    box-shadow: 0 0 18px rgba(168, 148, 60, 0.13) !important;
 }
 
 .sa-card:nth-child(4):hover {
     border-color: #405b99 !important;
-    box-shadow: 0 0 18px rgba(48, 71, 127, .13) !important;
+    box-shadow: 0 0 18px rgba(48, 71, 127, 0.13) !important;
 }
 
 .sa-card:nth-child(5):hover {
     border-color: #c2c2c2 !important;
-    box-shadow: 0 0 18px rgba(168, 168, 168, .12) !important;
+    box-shadow: 0 0 18px rgba(168, 168, 168, 0.12) !important;
 }
 
 .minecraftjava-icon-fallback,
@@ -583,11 +591,11 @@
 .terraria-plan-tag,
 .game-plan-tag {
     font-family: var(--game-font-family, inherit) !important;
-    margin: 0 0 .45rem !important;
+    margin: 0 0 0.45rem !important;
     color: #8e969c !important;
-    font-size: .74rem !important;
+    font-size: 0.74rem !important;
     font-weight: 700 !important;
-    letter-spacing: .12em !important;
+    letter-spacing: 0.12em !important;
     text-align: center !important;
     text-transform: uppercase !important;
     text-shadow: none !important;
@@ -634,9 +642,9 @@
     align-items: center !important;
     justify-content: space-between !important;
     gap: 1rem !important;
-    padding: .78rem 0 !important;
+    padding: 0.78rem 0 !important;
     border-bottom: 1px solid #333 !important;
-    font-size: .88rem !important;
+    font-size: 0.88rem !important;
     line-height: 1.25 !important;
     box-shadow: none !important;
 }
@@ -648,7 +656,7 @@
 .game-spec-label {
     color: #8e969c !important;
     text-transform: uppercase !important;
-    letter-spacing: .08em !important;
+    letter-spacing: 0.08em !important;
 }
 
 .minecraftjava-plan-specs .spec-value,
@@ -705,10 +713,13 @@
     text-decoration: none !important;
     text-shadow: none !important;
     text-transform: uppercase !important;
-    letter-spacing: .1em !important;
-    font-size: .86rem !important;
+    letter-spacing: 0.1em !important;
+    font-size: 0.86rem !important;
     font-weight: 800 !important;
-    transition: background .2s ease, color .2s ease, transform .2s ease !important;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease !important;
 }
 
 .minecraftjava-card-footer .btn:hover,
@@ -727,10 +738,10 @@
 
 .minecraftjava-card-footer .btn,
 .minecraftjava-card:hover .btn {
-    font-family: var(--game-font-family, 'Minecraft', monospace) !important;
+    font-family: var(--game-font-family, "Minecraft", monospace) !important;
     width: 100% !important;
     min-height: 46px !important;
-    padding: .55rem 1rem !important;
+    padding: 0.55rem 1rem !important;
     color: #ffffff !important;
     background: #5b874b !important;
     border: 2px solid #000000 !important;
@@ -757,8 +768,8 @@
 }
 
 .minecraftjava-card-footer .btn:active {
-    padding-top: calc(.55rem + 2px) !important;
-    padding-bottom: calc(.55rem - 2px) !important;
+    padding-top: calc(0.55rem + 2px) !important;
+    padding-bottom: calc(0.55rem - 2px) !important;
     box-shadow:
         inset 2px 2px 0 #3a5c2d,
         inset -2px -2px 0 #85b072 !important;
@@ -769,14 +780,14 @@
     font-family: "Terraria", "Trebuchet MS", system-ui, sans-serif !important;
     width: 100% !important;
     min-height: 48px !important;
-    padding: .76rem 1rem !important;
+    padding: 0.76rem 1rem !important;
     color: #e2e2e2 !important;
     background: transparent !important;
     border: 2px solid #1e1e1e !important;
     border-radius: 2px !important;
     box-shadow:
-        inset 1px 1px 0 rgba(255,255,255,.26),
-        inset -2px -2px 0 rgba(0,0,0,.28),
+        inset 1px 1px 0 rgba(255, 255, 255, 0.26),
+        inset -2px -2px 0 rgba(0, 0, 0, 0.28),
         0 2px 0 #1e1e1e !important;
     text-transform: none !important;
     letter-spacing: 0 !important;
@@ -787,7 +798,10 @@
         -1px 1px 0 #1b1b1b,
         1px -1px 0 #1b1b1b,
         -1px -1px 0 #1b1b1b !important;
-    transition: filter .14s ease, transform .14s ease, box-shadow .14s ease !important;
+    transition:
+        filter 0.14s ease,
+        transform 0.14s ease,
+        box-shadow 0.14s ease !important;
 }
 
 .terraria-card-footer .btn:hover,
@@ -797,16 +811,16 @@
     filter: none !important;
     transform: translateY(-1px) !important;
     box-shadow:
-        inset 1px 1px 0 rgba(255,255,255,.3),
-        inset -2px -2px 0 rgba(0,0,0,.24),
+        inset 1px 1px 0 rgba(255, 255, 255, 0.3),
+        inset -2px -2px 0 rgba(0, 0, 0, 0.24),
         0 2px 0 #1e1e1e !important;
 }
 
 .terraria-card-footer .btn:active {
     transform: translateY(2px) !important;
     box-shadow:
-        inset 2px 2px 0 rgba(0,0,0,.28),
-        inset -1px -1px 0 rgba(255,255,255,.18),
+        inset 2px 2px 0 rgba(0, 0, 0, 0.28),
+        inset -1px -1px 0 rgba(255, 255, 255, 0.18),
         0 1px 0 #1e1e1e !important;
 }
 
