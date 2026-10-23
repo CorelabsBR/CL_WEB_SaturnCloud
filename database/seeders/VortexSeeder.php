@@ -4,12 +4,13 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class VortexSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        Schema::disableForeignKeyConstraints();
 
         DB::table('cart_items')->truncate();
         DB::table('order_items')->truncate();
@@ -23,7 +24,7 @@ class VortexSeeder extends Seeder
         DB::table('location_prod')->truncate();
         DB::table('categoria_prod')->truncate();
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        Schema::enableForeignKeyConstraints();
 
         DB::table('categoria_prod')->insert([
             ['id' => 1, 'nome' => 'Hospedagem Web'],
